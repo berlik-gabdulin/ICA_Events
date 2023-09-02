@@ -18,7 +18,7 @@ const TitleBlock: React.FC<TPageType<TTitleBlock>> = ({ block_title, content }) 
         color: '#fff',
       }}
     >
-      <Typography variant="h1">{title}</Typography>
+      <Typography fontSize={68}>{title}</Typography>
       <Box mt={3}>
         {buttons?.events?.isActive ? (
           <Button variant="contained">{buttons.events.label}</Button>
