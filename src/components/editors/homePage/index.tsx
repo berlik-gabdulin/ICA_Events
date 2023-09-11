@@ -31,6 +31,7 @@ const Home: React.FC = () => {
     AboutTab: dynamic(() => import('./tabs/AboutTab')),
     TestimonialsTab: dynamic(() => import('./tabs/TestimonialsTab')),
     ContactsTab: dynamic(() => import('./tabs/ContactsTab')),
+    MembershipTab: dynamic(() => import('./tabs/MembershipTab')),
     MetaTab: dynamic(() => import('./tabs/MetaTab')),
   };
 

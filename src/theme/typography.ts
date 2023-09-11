@@ -2,8 +2,8 @@ import { pxToRem, responsiveFontSizes } from '../utils/getFontValue';
 
 // ----------------------------------------------------------------------
 
-const FONT_PRIMARY = 'Gilroy, sans-serif';
-const FONT_PRIMARY_BOLD = 'Gilroy-Semibold, sans-serif';
+export const FONT_PRIMARY = 'Gilroy, sans-serif';
+export const FONT_PRIMARY_BOLD = '"Gilroy-Semibold", sans-serif';
 
 const typography = {
   fontFamily: FONT_PRIMARY,

@@ -36,6 +36,10 @@ const sidebarConfig: { subheader: string; items: SidebarConfigItem[] }[] = [
         title: 'Galleries',
         path: '/admin/galleries',
       },
+      {
+        title: 'Settings',
+        path: '/admin/settings',
+      },
     ],
   },
 ];

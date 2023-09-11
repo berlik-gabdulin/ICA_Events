@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Typography, Box } from '@mui/material';
+import React from 'react';
+
 import { TAboutTab, TPageType } from 'src/utils/types';
-import { Container, Section } from 'src/components/globalStyles';
-import styled from '@emotion/styled';
+import { Container, Section, Title } from 'src/components/globalStyles';
+import { SectionStyle, Bullets, Bullet, BulletValue, BulletLabel } from './styles';
 
 const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ block_title, content }) => {
   const { text, bullets } = content;
 
   return (
-    <Section>
+    <Section style={SectionStyle}>
       <Container>
-        <Typography variant="h2">{block_title}</Typography>
+        <Title>{block_title}</Title>
         <div dangerouslySetInnerHTML={{ __html: text }} />
         <Bullets>
           {bullets
@@ -28,21 +28,3 @@ const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ block_title, content }) =>
 };
 
 export default AboutBlock;
-
-const Bullets = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-`;
-const Bullet = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const BulletValue = styled.span`
-  display: block;
-  font-size: 68px;
-`;
-const BulletLabel = styled.span`
-  display: block;
-  font-size: 28px;
-`;

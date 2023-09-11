@@ -1,7 +1,4 @@
-// components/editors/homePage/tabs/AboutTab.tsx
-
 import { useState, useEffect } from 'react';
-
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { fetchHomePageBlock, updateHomePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
@@ -43,12 +40,10 @@ const AboutTab: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchHomePageBlock('about');
-      console.log(data.content);
+
       setValue('about', JSON.parse(data.content) as TAboutTab);
       setLoading(false);
     };
-
-    console.log(getValues());
 
     fetchData();
   }, [setValue]);

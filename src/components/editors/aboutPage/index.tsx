@@ -13,7 +13,7 @@ const About: React.FC = () => {
     const fetchData = async () => {
       try {
         const blocks = await fetchAllAboutPageBlocks();
-        console.log(blocks);
+
         setData(blocks);
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -7,9 +7,11 @@ import { fetchAboutPageBlock, updateAboutPageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
 import CustomEditor from 'src/components/CustomEditor';
 import Button from 'src/components/Button';
+import Input from 'src/components/Input/Input';
+import { TAboutPage } from 'src/utils/types';
 
 type FormData = {
-  about: string;
+  about: TAboutPage;
 };
 
 const ContentTab: React.FC = () => {
@@ -19,15 +21,17 @@ const ContentTab: React.FC = () => {
     watch,
     control,
     handleSubmit,
+    register,
+    getValues,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({ defaultValues: { about: '' } });
+  } = useForm<FormData>({ defaultValues: { about: { text: '' } } });
   const { showError, showSuccess } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchAboutPageBlock('content');
-      setValue('about', data.content);
+      setValue('about', JSON.parse(data.content));
       setLoading(false);
     };
 
@@ -37,7 +41,7 @@ const ContentTab: React.FC = () => {
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
       setLoading(true);
-      await updateAboutPageBlock('about', formData.about);
+      await updateAboutPageBlock('content', JSON.stringify(formData.about));
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {
@@ -47,7 +51,19 @@ const ContentTab: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(handleSave)}>
-      {!loading ? <CustomEditor name="about" watch={watch} control={control} /> : <p>Loading</p>}
+      {!loading ? (
+        <>
+          <Input
+            label="Image"
+            shrink={getValues('about.image')}
+            fullWidth
+            {...register('about.image')}
+          />
+          <CustomEditor name="about.text" watch={watch} control={control} />
+        </>
+      ) : (
+        <p>Loading</p>
+      )}
       <Button>Save</Button>
     </form>
   );

@@ -3,16 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import useSnackbar from 'src/hooks/useSnackbar';
 import Input from 'src/components/Input/Input';
 import Button from 'src/components/Button';
-
-type FormData = {
-  id: number;
-  page_title: string;
-  meta_description: string;
-  meta_keywords: string;
-  og_description: string;
-  og_locale: string;
-  og_image: string;
-};
+import { TMetaFields } from 'src/utils/types';
 
 type MetaProps = {
   fetchData: (fieldName: string) => Promise<any>;
@@ -30,7 +21,7 @@ const Meta: React.FC<MetaProps> = ({ fetchData, updateData, onSaveSuccess, onSav
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<TMetaFields>({
     defaultValues: {
       page_title: '',
       meta_description: '',
@@ -45,10 +36,10 @@ const Meta: React.FC<MetaProps> = ({ fetchData, updateData, onSaveSuccess, onSav
   useEffect(() => {
     const fetch = async () => {
       const data = await fetchData('meta');
-      console.log(data);
+
       const parsedData = JSON.parse(data.content);
       for (const [key, value] of Object.entries(parsedData)) {
-        setValue(key as keyof FormData, value as keyof FormData);
+        setValue(key as keyof TMetaFields, value as keyof TMetaFields);
       }
       setLoading(false);
     };
@@ -56,7 +47,7 @@ const Meta: React.FC<MetaProps> = ({ fetchData, updateData, onSaveSuccess, onSav
     fetch();
   }, [setValue]);
 
-  const handleSave: SubmitHandler<FormData> = async (formData) => {
+  const handleSave: SubmitHandler<TMetaFields> = async (formData) => {
     try {
       await updateData('meta', JSON.stringify(formData));
       showSuccess('Successfully saved!');

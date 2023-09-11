@@ -1,20 +1,20 @@
 version: '3'
 
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
-    environment:
-      - DATABASE_URL=mysql://user:1234@db:3306/myDataBase
-    depends_on:
-      - db
-    volumes:
-      - ./node_modules:/app/node_modules
-      - ./src:/app/src
-      - ./public:/app/public
+  # web:
+  # build:
+  #   context: .
+  #   dockerfile: Dockerfile
+  # ports:
+  #   - '3000:3000'
+  # environment:
+  #   - DATABASE_URL=mysql://user:1234@db:3306/myDataBase
+  # depends_on:
+  #   - db
+  # volumes:
+  #   - ./node_modules:/app/node_modules
+  #   - ./src:/app/src
+  #   - ./public:/app/public
 
   phpmyadmin:
     depends_on:

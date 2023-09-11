@@ -27,7 +27,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({ name, control, watch, style
             menubar: false,
             toolbar:
               'undo redo | formatselect | ' +
-              'bold italic backcolor link | alignleft aligncenter ' +
+              'bold italic underline backcolor link | alignleft aligncenter ' +
               'alignright alignjustify | bullist numlist outdent indent | ' +
               'removeformat | help',
             plugins: 'link',

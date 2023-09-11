@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, FormControlLabel } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { fetchHomePageBlock, updateHomePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
@@ -12,35 +11,10 @@ import { TContactsBlock } from 'src/utils/types';
 const ContactsTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors },
-  } = useForm<TContactsBlock>({
+  const { control, register, handleSubmit, setValue, getValues, watch } = useForm<TContactsBlock>({
     defaultValues: {
       contactsHtml: '',
-      socialLinks: {
-        linkedin: {
-          url: '',
-          isActive: false,
-        },
-        instagram: {
-          url: '',
-          isActive: false,
-        },
-        youtube: {
-          url: '',
-          isActive: false,
-        },
-        facebook: {
-          url: '',
-          isActive: false,
-        },
-      },
+      photo: '',
     },
   });
   const { showError, showSuccess } = useSnackbar();
@@ -50,7 +24,7 @@ const ContactsTab: React.FC = () => {
       const data = await fetchHomePageBlock('contacts');
       const parsedData = JSON.parse(data.content);
       setValue('contactsHtml', parsedData.contactsHtml);
-      setValue('socialLinks', parsedData.socialLinks);
+      setValue('photo', parsedData.photo);
       setLoading(false);
     };
     fetchData();
@@ -70,27 +44,8 @@ const ContactsTab: React.FC = () => {
       {!loading ? (
         <>
           <CustomEditor name="contactsHtml" watch={watch} control={control} />
-          {Object.keys(watch('socialLinks')).map((platform: string) => (
-            <div key={platform}>
-              <DeviderStyled />
-              <Input
-                shrink={getValues(`socialLinks.${platform}.url`)}
-                label={platform}
-                fullWidth
-                {...register(`socialLinks.${platform}.url`)}
-                disabled={!watch(`socialLinks.${platform}.isActive`)}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    {...register(`socialLinks.${platform}.isActive`)}
-                    checked={watch(`socialLinks.${platform}.isActive`)}
-                  />
-                }
-                label={watch(`socialLinks.${platform}.isActive`) ? 'Show' : 'Hide'}
-              />
-            </div>
-          ))}
+          <DeviderStyled />
+          <Input shrink={getValues('photo')} label="Photo" fullWidth {...register('photo')} />
 
           <Button>Save</Button>
         </>

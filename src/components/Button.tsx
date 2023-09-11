@@ -1,15 +1,7 @@
 import React, { FC, ButtonHTMLAttributes, ReactNode } from 'react';
 import { Button as MUIButton } from '@mui/material';
 import styled from '@emotion/styled';
-
-type TButton = {
-  type?: 'button' | 'submit' | 'reset';
-  variant?: 'text' | 'outlined' | 'contained';
-  size?: 'small' | 'medium' | 'large';
-  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
-  style?: any;
-  children: ReactNode;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+import { TButton } from 'src/utils/types';
 
 const Button: FC<TButton> = ({
   type = 'submit',
