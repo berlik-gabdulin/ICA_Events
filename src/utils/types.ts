@@ -38,8 +38,8 @@ export type TButton = {
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
   color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
-  customcolor?: string;
-  style?: any;
+  customcolor?: string | null;
+  style?: any | null;
   onClick?: () => void;
   children: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
@@ -110,10 +110,15 @@ export type TNavigation = {
   order: number;
 }[];
 
+export type NavLinkProps = {
+  isActive?: boolean;
+};
+
 export type TLayoutProps = {
   social: TSocialLinks;
   footer: string;
   navigation: TNavigation;
+  meta: TMetaFields;
 };
 
 export type TEvent = {
@@ -137,6 +142,55 @@ export type TBGBox = {
 };
 
 export type TAboutPage = {
-  text: string;
   image: string;
+  text: string;
+};
+
+export type TSettingsMain = {
+  footer: string;
+};
+
+export interface IUpdateBlockData {
+  content?: string;
+  order_number?: number;
+  block_title?: string;
+  block_name?: string;
+}
+
+export type TSolutionButton = {
+  label: string;
+  link: string;
+};
+
+export type TSolution = {
+  id: string;
+  image: string;
+  title: string;
+  text: string;
+};
+
+export type TSolutions = {
+  image: string;
+  intro: string;
+  contacts: {
+    text: string;
+    phone: string;
+    email: string;
+  };
+  solutions: TSolution[];
+};
+
+export type TOffice = {
+  id: string;
+  image: string;
+  city: string;
+  text: string;
+  hours: string;
+  theme: 'Medium' | 'Light' | 'Dark';
+  map: string;
+};
+
+export type TContactsPage = {
+  image: string;
+  offices: TOffice[];
 };

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { fetchHomePageBlock, updateHomePageBlock } from 'src/utils/api';
+import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
 import CustomEditor from 'src/components/CustomEditor';
 import Button from 'src/components/Button';
-import Input from 'src/components/Input/Input';
+import Input from 'src/components/Input';
 import { TAboutTab } from 'src/utils/types';
 
 type FormData = {
@@ -14,15 +14,7 @@ type FormData = {
 const AboutTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
-  const {
-    watch,
-    control,
-    handleSubmit,
-    setValue,
-    getValues,
-    register,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { watch, control, handleSubmit, setValue, getValues, register } = useForm<FormData>({
     defaultValues: {
       about: {
         text: '',
@@ -39,7 +31,7 @@ const AboutTab: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchHomePageBlock('about');
+      const data = await fetchPageBlock('home', 'about');
 
       setValue('about', JSON.parse(data.content) as TAboutTab);
       setLoading(false);
@@ -51,7 +43,7 @@ const AboutTab: React.FC = () => {
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
       setLoading(true);
-      await updateHomePageBlock('about', JSON.stringify(formData.about));
+      await updatePageBlock('home', 'about', { content: JSON.stringify(formData.about) });
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {

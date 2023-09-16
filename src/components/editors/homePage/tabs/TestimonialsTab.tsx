@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { fetchHomePageBlock, updateHomePageBlock } from 'src/utils/api';
+import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -17,7 +17,7 @@ import {
   Box,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Input from 'src/components/Input/Input';
+import Input from 'src/components/Input';
 import CustomEditor from 'src/components/CustomEditor';
 import { TTestimonials } from 'src/utils/types';
 
@@ -25,14 +25,14 @@ const TestimonialsTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [toBeDeleted, setToBeDeleted] = useState<string | null>(null);
-  const { register, handleSubmit, setValue, control, getValues, watch } = useForm<TTestimonials>();
+  const { register, handleSubmit, setValue, control, watch } = useForm<TTestimonials>();
   const { showError, showSuccess } = useSnackbar();
 
   const testimonials = watch('testimonials') || [];
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchHomePageBlock('testimonials');
+      const data = await fetchPageBlock('home', 'testimonials');
       const parsedData = JSON.parse(data.content);
       setValue('testimonials', parsedData);
       setLoading(false);
@@ -43,7 +43,9 @@ const TestimonialsTab: React.FC = () => {
 
   const handleSave: SubmitHandler<TTestimonials> = async (formData) => {
     try {
-      await updateHomePageBlock('testimonials', JSON.stringify(formData.testimonials));
+      await updatePageBlock('home', 'testimonials', {
+        content: JSON.stringify(formData.testimonials),
+      });
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import palette from 'src/theme/palette';
+import customTheme from 'src/theme/customTheme';
 
 export const FooterWrapper = styled('footer')`
   display: flex;
@@ -8,12 +8,12 @@ export const FooterWrapper = styled('footer')`
   align-items: center;
   padding: 16px 24px;
   min-height: 68px;
-  background: ${palette.light.primary.darker};
-  color: ${palette.light.primary.light};
+  background: ${customTheme.darker[100]};
+  color: ${customTheme.light[100]};
   font-size: 20px;
   a {
     text-decoration: none;
-    color: ${palette.light.primary.light};
+    color: ${customTheme.light[100]};
     transition: all 0.2s ease-in-out;
     &:hover {
       color: #fff;

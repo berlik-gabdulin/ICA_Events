@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Input, Slide, Button, InputAdornment, ClickAwayListener } from '@mui/material';
 // utils
-import cssStyles from '../../../utils/cssStyles';
+import cssStyles from 'src/utils/cssStyles';
 // components
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';

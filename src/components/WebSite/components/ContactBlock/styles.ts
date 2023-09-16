@@ -25,15 +25,16 @@ export const Text = styled.div`
 export const SocialBox = styled(Box)`
   color: ${palette.light.primary.light};
   svg {
-    font-size: 44px;
+    height: 44px;
+    width: 44px;
     transition: all 0.3s ease-in-out;
   }
   a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px;
-    height: 60px;
+    width: 44px;
+    height: 44px;
     margin-right: 20px;
     color: ${palette.light.primary.light};
     &:hover {

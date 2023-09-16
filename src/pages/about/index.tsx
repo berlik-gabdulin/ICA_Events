@@ -1,12 +1,19 @@
 import React from 'react';
-import { fetchAllAboutPageBlocks, fetchHomePageBlock } from 'src/utils/api';
-import { TAboutPage, TLayoutProps, TMetaFields, TPageType, TTitleBlock } from 'src/utils/types';
+import { fetchAllPageData, fetchPageBlock } from 'src/utils/api';
+import {
+  IData,
+  TAboutPage,
+  TLayoutProps,
+  TMetaFields,
+  TPageType,
+  TTitleBlock,
+} from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import styled from '@emotion/styled';
-import { Container, Section, Title } from 'src/components/globalStyles';
+import { Container, Section, TitleH1 } from 'src/components/globalStyles';
 import { fetchLayoutData } from 'src/utils/fetchLayoutData';
-import MetaHead from 'src/components/MetaHead';
+import { Text } from './styles';
+import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 
 type TAboutPageProps = {
   content: TPageType<TAboutPage>;
@@ -26,7 +33,6 @@ const About = (props: TAboutPageProps) => {
 
   return (
     <>
-      <MetaHead meta={meta.content} />
       <Layout data={layoutData}>
         <BGBox
           bgImage={image ? image : bgImage}
@@ -38,7 +44,7 @@ const About = (props: TAboutPageProps) => {
         </BGBox>
         <Section>
           <Container>
-            <Title>{page_title}</Title>
+            <TitleH1>{page_title}</TitleH1>
             <Text dangerouslySetInnerHTML={{ __html: text }} />
           </Container>
         </Section>
@@ -50,11 +56,11 @@ const About = (props: TAboutPageProps) => {
 export default About;
 
 export async function getStaticProps() {
-  const res = await fetchAllAboutPageBlocks();
-  const resTitle = await fetchHomePageBlock('title');
-  const layoutData = await fetchLayoutData();
+  const res = await fetchAllPageData('about');
+  const resTitle = await fetchPageBlock('home', 'title');
+  const layoutData = await fetchLayoutData(res);
 
-  const data: any = {};
+  const data: IData = {};
   res.map((block) => {
     data[`${block.block_name}`] = {
       block_title: block.block_title,
@@ -73,20 +79,3 @@ export async function getStaticProps() {
     },
   };
 }
-
-const Heading = styled.h2`
-  color: #fff;
-  font-size: 64px;
-  line-height: 80px;
-  font-family: 'Gilroy-Semibold';
-  text-align: center;
-  @media screen and (max-width: 768px) {
-    font-size: 36px;
-  }
-`;
-
-const Text = styled.div`
-  font-size: 24px;
-  p {
-  }
-`;

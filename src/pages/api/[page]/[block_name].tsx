@@ -1,18 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import pool from '../../../utils/db';
-import { IAPIError, IPageBlock } from 'src/utils/types';
+import pool from 'src/utils/db';
+import { IAPIError, IPageBlock, IUpdateBlockData } from 'src/utils/types';
 import { RowDataPacket } from 'mysql2';
 
-const AboutPageBlock = async (
-  req: NextApiRequest,
-  res: NextApiResponse<IPageBlock | IAPIError>
-) => {
-  const { block_name } = req.query;
+const GetPageBlock = async (req: NextApiRequest, res: NextApiResponse<IPageBlock | IAPIError>) => {
+  const { page, block_name } = req.query;
 
   if (req.method === 'GET') {
     try {
       const [rows] = await pool.execute<RowDataPacket[]>(
-        'SELECT * FROM page_about WHERE block_name = ?',
+        `SELECT * FROM page_${page} WHERE block_name = ?`,
         [block_name]
       );
       if (rows.length) {
@@ -24,10 +21,16 @@ const AboutPageBlock = async (
       return res.status(500).json({ error: 'Data fetch error' });
     }
   } else if (req.method === 'POST') {
-    const { content } = req.body;
+    const updateData: IUpdateBlockData = req.body;
+
+    const fieldsToUpdate = Object.keys(updateData)
+      .map((key) => `${key} = ?`)
+      .join(', ');
+    const valuesToUpdate = Object.values(updateData);
+
     try {
-      await pool.execute('UPDATE page_about SET content = ? WHERE block_name = ?', [
-        content,
+      await pool.execute(`UPDATE page_${page} SET ${fieldsToUpdate} WHERE block_name = ?`, [
+        ...valuesToUpdate,
         block_name,
       ]);
       return res.status(200).json({ message: 'Changes have been saved' });
@@ -39,4 +42,4 @@ const AboutPageBlock = async (
   }
 };
 
-export default AboutPageBlock;
+export default GetPageBlock;

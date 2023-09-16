@@ -15,7 +15,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   useEffect(() => console.log('Layout is here'));
 
   return (
-    <Container display="flex">
+    <Container display="flex" alignItems="stretch">
       <NavSectionVertical navConfig={sidebarConfig} />
       <Box flexGrow={1} style={{ position: 'relative' }}>
         <AdminHeader />

@@ -1,4 +1,4 @@
-import React, { FC, ButtonHTMLAttributes, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { Button as MUIButton } from '@mui/material';
 import styled from '@emotion/styled';
 import { TButton } from 'src/utils/types';

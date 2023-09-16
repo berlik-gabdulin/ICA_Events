@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { Container, Section } from 'src/components/globalStyles';
 import { TextBox, LogoBox, MemberBox } from './styles';
 import Image from 'next/image';

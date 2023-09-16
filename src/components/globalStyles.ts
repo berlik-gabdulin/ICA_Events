@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
+import { Accordion, Box } from '@mui/material';
+import customTheme from 'src/theme/customTheme';
 
 import palette from 'src/theme/palette';
 
@@ -42,6 +43,24 @@ export const Title = styled.h2`
   margin-bottom: 30px;
   text-align: center;
   font-size: 72px;
+  line-height: 1.2;
+  font-weight: 400;
+  color: ${palette.light.primary.light};
+  font-family: 'Gilroy', sans-serif;
+  @media screen and (max-width: 1024px) {
+    font-size: 48px;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 42px;
+  }
+  @media screen and (max-width: 480px) {
+    font-size: 36px;
+  }
+`;
+
+export const TitleH1 = styled.h1`
+  text-align: center;
+  font-size: 72px;
   line-height: 80px;
   font-weight: 400;
   color: ${palette.light.primary.light};
@@ -50,6 +69,9 @@ export const Title = styled.h2`
     font-size: 48px;
   }
   @media screen and (max-width: 768px) {
+    font-size: 42px;
+  }
+  @media screen and (max-width: 480px) {
     font-size: 36px;
   }
 `;
@@ -89,5 +111,13 @@ export const Arrow = styled.span`
   &:before,
   &:after {
     display: none;
+  }
+`;
+
+export const AccordionCustom = styled(Accordion)`
+  border: 1px solid ${customTheme.dark[20]};
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    border: 1px solid ${customTheme.dark[60]};
   }
 `;

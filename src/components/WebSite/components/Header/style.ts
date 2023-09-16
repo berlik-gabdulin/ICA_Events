@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
-import Link from 'next/link';
+import { Box, IconButton } from '@mui/material';
 import palette from 'src/theme/palette';
+import { NavLinkProps } from 'src/utils/types';
 
 export const LogoBox = styled(Box)`
   padding-top: 8px;
@@ -24,7 +24,7 @@ export const SocialBox = styled(Box)`
     margin-left: 8px;
     color: #fff;
     svg {
-      font-size: 26px;
+      height: 24px;
     }
     &:hover {
       svg {
@@ -39,6 +39,11 @@ export const NavBox = styled.ul`
   font-size: 20px;
   text-transform: uppercase;
 `;
+export const MenuBox = styled(Box)`
+  @media screen and (max-width: 1010px) {
+    display: none;
+  }
+`;
 
 export const NavItem = styled.li`
   display: block;
@@ -49,12 +54,13 @@ export const NavItem = styled.li`
   }
 `;
 
-export const NavLink = styled.a`
+export const NavLink = styled.a<NavLinkProps>`
   position: relative;
   display: block;
   padding: 0 8px;
   color: #fff;
   text-decoration: none;
+
   &::after {
     content: '';
     position: absolute;
@@ -62,14 +68,15 @@ export const NavLink = styled.a`
     margin: 5px auto 0;
     left: 0;
     right: 0;
-    bottom: -16px;
-    width: 50%;
-    max-width: 50%;
+    bottom: ${(props) => (props.isActive ? '-8px' : '-16px')};
+    width: ${(props) => (props.isActive ? '100%' : '50%')};
+    max-width: ${(props) => (props.isActive ? 'calc(100% - 16px)' : '50%')};
     height: 5px;
     background-color: ${palette.light.primary.light};
-    opacity: 0;
+    opacity: ${(props) => (props.isActive ? '1' : '0')};
     transition: all 0.3s ease-in-out;
   }
+
   &:hover,
   &:focus {
     &:after {
@@ -78,5 +85,13 @@ export const NavLink = styled.a`
       opacity: 1;
       bottom: -8px;
     }
+  }
+`;
+
+export const MenuButton = styled(IconButton)`
+  display: none;
+
+  @media screen and (max-width: 1010px) {
+    display: block;
   }
 `;

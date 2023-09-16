@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { fetchHomePageBlock, updateHomePageBlock } from 'src/utils/api';
+import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
 import { DeviderStyled } from 'src/components/globalStyles';
-import Input from 'src/components/Input/Input';
+import Input from 'src/components/Input';
 import CustomEditor from 'src/components/CustomEditor';
 import Button from 'src/components/Button';
 import { TContactsBlock } from 'src/utils/types';
@@ -21,18 +21,18 @@ const ContactsTab: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchHomePageBlock('contacts');
+      const data = await fetchPageBlock('home', 'contacts');
       const parsedData = JSON.parse(data.content);
       setValue('contactsHtml', parsedData.contactsHtml);
       setValue('photo', parsedData.photo);
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [setValue]);
 
   const handleSave: SubmitHandler<TContactsBlock> = async (formData) => {
     try {
-      await updateHomePageBlock('contacts', JSON.stringify(formData));
+      await updatePageBlock('home', 'contacts', { content: JSON.stringify(formData) });
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

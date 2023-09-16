@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../../utils/db';
+import db from 'src/utils/db';
 
-const GetAboutPage = async (req: NextApiRequest, res: NextApiResponse) => {
+const GetPageData = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { page } = req.query;
+
   if (req.method === 'GET') {
     try {
-      const [rows] = await db.execute('SELECT * FROM `page_about` ORDER BY `order_number` ASC');
+      const [rows] = await db.execute(`SELECT * FROM page_${page} ORDER BY order_number ASC`);
       return res.status(200).json(rows);
     } catch (error) {
       console.log(error);
@@ -15,4 +17,4 @@ const GetAboutPage = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default GetAboutPage;
+export default GetPageData;

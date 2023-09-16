@@ -15,7 +15,7 @@ const sidebarConfig: { subheader: string; items: SidebarConfigItem[] }[] = [
           { title: 'Home Page', path: '/admin/pages/home' },
           { title: 'About', path: '/admin/pages/about' },
           { title: 'Events', path: '/admin/pages/events' },
-          { title: 'Event Solutions', path: '/admin/pages/event-solutions' },
+          { title: 'Event Solutions', path: '/admin/pages/solutions' },
           { title: 'Media', path: '/admin/pages/media' },
           { title: 'Contacts', path: '/admin/pages/contacts' },
         ],

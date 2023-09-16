@@ -8,7 +8,7 @@ import { Box, Stack, Drawer } from '@mui/material';
 import useResponsive from '../../../hooks/useResponsive';
 import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
 // utils
-import cssStyles from '../../../utils/cssStyles';
+import cssStyles from 'src/utils/cssStyles';
 // config
 import { NAVBAR } from '../../../config';
 // components

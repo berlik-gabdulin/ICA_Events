@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import AdminLayout from 'src/components/AdminLayout';
-import { fetchAllAboutPageBlocks } from 'src/utils/api';
+import { fetchAllPageData } from 'src/utils/api';
 import dynamic from 'next/dynamic';
 import { IPageBlock } from 'src/utils/types';
+import Meta from 'src/components/Meta';
 
 const About: React.FC = () => {
   const [data, setData] = useState<IPageBlock[]>([]);
@@ -12,7 +13,7 @@ const About: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const blocks = await fetchAllAboutPageBlocks();
+        const blocks = await fetchAllPageData('about');
 
         setData(blocks);
       } catch (error) {
@@ -29,7 +30,7 @@ const About: React.FC = () => {
 
   const components = {
     ContentTab: dynamic(() => import('./tabs/ContentTab')),
-    MetaTab: dynamic(() => import('./tabs/MetaTab')),
+    MetaTab: () => <Meta page="about" />,
   };
 
   const renderTabContent = () => {

@@ -1,3 +1,6 @@
+// Reset styles
+import '../../public/assets/reset.css';
+
 // scroll bar
 import 'simplebar/src/simplebar.css';
 

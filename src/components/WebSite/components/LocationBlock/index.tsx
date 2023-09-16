@@ -1,9 +1,10 @@
 import React, { MouseEvent, useState } from 'react';
 import Map from 'src/utils/mapData';
 import { eurasia, ourNetwork } from 'src/utils/network';
-import { Container, Section, Title } from 'src/components/globalStyles';
+import { Container, Title } from 'src/components/globalStyles';
 import palette from 'src/theme/palette';
 import { Popover, Tooltip } from '@mui/material';
+import { SectionLocation } from './styles';
 
 const LocationBlock = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -21,7 +22,7 @@ const LocationBlock = () => {
   const filteredLocations = Map.locations.filter((location) => eurasia.includes(location.name));
 
   return (
-    <Section style={{ background: '#cddcdc' }}>
+    <SectionLocation>
       <Container>
         <Title>Choose your event destination</Title>
 
@@ -63,7 +64,7 @@ const LocationBlock = () => {
           </div>
         </Popover>
       </Container>
-    </Section>
+    </SectionLocation>
   );
 };
 

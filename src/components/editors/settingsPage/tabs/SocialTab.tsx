@@ -2,10 +2,10 @@ import { FormControlLabel, Switch } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Button from 'src/components/Button';
-import Input from 'src/components/Input/Input';
+import Input from 'src/components/Input';
 import { DeviderStyled } from 'src/components/globalStyles';
 import useSnackbar from 'src/hooks/useSnackbar';
-import { fetchSettingsPageBlock, updateSettingsPageBlock } from 'src/utils/api';
+import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import { TSocialLinks } from 'src/utils/types';
 
 type FormData = {
@@ -41,7 +41,7 @@ const SocialTab = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchSettingsPageBlock('social');
+      const data = await fetchPageBlock('settings', 'social');
       const parsedData = JSON.parse(data.content);
       setValue('socialLinks', parsedData.socialLinks);
       setLoading(false);
@@ -51,7 +51,7 @@ const SocialTab = () => {
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
-      await updateSettingsPageBlock('contacts', JSON.stringify(formData));
+      await updatePageBlock('settings', 'contacts', { content: JSON.stringify(formData) });
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

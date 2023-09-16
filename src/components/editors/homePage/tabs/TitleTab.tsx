@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { fetchHomePageBlock, updateHomePageBlock } from 'src/utils/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import useSnackbar from 'src/hooks/useSnackbar';
-import Input from 'src/components/Input/Input';
+import Input from 'src/components/Input';
 import Button from 'src/components/Button';
 import { Box, FormControlLabel, Switch } from '@mui/material';
 import { DeviderStyled } from 'src/components/globalStyles';
 import { TTitleTab } from 'src/utils/types';
+import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 
 const TitleTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ const TitleTab: React.FC = () => {
   useEffect(() => {
     const fetchTitle = async () => {
       try {
-        const data = await fetchHomePageBlock('title');
+        const data = await fetchPageBlock('home', 'title');
         setValue('content', JSON.parse(data.content));
         setLoading(false);
       } catch (error) {
@@ -37,7 +37,7 @@ const TitleTab: React.FC = () => {
 
   const handleSave: SubmitHandler<TTitleTab> = async (formData) => {
     try {
-      await updateHomePageBlock('title', JSON.stringify(formData.content));
+      await updatePageBlock('home', 'title', { content: JSON.stringify(formData.content) });
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

@@ -8,7 +8,7 @@ type BGBoxProps = TBGBox & ComponentPropsWithoutRef<typeof Section>;
 const BGBox: FC<BGBoxProps> = ({ bgImage, containerStyles, children, ...props }) => (
   <SectionStyled {...props}>
     <Container style={containerStyles}>{children}</Container>
-    <BGImage layout="fill" src={bgImage} alt="ICA Events" />
+    <BGImage layout="fill" src={bgImage} alt="ICA Events" priority />
   </SectionStyled>
 );
 

@@ -10,7 +10,7 @@ import {
   Box,
 } from '@mui/material';
 // utils
-import cssStyles from '../../../utils/cssStyles';
+import cssStyles from 'src/utils/cssStyles';
 // config
 import { ICON, NAVBAR } from '../../../config';
 
@@ -23,8 +23,8 @@ export interface ListItemStyleProps extends ListItemButtonProps {
 
 export const VerticalBox = styled(Box)`
   box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
-  height: 100vh;
   width: 320px;
+  min-height: 100vh;
   z-index: 100;
 `;
 

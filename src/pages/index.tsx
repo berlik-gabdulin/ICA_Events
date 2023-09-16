@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchAllHomePageData, fetchAllSettingsPageData } from 'src/utils/api';
+import { fetchAllPageData } from 'src/utils/api';
 import TitleBlock from 'src/components/WebSite/components/TitleBlock';
 import AboutBlock from 'src/components/WebSite/components/AboutBlock';
 import EventsBlock from 'src/components/WebSite/components/EventsBlock';
@@ -13,9 +13,7 @@ import {
   TLayoutProps,
   TMembership,
   TMetaFields,
-  TNavigation,
   TPageType,
-  TSocialLinks,
   TTestimonial,
   TTitleBlock,
 } from 'src/utils/types';
@@ -23,7 +21,6 @@ import Layout from 'src/components/WebSite/components/Layout';
 import CustomSVGMap from 'src/components/WebSite/components/LocationBlock';
 import Membership from 'src/components/WebSite/components/Membership';
 import { fetchLayoutData } from 'src/utils/fetchLayoutData';
-import MetaHead from 'src/components/MetaHead';
 
 type THomePageProps = {
   title: TPageType<TTitleBlock>;
@@ -37,11 +34,10 @@ type THomePageProps = {
 };
 
 const Home = (props: THomePageProps) => {
-  const { title, about, events, testimonials, membership, contacts, meta, layoutData } = props;
+  const { title, about, events, testimonials, membership, contacts, layoutData } = props;
 
   return (
     <>
-      <MetaHead meta={meta.content} />
       <Layout data={layoutData}>
         <TitleBlock {...title} />
         <AboutBlock {...about} />
@@ -58,8 +54,10 @@ const Home = (props: THomePageProps) => {
 export default Home;
 
 export async function getStaticProps() {
-  const res = await fetchAllHomePageData();
-  const layoutData = await fetchLayoutData();
+  const res = await fetchAllPageData('home');
+
+  console.log(res);
+  const layoutData = await fetchLayoutData(res);
 
   const data: IData = {};
   res.map((block) => {

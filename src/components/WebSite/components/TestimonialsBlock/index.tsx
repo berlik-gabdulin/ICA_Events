@@ -5,7 +5,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { TPageType, TTestimonial } from 'src/utils/types';
 import { Typography } from '@mui/material';
-import { Section, Title } from 'src/components/globalStyles';
 import {
   SliderContainer,
   Author,
@@ -19,6 +18,7 @@ import {
 import Quote from './quote.svg';
 import BgText from './icaevents.svg';
 import Image from 'next/image';
+import { SectionLocation } from '../LocationBlock/styles';
 
 const TestimonialsBlock: FC<TPageType<TTestimonial[]>> = ({ block_title, content }) => {
   const settings = {
@@ -42,7 +42,7 @@ const TestimonialsBlock: FC<TPageType<TTestimonial[]>> = ({ block_title, content
   };
 
   return (
-    <Section style={{ backgroundColor: '#cddcdc' }}>
+    <SectionLocation>
       <BackgroundTextWrapper>
         <BackgroundText>
           <Image src={BgText} layout="fill" alt="" />
@@ -69,7 +69,7 @@ const TestimonialsBlock: FC<TPageType<TTestimonial[]>> = ({ block_title, content
           <Typography variant="body2">No data</Typography>
         )}
       </SliderContainer>
-    </Section>
+    </SectionLocation>
   );
 };
 

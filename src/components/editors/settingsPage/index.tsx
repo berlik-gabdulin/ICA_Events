@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import AdminLayout from 'src/components/AdminLayout';
-import { fetchAllSettingsPageData } from 'src/utils/api';
 import dynamic from 'next/dynamic';
 import { IPageBlock } from 'src/utils/types';
+import Meta from 'src/components/Meta';
+import { fetchAllPageData } from 'src/utils/api';
 
 const Home: React.FC = () => {
   const [data, setData] = useState<IPageBlock[]>([]);
@@ -12,7 +13,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const blocks = await fetchAllSettingsPageData();
+        const blocks = await fetchAllPageData('settings');
         setData(blocks);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -31,7 +32,7 @@ const Home: React.FC = () => {
     NavigationTab: dynamic(() => import('./tabs/NavigationTab')),
     SocialTab: dynamic(() => import('./tabs/SocialTab')),
     AnalyticsTab: dynamic(() => import('./tabs/AnalyticsTab')),
-    MetaTab: dynamic(() => import('./tabs/MetaTab')),
+    MetaTab: () => <Meta page="settings" />,
   };
 
   const renderTabContent = () => {
