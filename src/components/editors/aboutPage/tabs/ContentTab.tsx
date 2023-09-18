@@ -64,10 +64,10 @@ const ContentTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
-          <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+          <Button variant="contained" type="button" color="primary" onClick={() => setOpen(true)}>
             Загрузить новый файл
           </Button>
-          <DropzoneDialog
+          {/* <DropzoneDialog
             open={open}
             onSave={(newFiles: any) => {
               setFiles(newFiles);
@@ -78,7 +78,7 @@ const ContentTab: React.FC = () => {
             showPreviews={true}
             maxFileSize={5000000}
             onClose={() => setOpen(false)}
-          />
+          /> */}
           <Input
             label="Image"
             shrink={getValues('about.image')}
