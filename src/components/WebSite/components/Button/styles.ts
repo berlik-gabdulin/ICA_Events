@@ -1,11 +1,11 @@
 import { Button as MUIButton } from '@mui/material';
 import styled from '@emotion/styled';
-import palette from 'src/theme/palette';
 import { TButton } from 'src/utils/types';
+import customTheme from 'src/theme/customTheme';
 
 export const ButtonStyled = styled(MUIButton)<TButton>(
   ({ style, variant = 'primary', customcolor }) => {
-    const color = customcolor ? customcolor : palette.light.primary.light;
+    const color = customcolor ? customcolor : customTheme.light[100];
 
     let styles = {
       border: `2px solid ${color}`,

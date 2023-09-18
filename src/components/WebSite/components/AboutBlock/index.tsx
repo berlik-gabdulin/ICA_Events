@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { TAboutTab, TPageType } from 'src/utils/types';
-import { Container, Section, Title } from 'src/components/globalStyles';
-import { SectionStyle, Bullets, Bullet, BulletValue, BulletLabel } from './styles';
+import { Container, Title } from 'src/components/globalStyles';
+import { SectionStyled, Bullets, Bullet, BulletValue, BulletLabel } from './styles';
 
 const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ block_title, content }) => {
   const { text, bullets } = content;
 
   return (
-    <Section style={SectionStyle}>
+    <SectionStyled>
       <Container>
         <Title>{block_title}</Title>
         <div dangerouslySetInnerHTML={{ __html: text }} />
@@ -23,7 +23,7 @@ const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ block_title, content }) =>
             : null}
         </Bullets>
       </Container>
-    </Section>
+    </SectionStyled>
   );
 };
 

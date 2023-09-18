@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import palette from 'src/theme/palette';
+import customTheme from 'src/theme/customTheme';
 
 export const Wrapper = styled(Box)`
   padding: 80px 122px;
   max-width: 50%;
   font-size: 24px;
   color: #fff;
-  background: ${palette.light.primary.dark};
+  background-color: ${customTheme.main[100]};
 `;
 
 export const Text = styled.div`
@@ -17,13 +17,13 @@ export const Text = styled.div`
     text-decoration: none;
     transition: all 0.2s ease-in-out;
     &:hover {
-      color: ${palette.light.primary.light};
+      color: ${customTheme.light[100]};
     }
   }
 `;
 
 export const SocialBox = styled(Box)`
-  color: ${palette.light.primary.light};
+  color: ${customTheme.light[100]};
   svg {
     height: 44px;
     width: 44px;
@@ -36,7 +36,7 @@ export const SocialBox = styled(Box)`
     width: 44px;
     height: 44px;
     margin-right: 20px;
-    color: ${palette.light.primary.light};
+    color: ${customTheme.light[100]};
     &:hover {
       svg {
         color: #fff;

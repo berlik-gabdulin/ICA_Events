@@ -31,7 +31,7 @@ export const Container = styled.div`
 
 export const MainTitle = styled.h1`
   font-size: 64px;
-  line-height: 80px;
+  line-height: 1.2;
   font-family: 'Gilroy-Semibold';
   text-align: center;
   @media screen and (max-width: 768px) {

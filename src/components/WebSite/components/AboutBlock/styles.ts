@@ -1,14 +1,16 @@
+import customTheme from 'src/theme/customTheme';
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import palette from 'src/theme/palette';
+import { Section } from 'src/components/globalStyles';
 
-export const SectionStyle = {
-  backgroundColor: '#367171',
-  paddingTop: '40px',
-  paddingBottom: '33px',
-  color: '#fff',
-  fontSize: '24px',
-};
+export const SectionStyled = styled(Section)`
+  background-color: ${customTheme.main[80]};
+  padding-top: 40px;
+  padding-bottom: 33px;
+  color: #fff;
+  font-size: 24px;
+`;
 
 export const Bullets = styled(Box)`
   display: flex;

@@ -56,7 +56,6 @@ export default Home;
 export async function getStaticProps() {
   const res = await fetchAllPageData('home');
 
-  console.log(res);
   const layoutData = await fetchLayoutData(res);
 
   const data: IData = {};
