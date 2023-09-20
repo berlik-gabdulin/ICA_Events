@@ -196,14 +196,23 @@ export type TContactsPage = {
 };
 
 export type TGallery = {
+  id: string;
   gallery_title: string;
   country: string;
   preview: string;
   year: string;
   urls: string[];
+  path: string;
+  isNew: boolean;
 };
 
 export type TGalleries = {
   image: string;
-  
-}
+  galleries: TGallery[];
+};
+
+export type TGalleryModalProps = {
+  open: boolean;
+  onClose: (updatedGallery?: TGallery) => void;
+  gallery: TGallery;
+};

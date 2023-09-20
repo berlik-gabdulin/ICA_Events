@@ -13,7 +13,7 @@ const GalleriesPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const blocks = await fetchAllPageData('solutions');
+        const blocks = await fetchAllPageData('galleries');
         setData(blocks);
       } catch (error) {
         console.error('Error fetching data:', error);
