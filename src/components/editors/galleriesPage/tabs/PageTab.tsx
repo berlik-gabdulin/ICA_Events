@@ -44,7 +44,7 @@ const ContentTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
-          <FileUploader inputName="about.image" setValue={setValue} folder="pages" />
+          <FileUploader inputName="galleries.image" setValue={setValue} folder="reports" />
           <Input
             label="Image"
             shrink={getValues('about.image')}

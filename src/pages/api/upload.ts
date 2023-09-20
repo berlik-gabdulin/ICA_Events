@@ -1,4 +1,3 @@
-// pages/api/upload.js
 import { NextApiRequest, NextApiResponse } from 'next';
 import { IncomingForm, File } from 'formidable';
 import fs from 'fs';
@@ -36,7 +35,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
 
     for (const [key, fileArray] of Object.entries(files)) {
       if (!Array.isArray(fileArray)) {
-        console.error('No files in request');
+        console.error(`No files for ${key} in request`);
         return res.status(400).json({ error: 'Файлы не найдены' });
       }
 
@@ -47,7 +46,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
         try {
           await fs.promises.rename(fileData.filepath, newPath);
 
-          uploadedFiles.push(`/uploads/${fileData.originalFilename}`);
+          uploadedFiles.push(`/uploads/${folder}/${fileData.originalFilename}`);
         } catch (error) {
           console.error(`Error while moving file ${fileData.originalFilename}:`, error);
           return res.status(500).json({ error: 'Ошибка при перемещении файла' });

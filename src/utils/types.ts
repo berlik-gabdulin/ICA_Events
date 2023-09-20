@@ -194,3 +194,16 @@ export type TContactsPage = {
   image: string;
   offices: TOffice[];
 };
+
+export type TGallery = {
+  gallery_title: string;
+  country: string;
+  preview: string;
+  year: string;
+  urls: string[];
+};
+
+export type TGalleries = {
+  image: string;
+  
+}
