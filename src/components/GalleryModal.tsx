@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import {
   Dialog,
@@ -28,13 +28,15 @@ type FormData = {
 };
 
 const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) => {
+  const [showForm, setShowForm] = useState(false);
+
   const { register, handleSubmit, setValue, getValues, control, watch } = useForm<FormData>({
     defaultValues: { gallery },
   });
 
   useEffect(() => {
     setValue('gallery', gallery);
-  }, [gallery]);
+  }, [setValue, gallery]);
 
   const setPath = () => {
     // Проверяем, существует ли имя галереи и не является ли оно пустой строкой
@@ -48,7 +50,9 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
     }
   };
 
-  // console.log(watch('gallery'));
+  useEffect(() => {
+    if (watch('gallery.isNew')) setShowForm(watch('gallery.isNew'));
+  }, [watch('gallery.isNew')]);
 
   const onSubmit: SubmitHandler<FormData> = (formData) => {
     onClose(formData.gallery);
@@ -77,7 +81,7 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
             {...register('gallery.gallery_title')}
             onBlur={setPath}
           />
-          {!watch('gallery.isNew') ? (
+          {showForm ? (
             <>
               <FileUploader
                 inputName="gallery.preview"
@@ -92,7 +96,7 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
                 shrink={getValues('gallery.preview')}
               />
 
-              {watch('gallery.preview') ? (
+              {watch('gallery.preview').length ? (
                 <Box sx={{ width: '100%', height: 100, position: 'relative', marginBottom: 3 }}>
                   <ImageStyled
                     src={getValues('gallery.preview')}
@@ -119,6 +123,7 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
                   )}
                 />
               </FormControl>
+              <Input label="Location" fullWidth {...register('gallery.location')} />
               <Input label="Year" fullWidth {...register('gallery.year')} />
               <FileUploader
                 inputName="gallery.urls"

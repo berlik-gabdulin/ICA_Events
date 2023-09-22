@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import Button from 'src/components/Button';
-import BtnFront from 'src/components/WebSite/components/Button';
 import customTheme from 'src/theme/customTheme';
-import { FONT_PRIMARY_BOLD } from 'src/theme/typography';
 
 export const Text = styled.div`
   font-size: 24px;
@@ -16,23 +13,13 @@ export const Text = styled.div`
 export const ThemeSection = styled.section`
   display: flex;
   &:nth-of-type(odd) {
-    flex-direction: row-reverse;
-    background-color: ${customTheme.main[20]};
+    background-color: #fff;
     h2 {
       color: ${customTheme.main[100]};
     }
-
-    .text_block {
-      justify-content: start;
-      padding-left: 60px;
-      padding-right: 15px;
-      @media screen and (max-width: 992px) {
-        padding: 0;
-      }
-    }
   }
   &:nth-of-type(even) {
-    background-color: ${customTheme.main[100]};
+    background-color: ${customTheme.main[20]};
 
     h2,
     h3 {
@@ -50,10 +37,6 @@ export const ThemeSection = styled.section`
         color: ${customTheme.light[100]};
       }
     }
-
-    .image_block {
-      justify-content: flex-start;
-    }
   }
 
   p {
@@ -68,125 +51,54 @@ export const ThemeSection = styled.section`
       font-size: 18px;
     }
   }
-
-  @media screen and (max-width: 992px) {
-    flex-direction: column !important;
-  }
 `;
 
-export const ImageBlock = styled.div`
+// Контейнер для квадрата
+export const SquareContainer = styled.div`
   position: relative;
-  display: flex;
-  justify-content: flex-end;
-  min-height: 300px;
-  position: relative;
-  width: 50%;
-  margin-right: -1px;
-
-  img {
-    object-fit: cover;
-  }
-
-  &:hover {
-    img {
-      filter: blur(2px) brightness(0.7);
-    }
-  }
-
-  @media screen and (max-width: 992px) {
-    width: 100%;
-  }
-
-  .image_inner_block {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 625px;
-  }
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
 `;
 
-export const TextBlock = styled.div`
-  flex: 1;
-  display: flex;
-  padding: 50px 0 140px;
-  width: 50%;
-  justify-content: flex-end;
-
-  @media screen and (max-width: 768px) {
-    width: 100% !important;
-    padding: 0;
-    align-items: center;
-  }
-
-  h2 {
-    font-size: 64px;
-    margin-bottom: 22px;
-    color: ${customTheme.main[100]};
-    @media screen and (max-width: 768px) {
-      font-size: 36px;
-      margin-bottom: 0px;
-    }
-  }
-  h3 {
-    font-size: 44px;
-    line-height: 1.2;
-    margin-top: 45px;
-    margin-bottom: 0;
-    color: ${customTheme.main[100]};
-    @media screen and (max-width: 768px) {
-      font-size: 36px;
-      margin-top: 30px;
-      margin-bottom: 16px;
-    }
-  }
-
-  p {
-    a {
-      color: #000;
-      transition: all 0.3s ease-in-out;
-      text-decoration: none;
-      &:hover {
-        color: ${customTheme.light[100]};
-      }
-    }
-  }
-
-  .text_inner_block {
-    width: 100%;
-    max-width: 625px;
-    padding-left: 15px;
-    padding-right: 15px;
-    @media screen and (max-width: 768px) {
-      padding: 30px 15px !important;
-    }
-  }
+// Содержимое квадрата
+export const SquareContent = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 `;
 
-export const LookMap = styled(Button)`
-  margin-top: -5px;
-  margin-left: -11px;
-  font-size: 24px;
-  font-family: ${FONT_PRIMARY_BOLD};
-  font-weight: 700;
-  color: ${customTheme.dark[100]};
-  svg {
-    height: 28px;
-    margin-right: 10px;
-  }
+// Изображение
+export const SquareImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
-export const MapButton = styled(BtnFront)`
-  cursor: pointer;
-  color: #000 !important;
-  opacity: 0;
-  transition: all 0.3s ease;
-  &:hover {
-    background-color: transparent;
-    color: ${customTheme.light[100]} !important;
-  }
+// Заголовок
+export const SquareTitle = styled.h2`
+  font-size: 2rem;
+  text-align: center;
+  margin: auto;
+`;
 
-  .image_block:hover & {
-    opacity: 1;
-  }
+// Блок с текстом на дне
+export const SquareTextBlock = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+`;
+
+export const SquareSubtitle = styled.h3`
+  margin: 0;
+`;
+
+export const SquareText = styled.span`
+  margin: 0;
 `;

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { fetchAllPageData, fetchPageBlock } from 'src/utils/api';
 import {
   IData,
-  TContactsPage,
+  TGalleries,
+  TGallery,
   TLayoutProps,
   TMetaFields,
-  TOffice,
   TPageType,
   TTitleBlock,
 } from 'src/utils/types';
@@ -13,24 +13,25 @@ import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section, TitleH1 } from 'src/components/globalStyles';
 import { fetchLayoutData } from 'src/utils/fetchLayoutData';
-import { Text, TextBlock, ThemeSection } from './styles';
+import { ThemeSection } from './styles';
 import Image from 'next/image';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import customTheme from 'src/theme/customTheme';
+import { Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+import styled from '@emotion/styled';
 
 type TSolutionsPageProps = {
-  page: TPageType<TContactsPage>;
+  page: TPageType<TGalleries>;
   meta: TPageType<TMetaFields>;
   bgBox: TPageType<TTitleBlock>;
   layoutData: TLayoutProps;
 };
 
 const ReportsPage = (props: TSolutionsPageProps) => {
-  const extractIframeSrc = (iframeHtml: string) => {
-    const doc = new DOMParser().parseFromString(iframeHtml, 'text/html');
-    const iframe = doc.querySelector('iframe');
-    return iframe ? iframe.getAttribute('src') : null;
-  };
+  const [currentGallery, setCurrentGallery] = useState<TGallery | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { meta, page, bgBox, layoutData } = props;
 
@@ -38,7 +39,49 @@ const ReportsPage = (props: TSolutionsPageProps) => {
 
   const { page_title } = meta.content;
 
-  const { image, offices } = page.content;
+  const { image, galleries } = page.content;
+
+  const openLightbox = (gallery: TGallery) => {
+    setCurrentGallery(gallery);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const fillEmptyGalleries = (galleries: TGallery[]): TGallery[] => {
+    const emptyGallery = {
+      id: 'empty',
+      gallery_title: '',
+      country: '',
+      preview: '',
+      year: '',
+      location: '',
+      urls: [],
+      path: '',
+      isNew: true,
+    };
+    while (galleries.length < 5) {
+      galleries.push({ ...emptyGallery, id: `empty-${galleries.length}` });
+    }
+    return galleries;
+  };
+
+  const groupedByCountry: { [key: string]: TGallery[] } = galleries.reduce<{
+    [key: string]: TGallery[];
+  }>((acc, gallery) => {
+    const country = gallery.country;
+    if (!acc[country]) {
+      acc[country] = [];
+    }
+    acc[country].push(gallery);
+    return acc;
+  }, {});
+
+  Object.keys(groupedByCountry).forEach((country) => {
+    groupedByCountry[country] = fillEmptyGalleries(groupedByCountry[country]);
+  });
 
   return (
     <>
@@ -51,25 +94,58 @@ const ReportsPage = (props: TSolutionsPageProps) => {
             <TitleH1>{page_title}</TitleH1>
           </Container>
         </Section>
-        {offices.map((item: TOffice) => (
-          <ThemeSection key={item.id}>
-            <TextBlock className="text_block">
-              <div className="text_inner_block">
-                <h2>{item.city}</h2>
-                <Text dangerouslySetInnerHTML={{ __html: item.text }} />
-
-                <h3>Hours</h3>
-                <Text dangerouslySetInnerHTML={{ __html: item.hours }} />
-              </div>
-            </TextBlock>
+        {Object.keys(groupedByCountry).map((country) => (
+          <ThemeSection key={country}>
+            <Container>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={4}>
+                  <h2>{country}</h2>
+                  {groupedByCountry[country].slice(0, 5).map((gallery, index) => (
+                    <Card
+                      key={index}
+                      onClick={() => openLightbox(gallery)}
+                      style={{ borderRadius: 0 }}
+                    >
+                      <CardActionArea>
+                        <CardMedia
+                          component="img"
+                          alt={gallery.gallery_title}
+                          height="100%"
+                          image={gallery.preview}
+                          style={{ objectFit: 'cover' }}
+                        />
+                        <CardContent
+                          style={{ position: 'absolute', backgroundColor: 'transparent' }}
+                        >
+                          <Typography variant="body2" color="text.secondary">
+                            {gallery.gallery_title}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  ))}
+                </Grid>
+              </Grid>
+            </Container>
           </ThemeSection>
         ))}
       </Layout>
+      {lightboxOpen && currentGallery && (
+        <StyledLightBox
+          open={lightboxOpen}
+          close={() => closeLightbox()}
+          slides={currentGallery.urls.map((url) => ({ src: url }))}
+        />
+      )}
     </>
   );
 };
 
 export default ReportsPage;
+
+const StyledLightBox = styled(Lightbox)`
+  z-index: 10000;
+`;
 
 export async function getStaticProps() {
   const res = await fetchAllPageData('galleries');

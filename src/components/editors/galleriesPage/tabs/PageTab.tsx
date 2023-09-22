@@ -22,6 +22,7 @@ export const InitialGallery = {
   country: '',
   preview: '',
   year: '',
+  location: '',
   urls: [],
   path: '',
   isNew: true,
@@ -46,16 +47,20 @@ const PageTab: React.FC = () => {
 
   const handleCloseModal = (updatedGallery?: TGallery) => {
     if (updatedGallery) {
-      const galleries = getValues('galleries.galleries');
-      const index = galleries.findIndex((g) => g.id === updatedGallery.id);
+      const currentGalleries = getValues('galleries.galleries');
+      let newGalleries;
+
+      const index = currentGalleries.findIndex((g) => g.id === updatedGallery.id);
       if (index !== -1) {
         // Обновляем существующую галерею
-        galleries[index] = updatedGallery;
+        newGalleries = [...currentGalleries];
+        newGalleries[index] = updatedGallery;
       } else {
         // Добавляем новую галерею
-        galleries.push(updatedGallery);
+        newGalleries = [...currentGalleries, updatedGallery];
       }
-      setValue('galleries.galleries', galleries);
+
+      setValue('galleries.galleries', newGalleries);
     }
     setSelectedGallery(InitialGallery);
     setOpenModal(false);

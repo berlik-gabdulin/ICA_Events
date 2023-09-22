@@ -3,6 +3,7 @@ import { Accept, useDropzone } from 'react-dropzone';
 import { UseFormSetValue } from 'react-hook-form';
 import styled from '@emotion/styled';
 import ImageWrapper from '../ImageWrapper';
+import { Box } from '@mui/material';
 
 interface FileUploaderProps {
   inputName: string;
@@ -57,7 +58,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     <Wrapper {...getRootProps()}>
       <input {...getInputProps()} />
       <p>Drag 'n' drop some files here, or click to select files</p>
-      <div>
+      <GridBox marginTop={3}>
         {files.map((fileUrl, index) => (
           <ImageWrapper
             key={index}
@@ -65,7 +66,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
             onDelete={() => setFiles(files.filter((file) => file !== fileUrl))}
           />
         ))}
-      </div>
+      </GridBox>
     </Wrapper>
   );
 };
@@ -86,4 +87,11 @@ const Wrapper = styled.div`
     border: 1px solid #ddd;
     cursor: pointer;
   }
+`;
+
+const GridBox = styled(Box)`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 `;

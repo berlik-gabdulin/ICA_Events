@@ -201,6 +201,7 @@ export type TGallery = {
   country: string;
   preview: string;
   year: string;
+  location: string;
   urls: string[];
   path: string;
   isNew: boolean;
