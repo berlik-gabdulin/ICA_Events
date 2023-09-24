@@ -23,9 +23,9 @@ const sidebarConfig: { subheader: string; items: SidebarConfigItem[] }[] = [
         title: 'Media',
         path: '/admin/media',
         children: [
-          { title: 'Galleries', path: '/admin/media/galleries' },
-          { title: 'News', path: '/admin/media/news' },
+          { title: 'Photo reports', path: '/admin/media/reports' },
           { title: 'Marketing materials', path: '/admin/media/materials' },
+          { title: 'News', path: '/admin/media/news' },
         ],
       },
       {

@@ -1,16 +1,20 @@
 import React, { useCallback, useState } from 'react';
-import { Accept, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { UseFormSetValue } from 'react-hook-form';
 import styled from '@emotion/styled';
 import ImageWrapper from '../ImageWrapper';
 import { Box } from '@mui/material';
+import { uploadFiles } from 'src/utils/api';
+import { TUpload } from 'src/utils/types';
 
 interface FileUploaderProps {
   inputName: string;
   setValue: UseFormSetValue<any>;
   folder?: string;
   prefix?: string;
+  preview?: boolean;
   maxFiles?: number;
+  onUpload?: (data?: any) => void;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
@@ -18,9 +22,11 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   setValue,
   folder,
   prefix,
+  preview = true,
   maxFiles = 1,
+  onUpload,
 }) => {
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<TUpload[]>([]);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -34,18 +40,16 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       });
 
       try {
-        const response = await fetch(`/api/upload${folder ? `?folder=${folder}` : ''}`, {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await response.json();
-        setFiles([...files, ...data.urls]);
-        setValue(inputName, prefix === 'preview' ? data.urls[0] : data.urls);
+        const data = await uploadFiles(folder || 'default', formData);
+        console.log('uploader data', data.files[0].type);
+        setFiles([...files, ...data.files]);
+        setValue(inputName, maxFiles === 1 ? data.urls[0] : data.urls);
+        if (onUpload) onUpload(data.files);
       } catch (error) {
         console.error('Error uploading files:', error);
       }
     },
-    [files, folder, inputName, setValue, prefix]
+    [files, folder, inputName, setValue, prefix, onUpload, maxFiles]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -58,12 +62,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     <Wrapper {...getRootProps()}>
       <input {...getInputProps()} />
       <p>Drag 'n' drop some files here, or click to select files</p>
+
       <GridBox marginTop={3}>
-        {files.map((fileUrl, index) => (
+        {files.map((file, index) => (
           <ImageWrapper
             key={index}
-            url={fileUrl}
-            onDelete={() => setFiles(files.filter((file) => file !== fileUrl))}
+            url={file.url}
+            fileName={file.name && !preview ? file.name : undefined}
+            onDelete={() => setFiles(files.filter((item) => item.url !== file.url))}
           />
         ))}
       </GridBox>

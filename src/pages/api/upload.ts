@@ -32,6 +32,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
     }
 
     const uploadedFiles = [];
+    const fileDetails = [];
 
     for (const [key, fileArray] of Object.entries(files)) {
       if (!Array.isArray(fileArray)) {
@@ -40,6 +41,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
 
       for (const file of fileArray) {
+        console.log(file);
         const fileData = file as unknown as File;
         const newPath = path.join((form as any).uploadDir, (fileData as any).originalFilename);
 
@@ -47,6 +49,16 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
           await fs.promises.rename(fileData.filepath, newPath);
 
           uploadedFiles.push(`/uploads/${folder}/${fileData.originalFilename}`);
+          fileDetails.push({
+            // Добавлено
+            url: `/uploads/${folder}/${fileData.originalFilename}`,
+            name: fileData.originalFilename,
+            size: fileData.size,
+            type:
+              fileData.mimetype?.split('/')[1] !== 'undefined'
+                ? fileData.mimetype?.split('/')[1]
+                : fileData.mimetype,
+          });
         } catch (error) {
           console.error(`Error while moving file ${fileData.originalFilename}:`, error);
           return res.status(500).json({ error: 'Ошибка при перемещении файла' });
@@ -54,6 +66,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
     }
 
-    res.status(200).json({ urls: uploadedFiles });
+    res.status(200).json({ urls: uploadedFiles, files: fileDetails });
   });
 }

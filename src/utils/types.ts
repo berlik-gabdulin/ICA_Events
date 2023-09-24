@@ -108,6 +108,7 @@ export type TNavigation = {
   path: string;
   isActive: boolean;
   order: number;
+  subMenu?: TNavigation;
 }[];
 
 export type NavLinkProps = {
@@ -216,4 +217,32 @@ export type TGalleryModalProps = {
   open: boolean;
   onClose: (updatedGallery?: TGallery) => void;
   gallery: TGallery;
+};
+
+export type TImagePreviewProps = {
+  src: string;
+  alt?: string;
+  width?: string | number;
+  height?: string | number;
+};
+
+export type TMaterial = {
+  id: string;
+  name: string;
+  link: string;
+  size: string;
+  format: string;
+  order: string;
+};
+
+export type TMaterialsPage = {
+  image: string;
+  materials: TMaterial[];
+};
+
+export type TUpload = {
+  url: string;
+  name: string;
+  size: number;
+  type: string;
 };

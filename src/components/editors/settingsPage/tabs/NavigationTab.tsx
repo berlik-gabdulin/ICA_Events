@@ -42,16 +42,49 @@ const NavigationTab: React.FC = () => {
       {!loading ? (
         <>
           {watch('nav').map((item, index) => (
-            <Box key={index} display="flex" gap={2}>
-              <Input label={item.name} value={item.label} {...register(`nav.${index}.label`)} />{' '}
-              <Input label="Path" value={item.path} disabled />{' '}
-              <Input label="Order" type="number" {...register(`nav.${index}.order`)} />{' '}
-              <FormControlLabel
-                control={<Switch {...register(`nav.${index}.isActive`)} checked={item.isActive} />}
-                label={item.isActive ? 'Active' : 'Inactive'}
-                style={{ marginBottom: 15 }}
-              />
-            </Box>
+            <>
+              <Box key={index} display="flex" gap={2}>
+                <Input label={item.name} value={item.label} {...register(`nav.${index}.label`)} />
+                <Input label="Path" value={item.path} disabled />
+                <Input label="Order" type="number" {...register(`nav.${index}.order`)} />
+                <FormControlLabel
+                  control={
+                    <Switch {...register(`nav.${index}.isActive`)} checked={item.isActive} />
+                  }
+                  label={item.isActive ? 'Active' : 'Inactive'}
+                  style={{ marginBottom: 15 }}
+                />
+              </Box>
+              {item.subMenu && item.subMenu.length > 0 && (
+                <div>
+                  {item.subMenu.map((subItem, subIndex) => (
+                    <Box key={subIndex} display="flex" gap={2}>
+                      <Input
+                        label={subItem.name}
+                        value={subItem.label}
+                        {...register(`nav.${index}.subMenu.${subIndex}.label` as any)}
+                      />
+                      <Input label="Sub-Path" value={subItem.path} disabled />
+                      <Input
+                        label="Sub-Order"
+                        type="number"
+                        {...register(`nav.${index}.subMenu.${subIndex}.order` as any)}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            {...register(`nav.${index}.subMenu.${subIndex}.isActive` as any)}
+                            checked={subItem.isActive}
+                          />
+                        }
+                        label={subItem.isActive ? 'Sub-Active' : 'Sub-Inactive'}
+                        style={{ marginBottom: 15 }}
+                      />
+                    </Box>
+                  ))}
+                </div>
+              )}
+            </>
           ))}
           <Button type="submit">Save</Button>
         </>

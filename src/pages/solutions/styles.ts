@@ -1,11 +1,42 @@
 import styled from '@emotion/styled';
 import { Section } from 'src/components/globalStyles';
 import customTheme from 'src/theme/customTheme';
+import { FONT_PRIMARY, FONT_PRIMARY_BOLD } from 'src/theme/typography';
 
 export const Text = styled.div`
-  font-size: 24px;
   p {
+    font-size: 20px;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: ${FONT_PRIMARY};
+    line-height: 1.2;
+    margin-top: 28px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+  h2 {
+    font-size: 34px;
+  }
+  h3 {
+    font-size: 32px;
+  }
+  h4 {
+    font-size: 30px;
+  }
+  h5 {
+    font-size: 28px;
+  }
+  h6 {
+    height: 26px;
+  }
+
   @media screen and (max-width: 480px) {
     font-size: 18px;
   }

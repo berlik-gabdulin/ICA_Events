@@ -5,6 +5,8 @@ import Input from 'src/components/Input';
 import Button from 'src/components/Button';
 import { TMetaFields } from 'src/utils/types';
 import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
+import FileUploader from './upload/FileUploader';
+import ImagePreview from './ImagePreview';
 
 type MetaProps = {
   page: string;
@@ -20,6 +22,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
     getValues,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<TMetaFields>({
     defaultValues: {
@@ -101,9 +104,18 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
         error={Boolean(errors.og_locale)}
         helperText={errors.og_locale?.message}
       />
+      <FileUploader
+        inputName="og_image"
+        setValue={setValue}
+        prefix="preview"
+        folder={`pages/${page}`}
+      />
+
+      <ImagePreview src={watch('og_image')} alt="Header Background" width={300} height={200} />
+
       <Input
         label="OG Image URL"
-        shrink={getValues('og_image')}
+        shrink={watch('og_image')}
         fullWidth
         {...register('og_image', { required: 'This field is required' })}
         error={Boolean(errors.og_image)}

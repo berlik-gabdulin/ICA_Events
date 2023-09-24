@@ -7,6 +7,7 @@ import Button from 'src/components/Button';
 import Input from 'src/components/Input';
 import { TAboutPage } from 'src/utils/types';
 import FileUploader from 'src/components/upload/FileUploader';
+import ImagePreview from 'src/components/ImagePreview';
 
 type FormData = {
   about: TAboutPage;
@@ -51,6 +52,7 @@ const ContentTab: React.FC = () => {
             fullWidth
             {...register('about.image')}
           />
+          <ImagePreview src={getValues('about.image')} />
           <CustomEditor name="about.text" control={control} watch={watch} />
         </>
       ) : (

@@ -18,10 +18,11 @@ import { TGalleryModalProps, TGallery } from 'src/utils/types';
 import Input from './Input';
 import Button from './Button';
 import { ourNetwork } from 'src/utils/network';
-import { InitialGallery } from './editors/galleriesPage/tabs/PageTab';
+import { InitialGallery } from './editors/reportsPage/tabs/PageTab';
 import styled from '@emotion/styled';
-import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
+import ImagePreview from './ImagePreview';
+import { removeFS } from 'src/utils/api';
 
 type FormData = {
   gallery: TGallery;
@@ -29,41 +30,48 @@ type FormData = {
 
 const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) => {
   const [showForm, setShowForm] = useState(false);
+  const [removedPhoto, setRemovedPhoto] = useState<string[]>([]);
 
   const { register, handleSubmit, setValue, getValues, control, watch } = useForm<FormData>({
     defaultValues: { gallery },
   });
 
-  useEffect(() => {
-    setValue('gallery', gallery);
-  }, [setValue, gallery]);
-
   const setPath = () => {
     // Проверяем, существует ли имя галереи и не является ли оно пустой строкой
-    if (getValues('gallery.isNew') && getValues('gallery.gallery_title').length > 8) {
+    if (watch('gallery.isNew') && getValues('gallery.gallery_title').length > 8) {
+      console.log('asdf');
       // Преобразуем имя галереи в snake_case
-      const initialFolderName = getValues('gallery.gallery_title').replace(/ /g, '_');
+      const initialFolderName = getValues('gallery.gallery_title')
+        .replace(/[\s&]/g, '_')
+        .replace('__', '_')
+        .replace('__', '_');
       // Устанавливаем начальное имя папки
       setValue('gallery.path', initialFolderName);
       setValue('gallery.id', uuidv4());
       setValue('gallery.isNew', false);
+      setShowForm(true);
     }
   };
 
   useEffect(() => {
-    if (watch('gallery.isNew')) setShowForm(watch('gallery.isNew'));
-  }, [watch('gallery.isNew')]);
+    if (!watch('gallery.isNew')) {
+      setShowForm(true);
+    }
+  }, [watch]);
 
   const onSubmit: SubmitHandler<FormData> = (formData) => {
+    removedPhoto.map(async (url) => await removeFS({ fileUrl: url }));
     onClose(formData.gallery);
   };
 
-  const removePhoto = (url: string) =>
+  const removePhoto = (url: string) => {
+    setRemovedPhoto((prev) => [...prev, url]);
+
     setValue(
       'gallery.urls',
       getValues('gallery.urls').filter((item) => item !== url)
     );
-
+  };
   return (
     <DialogStyled
       open={open}
@@ -93,19 +101,9 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
                 label="Preview"
                 fullWidth
                 {...register('gallery.preview')}
-                shrink={getValues('gallery.preview')}
+                shrink={watch('gallery.preview')}
               />
-
-              {watch('gallery.preview').length ? (
-                <Box sx={{ width: '100%', height: 100, position: 'relative', marginBottom: 3 }}>
-                  <ImageStyled
-                    src={getValues('gallery.preview')}
-                    alt="Header Background"
-                    layout="fill"
-                    style={{ objectFit: 'cover', borderRadius: 8 }}
-                  />
-                </Box>
-              ) : null}
+              <ImagePreview src={watch('gallery.preview')} />
 
               <FormControl fullWidth>
                 <InputLabel id={`country-label}`}>Country</InputLabel>
@@ -123,8 +121,11 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
                   )}
                 />
               </FormControl>
+
               <Input label="Location" fullWidth {...register('gallery.location')} />
+
               <Input label="Year" fullWidth {...register('gallery.year')} />
+
               <FileUploader
                 inputName="gallery.urls"
                 setValue={setValue}
@@ -132,21 +133,20 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
                 folder={`galleries/${getValues('gallery.path')}`}
                 maxFiles={20}
               />
+
               <Box>
-                {watch('gallery.urls').length ? (
-                  <GridBox marginTop={3}>
-                    {getValues('gallery.urls').map((url, index) => (
-                      <Box key={url} position="relative" width="100%">
-                        <ImageStyled src={url} alt={`Photo ${index}`} width={168} height={100} />
-                        <Box sx={{ position: 'absolute', top: 5, right: 5 }}>
-                          <IconButtonStyled onClick={() => removePhoto(url)}>
-                            <CloseIcon />
-                          </IconButtonStyled>
-                        </Box>
+                <GridBox marginTop={3}>
+                  {getValues('gallery.urls').map((url, index) => (
+                    <Box key={url} position="relative" width="100%">
+                      <ImagePreview src={url} alt={`Photo ${index}`} width={168} height={100} />
+                      <Box sx={{ position: 'absolute', top: 5, right: 5 }}>
+                        <IconButtonStyled onClick={() => removePhoto(url)}>
+                          <CloseIcon />
+                        </IconButtonStyled>
                       </Box>
-                    ))}
-                  </GridBox>
-                ) : null}
+                    </Box>
+                  ))}
+                </GridBox>
               </Box>
             </>
           ) : (
@@ -180,16 +180,6 @@ const DialogStyled = styled(Dialog)`
   margin: 0 auto;
   .MuiPaper-root {
     width: 100%;
-  }
-`;
-
-const ImageStyled = styled(Image)`
-  border-radius: 8px;
-  object-fit: cover !important;
-  margin-bottom: 15px;
-  img {
-    width: 100%;
-    height: 100%;
   }
 `;
 
