@@ -7,7 +7,6 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,6 +21,7 @@ import { TSolution, TSolutions } from 'src/utils/types';
 import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
 import styled from '@emotion/styled';
 import { FONT_PRIMARY_BOLD } from 'src/theme/typography';
+import Button from 'src/components/Button';
 
 const PageTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -160,7 +160,7 @@ const PageTab: React.FC = () => {
           <DialogContentText>This action cannot be undone.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="primary">
+          <Button onClick={() => setOpenDialog(false)} color="primary" type="button">
             Cancel
           </Button>
           <Button

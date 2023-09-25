@@ -80,15 +80,11 @@ const PageTab: React.FC = () => {
   };
 
   const onUpload = (index: number) => async (data: any) => {
-    console.log('data', data);
-    console.log('index', index);
     setValue(`materials.${index}.name`, data[0].name.replace('material_', '').split('_').join(' '));
     setValue(`materials.${index}.size`, formatBytes(data[0].size));
     setValue(`materials.${index}.format`, data[0].type);
     setValue(`materials.${index}.order`, data[0].order);
   };
-
-  useEffect(() => console.log('watch', watch('materials')), [watch()]);
 
   return !loading ? (
     <form onSubmit={handleSubmit(handleSave)}>

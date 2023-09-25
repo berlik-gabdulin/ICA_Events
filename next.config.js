@@ -5,6 +5,7 @@ const nextConfig = {
   },
   images: {
     domains: ['onsite.iteca.kz'], // разрешает загрузку изображений с основного домена
+    unoptimized: true,
   },
 };
 
