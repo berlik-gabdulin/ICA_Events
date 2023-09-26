@@ -19,10 +19,11 @@ const AboutTab: React.FC = () => {
       about: {
         text: '',
         bullets: {
-          countries: '7',
-          events: '50',
-          visitors: '100,000',
-          sqm: '50,000',
+          countries: '8',
+          events: '60+',
+          industries: '18',
+          attendees: '340.000+',
+          exhibitors: '9000+',
         },
       },
     },
@@ -65,6 +66,7 @@ const AboutTab: React.FC = () => {
             <Input
               shrink={getValues(`about.bullets.${bullet}`)}
               label={bullet}
+              fullWidth
               {...register(`about.bullets.${bullet}`)}
               disabled={!watch(`about.bullets.${bullet}`)}
               key={bullet}

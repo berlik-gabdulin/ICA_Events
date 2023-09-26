@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box, IconButton } from '@mui/material';
-import palette from 'src/theme/palette';
+import customTheme from 'src/theme/customTheme';
 import { NavLinkProps } from 'src/utils/types';
 
 export const LogoBox = styled(Box)`
@@ -14,7 +14,8 @@ export const LogoBox = styled(Box)`
 `;
 
 export const SocialBox = styled(Box)`
-  margin-bottom: 27px;
+  display: flex;
+  margin-bottom: 16px;
   justify-content: flex-end;
   padding: 0 10px;
   a {
@@ -28,7 +29,7 @@ export const SocialBox = styled(Box)`
     }
     &:hover {
       svg {
-        color: ${palette.light.primary.light};
+        color: ${customTheme.light[100]};
       }
     }
   }
@@ -46,11 +47,19 @@ export const MenuBox = styled(Box)`
 `;
 
 export const NavItem = styled.li`
+  position: relative;
   display: block;
   margin: 10px;
   list-style-type: none;
   &:last-of-type a {
     padding-right: 0;
+  }
+
+  &:hover {
+    > div {
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
   }
 `;
 
@@ -72,7 +81,7 @@ export const NavLink = styled.a<NavLinkProps>`
     width: ${(props) => (props.isActive ? '100%' : '50%')};
     max-width: ${(props) => (props.isActive ? 'calc(100% - 16px)' : '50%')};
     height: 5px;
-    background-color: ${palette.light.primary.light};
+    background-color: ${customTheme.light[100]};
     opacity: ${(props) => (props.isActive ? '1' : '0')};
     transition: all 0.3s ease-in-out;
   }
@@ -93,5 +102,29 @@ export const MenuButton = styled(IconButton)`
 
   @media screen and (max-width: 1010px) {
     display: block;
+  }
+`;
+
+export const SubNav = styled.div`
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 300px;
+  padding: 12px;
+  background: #fff;
+  transform: translate(-50%, 40px);
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+  z-index: 1500;
+  a {
+    color: #000;
+    transition: all 0.3s ease-in-out;
+    &:after {
+      display: none;
+    }
+    &:hover {
+      color: ${customTheme.main[60]} !important;
+    }
   }
 `;

@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import Logo from '/public/logo/logo.svg';
 import Image from 'next/image';
-import { LogoBox, MenuBox, MenuButton, NavBox, NavItem, NavLink, SocialBox } from './style';
+import { LogoBox, MenuBox, MenuButton, NavBox, NavItem, NavLink, SocialBox, SubNav } from './style';
 import Link from 'next/link';
 import { Container } from 'src/components/globalStyles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -30,7 +30,7 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
           <LogoBox display="flex" flexGrow={1}>
             <Link href="/" passHref>
               <a>
-                <Image src={Logo} width={241} height={163} alt="ICA Events" priority />
+                <Image src={Logo} width={150} height={120} alt="ICA Events" priority />
               </a>
             </Link>
           </LogoBox>
@@ -44,7 +44,7 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
           </MenuButton>
           <MenuBox display="flex" flexDirection="column">
             {hasActiveLink ? (
-              <SocialBox display="flex">
+              <SocialBox>
                 {social?.linkedin?.isActive ? (
                   <Link href={social?.linkedin?.url}>
                     <a target="_blank" aria-label="LinkedIn">
@@ -82,6 +82,22 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
                     <Link passHref href={item.path}>
                       <NavLink isActive={router.pathname === item.path}>{item.label}</NavLink>
                     </Link>
+                    {item.subMenu && item.subMenu.length > 0 && (
+                      <SubNav>
+                        {item.subMenu.map((subItem) =>
+                          subItem.isActive ? (
+                            <Link passHref href={subItem.path} key={subItem.path}>
+                              <NavLink
+                                isActive={router.pathname === subItem.path}
+                                style={{ color: '#000' }}
+                              >
+                                {subItem.label}
+                              </NavLink>
+                            </Link>
+                          ) : null
+                        )}
+                      </SubNav>
+                    )}
                   </NavItem>
                 ) : null
               )}

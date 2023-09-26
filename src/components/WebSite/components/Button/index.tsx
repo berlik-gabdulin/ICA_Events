@@ -3,7 +3,7 @@ import { ButtonStyled } from './styles';
 import { TButton } from 'src/utils/types';
 
 const Button: FC<TButton> = ({
-  type = 'submit',
+  type = 'button',
   variant = 'contained',
   size = 'large',
   color = 'primary',

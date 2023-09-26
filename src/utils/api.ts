@@ -1,7 +1,7 @@
 // utils/api.ts
 
 import { API_BASE_URL } from 'src/config';
-import { IAPIError, IPageBlock, IUpdateBlockData } from './types';
+import { IAPIError, ICreateBlockData, IPageBlock, IUpdateBlockData } from './types';
 
 export const fetchPageBlock = async (page: string, blockName: string): Promise<IPageBlock> => {
   const response = await fetch(`${API_BASE_URL}/api/${page}/${blockName}`);
@@ -28,12 +28,28 @@ export const updatePageBlock = async (
   blockName: string,
   updateData: IUpdateBlockData
 ) => {
+  // console.log('dataIsFetched', page, blockName);
   const response = await fetch(`${API_BASE_URL}/api/${page}/${blockName}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(updateData),
+  });
+  // console.log('data is posted');
+  if (!response.ok) {
+    const data = (await response.json()) as IAPIError;
+    throw new Error(data.error);
+  }
+};
+
+export const createPageBlock = async (page: string, blockData: ICreateBlockData) => {
+  const response = await fetch(`${API_BASE_URL}/api/${page}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(blockData),
   });
   if (!response.ok) {
     const data = (await response.json()) as IAPIError;

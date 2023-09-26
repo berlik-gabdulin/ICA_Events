@@ -5,6 +5,7 @@ import { Container, Title } from 'src/components/globalStyles';
 import palette from 'src/theme/palette';
 import { Popover, Tooltip } from '@mui/material';
 import { SectionLocation } from './styles';
+import customTheme from 'src/theme/customTheme';
 
 const LocationBlock = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -24,7 +25,7 @@ const LocationBlock = () => {
   return (
     <SectionLocation>
       <Container>
-        <Title>Choose your event destination</Title>
+        <Title color={customTheme.main[100]}>Choose your event destination</Title>
 
         <svg viewBox={Map.viewBox} className="svg-map">
           {filteredLocations.map((location) => {
@@ -44,11 +45,18 @@ const LocationBlock = () => {
                       ? {
                           fill:
                             selectedCountry === location.name
-                              ? palette.light.primary.light
-                              : palette.light.primary.dark,
+                              ? customTheme.light[100]
+                              : customTheme.main[100],
                           cursor: 'pointer',
+                          stroke: customTheme.light[20],
+                          strokeWidth: '0.3px',
                         }
-                      : { fill: 'grey', cursor: 'default' }
+                      : {
+                          fill: '#aeaeae',
+                          cursor: 'default',
+                          stroke: '#5b5b5b',
+                          strokeWidth: '0.3px',
+                        }
                   }
                   name={location.name}
                 />

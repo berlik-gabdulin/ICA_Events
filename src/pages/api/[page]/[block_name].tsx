@@ -6,6 +6,8 @@ import { RowDataPacket } from 'mysql2';
 const GetPageBlock = async (req: NextApiRequest, res: NextApiResponse<IPageBlock | IAPIError>) => {
   const { page, block_name } = req.query;
 
+  console.log(page, block_name);
+
   if (req.method === 'GET') {
     try {
       const [rows] = await pool.execute<RowDataPacket[]>(
@@ -22,11 +24,17 @@ const GetPageBlock = async (req: NextApiRequest, res: NextApiResponse<IPageBlock
     }
   } else if (req.method === 'POST') {
     const updateData: IUpdateBlockData = req.body;
-
+    console.log(updateData);
     const fieldsToUpdate = Object.keys(updateData)
       .map((key) => `${key} = ?`)
       .join(', ');
     const valuesToUpdate = Object.values(updateData);
+
+    console.log('valuesToUpdate', valuesToUpdate);
+
+    console.log(
+      `UPDATE page_${page} SET content = ${valuesToUpdate} WHERE block_name = ${block_name}`
+    );
 
     try {
       await pool.execute(`UPDATE page_${page} SET ${fieldsToUpdate} WHERE block_name = ?`, [
@@ -35,7 +43,7 @@ const GetPageBlock = async (req: NextApiRequest, res: NextApiResponse<IPageBlock
       ]);
       return res.status(200).json({ message: 'Changes have been saved' });
     } catch (error) {
-      return res.status(500).json({ error: 'Error during data update' });
+      return res.status(500).json({ error: 'Error during data update', message: error });
     }
   } else {
     return res.status(405).end();

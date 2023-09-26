@@ -29,7 +29,9 @@ const Events: React.FC = () => {
   };
 
   const components = {
-    PageTab: dynamic(() => import('./tabs/PageTab')),
+    ApiTab: dynamic(() => import('./tabs/ApiTab')),
+    EventsTab: dynamic(() => import('./tabs/EventsTab')),
+    ManualTab: dynamic(() => import('./tabs/ManualTab')),
     MetaTab: () => <Meta page="events" />,
   };
 

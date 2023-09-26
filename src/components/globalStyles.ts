@@ -34,6 +34,9 @@ export const MainTitle = styled.h1`
   line-height: 1.2;
   font-family: 'Gilroy-Semibold';
   text-align: center;
+  @media screen and (max-width: 1200px) {
+    font-size: 48px;
+  }
   @media screen and (max-width: 768px) {
     font-size: 36px;
   }
@@ -45,7 +48,7 @@ export const Title = styled.h2`
   font-size: 72px;
   line-height: 1.2;
   font-weight: 400;
-  color: ${palette.light.primary.light};
+  color: ${({ color }: { color?: string }) => (color ? color : customTheme.light[100])};
   font-family: 'Gilroy', sans-serif;
   @media screen and (max-width: 1024px) {
     font-size: 48px;
@@ -63,7 +66,7 @@ export const TitleH1 = styled.h1`
   font-size: 72px;
   line-height: 80px;
   font-weight: 400;
-  color: ${palette.light.primary.light};
+  color: ${customTheme.light[100]};
   font-family: 'Gilroy', sans-serif;
   @media screen and (max-width: 1024px) {
     font-size: 48px;
@@ -88,10 +91,10 @@ export const Arrow = styled.span`
     font-size: 60px !important;
     justify-content: center;
     align-items: center;
-    fill: ${palette.light.primary.light};
+    fill: ${customTheme.light[100]};
     &:hover,
     &:focus {
-      fill: ${palette.light.primary.dark};
+      fill: ${customTheme.dark[100]};
     }
   }
   &.slick-prev {

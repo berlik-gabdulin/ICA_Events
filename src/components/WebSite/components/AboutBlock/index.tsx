@@ -16,7 +16,16 @@ const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ block_title, content }) =>
           {bullets
             ? Object.entries(bullets).map(([label, value]) => (
                 <Bullet key={label}>
-                  <BulletValue>{value}</BulletValue>
+                  <BulletValue>
+                    {value.includes('+') ? (
+                      <>
+                        {value.split('+')[0]}
+                        <span>+</span>
+                      </>
+                    ) : (
+                      value
+                    )}
+                  </BulletValue>
                   <BulletLabel>{label}</BulletLabel>
                 </Bullet>
               ))

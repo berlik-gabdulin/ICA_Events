@@ -19,6 +19,13 @@ export interface IPageBlock {
   order: number;
 }
 
+export interface ICreateBlockData {
+  block_name: string;
+  block_title: string;
+  content: string;
+  order_number: number;
+}
+
 export interface IUploadResponse {
   url: string;
 }
@@ -123,13 +130,16 @@ export type TLayoutProps = {
 };
 
 export type TEvent = {
+  id: string;
   title: string;
   description: string;
   image_profile: string;
-  beginDate: string;
-  endDate: string;
+  dateRange: string;
   location: string;
+  country: string;
+  industry: string;
   website: string;
+  pastEvent: boolean;
 };
 
 export type TEvents = {

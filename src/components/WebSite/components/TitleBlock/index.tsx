@@ -8,24 +8,22 @@ import { Buttons, ContainerStyles } from './styles';
 const TitleBlock: React.FC<TPageType<TTitleBlock>> = ({ block_title, content }) => {
   const { title, buttons, bgImage } = content;
 
-  const btnMargin = { margin: '0 16px' };
-
   return (
     <BGBox textAlign="center" bgImage={bgImage} containerStyles={ContainerStyles}>
       <MainTitle>{title}</MainTitle>
-      <Buttons>
+      <Buttons gap="8px">
         {buttons?.events?.isActive ? (
-          <Button variant="outlined" style={btnMargin}>
+          <Button variant="outlined" type="button">
             {buttons.events.label}
           </Button>
         ) : null}
         {buttons?.stand?.isActive ? (
-          <Button variant="outlined" style={btnMargin}>
+          <Button variant="outlined" type="button">
             {buttons.stand.label}
           </Button>
         ) : null}
         {buttons?.contact?.isActive ? (
-          <Button variant="outlined" style={btnMargin}>
+          <Button variant="outlined" type="button">
             {buttons.contact.label}
           </Button>
         ) : null}

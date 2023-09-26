@@ -17,7 +17,7 @@ export const Card = styled.div`
   max-width: 380px;
   height: 620px;
   min-height: 100%;
-  box-shadow: 0 0px 15px -2px rgba(4, 78, 78, 0.5);
+  box-shadow: 0 0px 15px -4px rgba(4, 78, 78, 0.4);
   background: #ffffff;
 `;
 
@@ -82,9 +82,10 @@ export const CardText = styled.p`
 
 export const CardItemDate = styled.p`
   margin-bottom: 15px;
-  line-height: 12px;
+  line-height: 1.2;
   color: #000000;
   font-size: 24px;
+  height: 58px;
   font-family: 'Gilroy-Semibold', sans-serif;
   @media only screen and (max-width: 425px) {
     margin-bottom: 0;

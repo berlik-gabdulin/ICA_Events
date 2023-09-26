@@ -14,8 +14,9 @@ import {
 import Image from 'next/image';
 import Button from '../Button';
 import palette from 'src/theme/palette';
+import { TEvent } from 'src/utils/types';
 
-export const EventCard = ({ event }: any) => {
+export const EventCard = ({ event }: { event: TEvent }) => {
   const openInNewTab = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -29,7 +30,7 @@ export const EventCard = ({ event }: any) => {
         <CardInner>
           <CardTitle>{event.title}</CardTitle>
           <CardText>{event.description}</CardText>
-          <CardItemDate>{event.beginDate}</CardItemDate>
+          <CardItemDate>{event.dateRange}</CardItemDate>
           <CardItemAddress>{event.location}</CardItemAddress>
           <Button
             onClick={() => openInNewTab(event.website)}

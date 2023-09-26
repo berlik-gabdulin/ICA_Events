@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import Input from 'src/components/Input';
@@ -42,7 +42,7 @@ const NavigationTab: React.FC = () => {
       {!loading ? (
         <>
           {watch('nav').map((item, index) => (
-            <>
+            <Fragment key={item.path}>
               <Box key={index} display="flex" gap={2}>
                 <Input label={item.name} value={item.label} {...register(`nav.${index}.label`)} />
                 <Input label="Path" value={item.path} disabled />
@@ -84,7 +84,7 @@ const NavigationTab: React.FC = () => {
                   ))}
                 </div>
               )}
-            </>
+            </Fragment>
           ))}
           <Button type="submit">Save</Button>
         </>
