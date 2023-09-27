@@ -1,5 +1,4 @@
 import React from 'react';
-import { fetchAllPageData } from 'src/utils/api';
 import TitleBlock from 'src/components/WebSite/components/TitleBlock';
 import AboutBlock from 'src/components/WebSite/components/AboutBlock';
 import EventsBlock from 'src/components/WebSite/components/EventsBlock';
@@ -7,6 +6,7 @@ import TestimonialsBlock from 'src/components/WebSite/components/TestimonialsBlo
 import ContactBlock from 'src/components/WebSite/components/ContactBlock';
 import {
   IData,
+  IPageBlock,
   TAboutTab,
   TContactsBlock,
   TEvent,
@@ -20,7 +20,8 @@ import {
 import Layout from 'src/components/WebSite/components/Layout';
 import CustomSVGMap from 'src/components/WebSite/components/LocationBlock';
 import Membership from 'src/components/WebSite/components/Membership';
-import { fetchLayoutData } from 'src/utils/fetchLayoutData';
+import { RowDataPacket } from 'mysql2';
+import db from 'src/utils/db';
 
 type THomePageProps = {
   title: TPageType<TTitleBlock>;
@@ -54,12 +55,35 @@ const Home = (props: THomePageProps) => {
 export default Home;
 
 export async function getStaticProps() {
-  const res = await fetchAllPageData('home');
+  // Получение всех данных страницы
+  const [pageData] = (await db.execute(
+    `SELECT * FROM page_home ORDER BY order_number ASC`
+  )) as RowDataPacket[];
 
-  const layoutData = await fetchLayoutData(res);
+  const [settings] = (await db.execute(
+    `SELECT * FROM page_settings ORDER BY order_number ASC`
+  )) as RowDataPacket[];
+
+  const settingsData: IData = {};
+  settings.map((block: IPageBlock) => {
+    settingsData[`${block.block_name}`] = {
+      block_title: block.block_title,
+      content: JSON.parse(block.content),
+    };
+  });
+
+  const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
+  const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
+
+  const layoutData = {
+    social: settingsData.social?.content?.socialLinks || {},
+    footer: settingsData.main?.content?.footer || '',
+    navigation: settingsData.navigation?.content?.nav || [],
+    meta: metaContent,
+  };
 
   const data: IData = {};
-  res.map((block) => {
+  pageData.map((block: IPageBlock) => {
     data[`${block.block_name}`] = {
       block_title: block.block_title,
       content: JSON.parse(block.content),

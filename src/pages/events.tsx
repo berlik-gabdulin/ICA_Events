@@ -197,7 +197,7 @@ export async function getStaticProps() {
         id: event.projectID ? event.projectID : event.id,
         title: event.project ? event.project : event.title,
         description: event.description,
-        image_profile: event.logomini ? event.logomini : event.logo,
+        image_profile: country !== 'Azerbaijan' ? event.logomini : event.image_profile,
         beginDate: event.beginDate,
         dateRange: formatDateRange(event),
         location: event.location,
@@ -209,7 +209,7 @@ export async function getStaticProps() {
     )
     .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.endDate).getTime());
 
-  // console.log(combinedEvents);
+  console.log(combinedEvents);
 
   return {
     props: {

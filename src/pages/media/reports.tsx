@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { fetchAllPageData, fetchPageBlock } from 'src/utils/api';
 import {
   IData,
+  IPageBlock,
   TGalleries,
   TGallery,
   TLayoutProps,
@@ -12,7 +12,6 @@ import {
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section, TitleH1 } from 'src/components/globalStyles';
-import { fetchLayoutData } from 'src/utils/fetchLayoutData';
 import { ThemeSection } from 'src/components/WebSite/pageStyles/stylesReports';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { Grid } from '@mui/material';
@@ -20,6 +19,8 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import styled from '@emotion/styled';
 import SquareComponent from 'src/components/SquareComponent';
+import db from 'src/utils/db';
+import { RowDataPacket } from 'mysql2';
 
 type TSolutionsPageProps = {
   page: TPageType<TGalleries>;
@@ -135,12 +136,40 @@ const StyledLightBox = styled(Lightbox)`
 `;
 
 export async function getStaticProps() {
-  const res = await fetchAllPageData('galleries');
-  const resTitle = await fetchPageBlock('home', 'title');
-  const layoutData = await fetchLayoutData(res);
+  // Получение всех данных страницы
+  const [pageData] = (await db.execute(
+    `SELECT * FROM page_galleries ORDER BY order_number ASC`
+  )) as RowDataPacket[];
+
+  // Получение данных для заголовка
+  const [titleData] = (await db.execute(
+    `SELECT * FROM page_home WHERE block_name = 'title'`
+  )) as RowDataPacket[];
+
+  const [settings] = (await db.execute(
+    `SELECT * FROM page_settings ORDER BY order_number ASC`
+  )) as RowDataPacket[];
+
+  const settingsData: IData = {};
+  settings.map((block: IPageBlock) => {
+    settingsData[`${block.block_name}`] = {
+      block_title: block.block_title,
+      content: JSON.parse(block.content),
+    };
+  });
+
+  const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
+  const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
+
+  const layoutData = {
+    social: settingsData.social?.content?.socialLinks || {},
+    footer: settingsData.main?.content?.footer || '',
+    navigation: settingsData.navigation?.content?.nav || [],
+    meta: metaContent,
+  };
 
   const data: IData = {};
-  res.map((block) => {
+  pageData.map((block: IPageBlock) => {
     data[`${block.block_name}`] = {
       block_title: block.block_title,
       content: JSON.parse(block.content),
@@ -149,10 +178,11 @@ export async function getStaticProps() {
 
   return {
     props: {
-      ...data,
+      page: data.page,
+      meta: data.meta,
       bgBox: {
-        block_title: resTitle.block_name,
-        content: JSON.parse(resTitle.content),
+        block_title: titleData[0].block_name,
+        content: JSON.parse(titleData[0].content),
       },
       layoutData,
     },

@@ -112,19 +112,21 @@ export const SubNav = styled.div`
   left: 50%;
   width: 300px;
   padding: 12px;
-  background: #fff;
+  background: ${customTheme.darker[80]};
   transform: translate(-50%, 40px);
   font-size: 16px;
   transition: all 0.3s ease-in-out;
   z-index: 1500;
   a {
-    color: #000;
+    margin: 10px;
+    color: #fff !important;
+    padding: 4px 2px;
     transition: all 0.3s ease-in-out;
     &:after {
       display: none;
     }
     &:hover {
-      color: ${customTheme.main[60]} !important;
+      color: ${customTheme.light[100]} !important;
     }
   }
 `;
