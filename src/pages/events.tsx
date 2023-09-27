@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllPageData, fetchPageBlock } from 'src/utils/api';
 import {
   IData,
   IPageBlock,
@@ -13,7 +12,6 @@ import {
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section, TitleH1 } from 'src/components/globalStyles';
-import { fetchLayoutData } from 'src/utils/fetchLayoutData';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
