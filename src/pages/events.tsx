@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchAllPageData, fetchPageBlock } from 'src/utils/api';
 import {
   IData,
+  IPageBlock,
   TEvent,
   TEvents,
   TLayoutProps,
@@ -24,6 +25,8 @@ import {
   SearchInput,
   SearchLabel,
 } from 'src/components/WebSite/pageStyles/stylesEvents';
+import { RowDataPacket } from 'mysql2';
+import db from 'src/utils/db';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;
@@ -174,14 +177,40 @@ const Events = (props: TMaterialsPageProps) => {
 export default Events;
 
 export async function getStaticProps() {
-  const res = await fetchAllPageData('events');
-  const resTitle = await fetchPageBlock('home', 'title');
-  const layoutData = await fetchLayoutData(res);
+  // Получение всех данных страницы
+  const [pageData] = (await db.execute(
+    `SELECT * FROM page_events ORDER BY order_number ASC`
+  )) as RowDataPacket[];
 
-  console.log(res);
+  // Получение данных для заголовка
+  const [titleData] = (await db.execute(
+    `SELECT * FROM page_home WHERE block_name = 'title'`
+  )) as RowDataPacket[];
+
+  const [settings] = (await db.execute(
+    `SELECT * FROM page_settings ORDER BY order_number ASC`
+  )) as RowDataPacket[];
+
+  const settingsData: IData = {};
+  settings.map((block: IPageBlock) => {
+    settingsData[`${block.block_name}`] = {
+      block_title: block.block_title,
+      content: JSON.parse(block.content),
+    };
+  });
+
+  const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
+  const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
+
+  const layoutData = {
+    social: settingsData.social?.content?.socialLinks || {},
+    footer: settingsData.main?.content?.footer || '',
+    navigation: settingsData.navigation?.content?.nav || [],
+    meta: metaContent,
+  };
 
   const data: IData = {};
-  res.map((block) => {
+  pageData.map((block: IPageBlock) => {
     data[`${block.block_name}`] = {
       block_title: block.block_title,
       content: JSON.parse(block.content),
@@ -189,7 +218,6 @@ export async function getStaticProps() {
   });
 
   const allEvents = { ...data.manual.content, ...data.events.content };
-  console.log(allEvents);
 
   const combinedEvents = Object.entries(allEvents)
     .flatMap(([country, events]) =>
@@ -209,17 +237,15 @@ export async function getStaticProps() {
     )
     .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.endDate).getTime());
 
-  console.log(combinedEvents);
-
   return {
     props: {
       ...data,
-      combinedEvents,
       bgBox: {
-        block_title: resTitle.block_name,
-        content: JSON.parse(resTitle.content),
+        block_title: titleData[0].block_name,
+        content: JSON.parse(titleData[0].content),
       },
       layoutData,
+      combinedEvents,
     },
   };
 }
