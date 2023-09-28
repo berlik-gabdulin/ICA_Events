@@ -11,7 +11,7 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Section, TitleH1 } from 'src/components/globalStyles';
+import { Container, Path, Section, TitleH1 } from 'src/components/globalStyles';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
@@ -25,6 +25,8 @@ import {
 } from 'src/components/WebSite/pageStyles/stylesEvents';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
+import Image from 'next/image';
+import PathImg from 'public/assets/arc.png';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;
@@ -166,6 +168,9 @@ const Events = (props: TMaterialsPageProps) => {
               )}
             </GridBox>
           </Container>
+          <Path>
+            <Image src={PathImg} layout="fill" alt="Path" />
+          </Path>
         </Section>
       </Layout>
     </>

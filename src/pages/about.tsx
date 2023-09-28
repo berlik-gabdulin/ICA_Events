@@ -11,10 +11,12 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Section, TitleH1 } from 'src/components/globalStyles';
+import { Container, Section, TitleH1, Path } from 'src/components/globalStyles';
 import { Text } from '../components/WebSite/pageStyles/stylesAbout';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { RowDataPacket } from 'mysql2';
+import PathImg from 'public/assets/arc.png';
+import Image from 'next/image';
 
 type TAboutPageProps = {
   page: TPageType<TAboutPage>;
@@ -48,6 +50,9 @@ const About = (props: TAboutPageProps) => {
             <TitleH1>{page_title}</TitleH1>
             <Text dangerouslySetInnerHTML={{ __html: text }} />
           </Container>
+          <Path>
+            <Image src={PathImg} layout="fill" alt="Path" />
+          </Path>
         </Section>
       </Layout>
     </>

@@ -96,7 +96,7 @@ export const CardItemAddress = styled.p`
   font-size: 16px;
   line-height: 20px;
   height: 40px;
-  margin-bottom: 31px;
+  margin-bottom: 20px;
 `;
 
 export const BtnStyles = {

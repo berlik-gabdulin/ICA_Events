@@ -11,7 +11,7 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Section, TitleH1 } from 'src/components/globalStyles';
+import { Container, Path, Section, TitleH1 } from 'src/components/globalStyles';
 import { ThemeSection } from 'src/components/WebSite/pageStyles/stylesReports';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { Grid } from '@mui/material';
@@ -21,6 +21,8 @@ import styled from '@emotion/styled';
 import SquareComponent from 'src/components/SquareComponent';
 import db from 'src/utils/db';
 import { RowDataPacket } from 'mysql2';
+import Image from 'next/image';
+import PathImg from 'public/assets/arc.png';
 
 type TSolutionsPageProps = {
   page: TPageType<TGalleries>;
@@ -96,7 +98,7 @@ const ReportsPage = (props: TSolutionsPageProps) => {
             <TitleH1>{page_title}</TitleH1>
           </Container>
         </Section>
-        {Object.keys(groupedByCountry).map((country) => (
+        {Object.keys(groupedByCountry).map((country, index) => (
           <ThemeSection key={country} style={{ padding: '40px 0' }}>
             <Container>
               <Grid container spacing="24px">
@@ -115,6 +117,11 @@ const ReportsPage = (props: TSolutionsPageProps) => {
                 ))}
               </Grid>
             </Container>
+            {Object.keys(groupedByCountry).length === index + 1 ? (
+              <Path>
+                <Image src={PathImg} layout="fill" alt="Path" />
+              </Path>
+            ) : null}
           </ThemeSection>
         ))}
         {lightboxOpen && currentGallery && (

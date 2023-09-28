@@ -124,3 +124,19 @@ export const AccordionCustom = styled(Accordion)`
     border: 1px solid ${customTheme.dark[60]};
   }
 `;
+
+export const Path = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  max-width: 800px;
+  > span {
+    display: block !important;
+    position: absolute !important;
+    padding-bottom: 136% !important;
+    width: 100% !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+`;

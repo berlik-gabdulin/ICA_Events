@@ -8,10 +8,11 @@ import {
   faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
 import { TContactsBlock, TPageType, TSocialLinks } from 'src/utils/types';
-import { SocialBox, Wrapper, PhotoBox, Text } from './styles';
-import { Title } from 'src/components/globalStyles';
+import { SocialBox, Wrapper, PhotoBox, Text, SocialTitle } from './styles';
+import { Path, Title } from 'src/components/globalStyles';
 import Image from 'next/image';
 import Link from 'next/link';
+import PathImg from 'public/assets/arc_light.png';
 
 const ContactBlock: React.FC<TPageType<TContactsBlock> & { socialLinks: TSocialLinks }> = ({
   content,
@@ -31,7 +32,7 @@ const ContactBlock: React.FC<TPageType<TContactsBlock> & { socialLinks: TSocialL
         <Text dangerouslySetInnerHTML={{ __html: contactsHtml }} />
         {hasActiveLink ? (
           <>
-            <Title style={{ textAlign: 'left', marginTop: 140 }}>Get social</Title>
+            <SocialTitle>Get social</SocialTitle>
             <SocialBox display="flex">
               {socialLinks?.linkedin?.isActive ? (
                 <Link href={socialLinks?.linkedin?.url}>
@@ -64,6 +65,9 @@ const ContactBlock: React.FC<TPageType<TContactsBlock> & { socialLinks: TSocialL
             </SocialBox>
           </>
         ) : null}
+        <Path style={{ maxWidth: '500px', margin: 'auto', zIndex: 1 }}>
+          <Image src={PathImg} layout="fill" alt="Path" />
+        </Path>
       </Wrapper>
     </Box>
   );

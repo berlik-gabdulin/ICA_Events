@@ -9,8 +9,8 @@ const nextConfig = {
     DATABASE_URL: process.env.DATABASE_URL,
   },
   images: {
-    domains: ['onsite.iteca.kz'], // разрешает загрузку изображений с основного домена
-    unoptimized: true,
+    domains: ['onsite.iteca.kz', 'exhibitions.az', 'iteca.uz'], // разрешает загрузку изображений с основного домена
+    unoptimized: false,
   },
 };
 

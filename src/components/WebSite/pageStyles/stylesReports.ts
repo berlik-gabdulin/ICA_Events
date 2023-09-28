@@ -12,6 +12,7 @@ export const Text = styled.div`
 
 export const ThemeSection = styled.section`
   display: flex;
+  position: relative;
   &:nth-of-type(odd) {
     background-color: #fff;
   }

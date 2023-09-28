@@ -1,16 +1,25 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
+import { Title } from 'src/components/globalStyles';
 import customTheme from 'src/theme/customTheme';
 
 export const Wrapper = styled(Box)`
+  position: relative;
   padding: 80px 122px;
   max-width: 50%;
   font-size: 24px;
   color: #fff;
   background-color: ${customTheme.main[100]};
+  overflow: hidden;
+  @media screen and (max-width: 992px) {
+    max-width: 100%;
+    padding: 30px;
+  }
 `;
 
 export const Text = styled.div`
+  position: relative;
+  z-index: 3;
   a {
     position: relative;
     color: #fff;
@@ -23,6 +32,8 @@ export const Text = styled.div`
 `;
 
 export const SocialBox = styled(Box)`
+  position: relative;
+  z-index: 3;
   color: ${customTheme.light[100]};
   svg {
     height: 44px;
@@ -44,6 +55,9 @@ export const SocialBox = styled(Box)`
     }
     &:first-of-type {
       margin-left: -8px;
+      @media screen and (max-width: 992px) {
+        margin-left: 0;
+      }
     }
   }
 `;
@@ -54,5 +68,16 @@ export const PhotoBox = styled(Box)`
   position: relative;
   img {
     object-fit: cover;
+  }
+  @media screen and (max-width: 992px) {
+    display: none;
+  }
+`;
+
+export const SocialTitle = styled(Title)`
+  margin-top: 140px;
+  text-align: left;
+  @media screen and (max-width: 992px) {
+    margin-top: 40px;
   }
 `;

@@ -1,45 +1,43 @@
 version: '3'
 
 services:
-  # web:
-  # build:
-  #   context: .
-  #   dockerfile: Dockerfile
-  # ports:
-  #   - '3000:3000'
-  # environment:
-  #   - DATABASE_URL=mysql://user:1234@db:3306/myDataBase
-  # depends_on:
-  #   - db
-  # volumes:
-  #   - ./node_modules:/app/node_modules
-  #   - ./src:/app/src
-  #   - ./public:/app/public
+  web:
+  build:
+    context: .
+    dockerfile: Dockerfile
+  ports:
+    - '3000:3000'
+  environment:
+    - DATABASE_URL=mysql://icaeventscom_berlik:BerlikAdmin2018@localhost:3306/icaeventscom_main
+  volumes:
+    - ./node_modules:/app/node_modules
+    - ./src:/app/src
+    - ./public:/app/public
 
-  phpmyadmin:
-    depends_on:
-      - db
-    image: phpmyadmin/phpmyadmin
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_ARBITRARY: 1
-    restart: always
-    ports:
-      - 8080:80
+#   phpmyadmin:
+#     depends_on:
+#       - db
+#     image: phpmyadmin/phpmyadmin
+#     environment:
+#       PMA_HOST: db
+#       PMA_PORT: 3306
+#       PMA_ARBITRARY: 1
+#     restart: always
+#     ports:
+#       - 8080:80
 
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: myDataBase
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
-    ports:
-      - '3306:3306'
-    volumes:
-      - mysql-data:/var/lib/mysql
-    platform: linux/amd64
+#   db:
+#     image: mysql:5.7
+#     environment:
+#       MYSQL_ROOT_PASSWORD: 1234
+#       MYSQL_DATABASE: myDataBase
+#       MYSQL_USER: user
+#       MYSQL_PASSWORD: 1234
+#     ports:
+#       - '3306:3306'
+#     volumes:
+#       - mysql-data:/var/lib/mysql
+#     platform: linux/amd64
 
-volumes:
-  mysql-data:
+# volumes:
+#   mysql-data:

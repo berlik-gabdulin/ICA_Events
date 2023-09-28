@@ -28,6 +28,7 @@ export const DownloadCard = styled.div`
   align-items: center;
   padding: 40px 50px;
   margin-bottom: 90px;
+  background-color: #fff;
   box-shadow: 0 0 21px rgba(4, 78, 78, 0.1);
   @media screen and (max-width: 1600px) {
     padding: 20px 25px;

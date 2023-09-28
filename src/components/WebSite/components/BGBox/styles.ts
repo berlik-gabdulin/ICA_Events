@@ -5,6 +5,7 @@ import { Section } from 'src/components/globalStyles';
 export const SectionStyled = styled(Section)`
   position: relative;
   min-height: 300px;
+  z-index: 1;
   &:before {
     content: '';
     position: absolute;
