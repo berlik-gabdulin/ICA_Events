@@ -6,7 +6,7 @@ const pool = createPool({
   database: 'icaeventscom_main',
   password: 'BerlikAdmin2018',
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 20,
   queueLimit: 0,
 });
 
