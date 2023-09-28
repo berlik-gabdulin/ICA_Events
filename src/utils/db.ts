@@ -1,7 +1,7 @@
 import { createPool } from 'mysql2/promise';
 
 const pool = createPool({
-  host: 'https://db.ica-events.com',
+  host: 'db.ica-events.com',
   user: 'icaeventscom_berlik',
   database: 'icaeventscom_main',
   password: 'BerlikAdmin2018',
