@@ -72,7 +72,16 @@ export const eurasia = [
   'South Ossetia',
   'Transnistria',
 ];
-export const ourNetwork = [
+export const galleryCountries = [
+  'United Kingdom',
+  'Poland / Romania',
+  'United Arab Emirates',
+  'Turkey',
+  'Kazakhstan',
+  'Azerbaijan',
+  'Uzbekistan',
+];
+export const countries = [
   'United Kingdom',
   'Poland',
   'Romania',

@@ -57,6 +57,7 @@ const ReportsPage = (props: TSolutionsPageProps) => {
       id: 'empty',
       gallery_title: '',
       country: '',
+      countryInLocation: '',
       preview: '',
       year: '',
       location: '',
@@ -110,7 +111,9 @@ const ReportsPage = (props: TSolutionsPageProps) => {
                     <SquareComponent
                       imageSrc={gallery.preview}
                       subtitle={gallery.gallery_title}
-                      text={`${gallery.location}, ${gallery.country}`}
+                      text={`${gallery.location}, ${
+                        gallery.countryInLocation ? gallery.countryInLocation : gallery.country
+                      }`}
                       onClick={() => (gallery.preview ? openLightbox(gallery) : null)}
                     />
                   </Grid>

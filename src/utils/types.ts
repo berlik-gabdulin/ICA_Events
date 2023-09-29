@@ -211,6 +211,7 @@ export type TGallery = {
   id: string;
   gallery_title: string;
   country: string;
+  countryInLocation: string;
   preview: string;
   year: string;
   location: string;

@@ -26,6 +26,7 @@ export const InitialGallery = {
   id: '',
   gallery_title: '',
   country: '',
+  countryInLocation: '',
   preview: '',
   year: '',
   location: '',
@@ -132,7 +133,7 @@ const PageTab: React.FC = () => {
           >
             Add New Gallery
           </Button>
-          <Stack direction="row" spacing={2} marginBottom={3} marginTop={3}>
+          <Stack direction="row" spacing={2} marginBottom={3} marginTop={3} flexWrap="wrap">
             {getValues('galleries.galleries').map((gallery: TGallery, index: number) => (
               <GalleryCard
                 key={index}

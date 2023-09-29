@@ -27,6 +27,7 @@ import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
+import { countries } from 'src/utils/network';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;
@@ -51,16 +52,13 @@ const Events = (props: TMaterialsPageProps) => {
   const [filterCountry, setFilterCountry] = useState('');
   const [filterIndustry, setFilterIndustry] = useState('');
   const [eventsToShow, setEventsToShow] = useState<TEvent[]>([]);
-  const [countries, setCountries] = useState<string[]>([]);
   const [industries, setIndustries] = useState<string[]>([]);
 
   useEffect(() => {
-    const uniqueCountries = Array.from(new Set(combinedEvents.map((event) => event.country)));
     const uniqueIndustries = Array.from(
       new Set(combinedEvents.flatMap((event) => event.industry || []))
     );
 
-    setCountries(uniqueCountries);
     setIndustries(uniqueIndustries);
   }, [combinedEvents]);
 
@@ -72,7 +70,7 @@ const Events = (props: TMaterialsPageProps) => {
       const title = event.title.toLowerCase(),
         description = event.description.toLowerCase(),
         location = event.location.toLowerCase(),
-        textDate = event.dateRange.toLowerCase(),
+        textDate = event.dateRange,
         country = event.country.toLowerCase(),
         industry = event.industry ? event.industry.toLowerCase() : '';
 

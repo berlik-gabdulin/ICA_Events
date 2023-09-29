@@ -17,7 +17,7 @@ import FileUploader from 'src/components/upload/FileUploader';
 import { TGalleryModalProps, TGallery } from 'src/utils/types';
 import Input from './Input';
 import Button from './Button';
-import { ourNetwork } from 'src/utils/network';
+import { countries, galleryCountries } from 'src/utils/network';
 import { InitialGallery } from './editors/reportsPage/tabs/PageTab';
 import styled from '@emotion/styled';
 import { v4 as uuidv4 } from 'uuid';
@@ -108,11 +108,28 @@ const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) 
               <FormControl fullWidth>
                 <InputLabel id={`country-label}`}>Country</InputLabel>
                 <Controller
+                  name={`gallery.countryInLocation`}
+                  control={control}
+                  render={({ field }) => (
+                    <Select label="Country" fullWidth {...field} style={{ marginBottom: 15 }}>
+                      {countries.map((country) => (
+                        <MenuItem key={country} value={country}>
+                          {country}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel id={`country-label}`}>Group Country</InputLabel>
+                <Controller
                   name={`gallery.country`}
                   control={control}
                   render={({ field }) => (
                     <Select label="Country" fullWidth {...field} style={{ marginBottom: 15 }}>
-                      {ourNetwork.map((country) => (
+                      {galleryCountries.map((country) => (
                         <MenuItem key={country} value={country}>
                           {country}
                         </MenuItem>

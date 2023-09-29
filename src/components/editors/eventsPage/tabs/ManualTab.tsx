@@ -19,16 +19,18 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileUploader from 'src/components/upload/FileUploader';
 import ImagePreview from 'src/components/ImagePreview';
-import { ourNetwork } from 'src/utils/network';
 import { v4 as uuidv4 } from 'uuid';
+import { formatDateRange } from 'src/utils/formatDateRange';
+import { countries } from 'src/utils/network';
 
 const InitEvent = {
   id: uuidv4(),
   title: '',
   description: '',
   website: '',
-  logomini: '',
+  image_profile: '',
   beginDate: '',
+  dateRange: '',
   endDate: '',
   location: '',
   industry: '',
@@ -63,9 +65,16 @@ const EventInputPage: React.FC = () => {
   }, [setValue]);
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
+    const events = formData.events.map((event: any) => ({
+      ...event,
+      dateRange: formatDateRange(event),
+    }));
+
+    console.log(events);
+
     try {
       setLoading(true);
-      await updatePageBlock('events', 'manual', { content: JSON.stringify(formData) });
+      await updatePageBlock('events', 'manual', { content: JSON.stringify({ events }) });
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {
@@ -92,11 +101,11 @@ const EventInputPage: React.FC = () => {
                   />
                   <Input label="Website" fullWidth {...register(`events.${index}.website`)} />
                   <FileUploader
-                    inputName={`events.${index}.logomini`}
+                    inputName={`events.${index}.image_profile`}
                     setValue={setValue}
                     folder="events"
                   />
-                  <ImagePreview src={watch(`events.${index}.logomini`)} />
+                  <ImagePreview src={watch(`events.${index}.image_profile`)} />
                   <Input label="Begin Date" fullWidth {...register(`events.${index}.beginDate`)} />
                   <Input label="End Date" fullWidth {...register(`events.${index}.endDate`)} />
                   <Input label="Location" fullWidth {...register(`events.${index}.location`)} />
@@ -109,7 +118,7 @@ const EventInputPage: React.FC = () => {
                       control={control}
                       render={({ field }) => (
                         <Select label="Country" fullWidth {...field} style={{ marginBottom: 15 }}>
-                          {ourNetwork.map((country) => (
+                          {countries.map((country) => (
                             <MenuItem key={country} value={country}>
                               {country}
                             </MenuItem>
