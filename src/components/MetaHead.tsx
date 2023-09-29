@@ -4,7 +4,7 @@ import { TMetaFields } from 'src/utils/types';
 
 const MetaHead: FC<{ meta: TMetaFields }> = ({ meta }) => (
   <Head>
-    <title>{meta.page_title}</title>
+    <title>{meta.meta_title}</title>
     <meta name="description" content={meta.meta_description} />
     <meta name="keywords" content={meta.meta_keywords} />
     <meta property="og:description" content={meta.og_description} />

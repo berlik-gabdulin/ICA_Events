@@ -22,6 +22,8 @@ import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
 import styled from '@emotion/styled';
 import { FONT_PRIMARY_BOLD } from 'src/theme/typography';
 import Button from 'src/components/Button';
+import FileUploader from 'src/components/upload/FileUploader';
+import ImagePreview from 'src/components/ImagePreview';
 
 const PageTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -80,12 +82,14 @@ const PageTab: React.FC = () => {
   return !loading ? (
     <form onSubmit={handleSubmit(handleSave)}>
       <Box>
+        <FileUploader inputName="image" setValue={setValue} folder="pages" prefix="solutions" />
         <Input
           label="Background"
-          shrink={getValues('image')}
+          shrink={watch('image')}
           fullWidth
           {...register('image', { required: 'This field is required' })}
         />
+        <ImagePreview src={getValues('image')} />
         <DeviderStyled />
 
         <Heading>Intro text</Heading>
@@ -123,9 +127,32 @@ const PageTab: React.FC = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Box display="flex" flexDirection="column" gap={2}>
-                <Input label="Title" {...register(`solutions.${index}.title`)} fullWidth />
+                <Input
+                  label="Title"
+                  {...register(`solutions.${index}.title`)}
+                  shrink={getValues(`solutions.${index}.title`)}
+                  fullWidth
+                />
                 <CustomEditor name={`solutions.${index}.text`} control={control} watch={watch} />
-                <Input label="Image" {...register(`solutions.${index}.image`)} fullWidth />
+                <DeviderStyled />
+                <FileUploader
+                  inputName={`solutions.${index}.image`}
+                  setValue={setValue}
+                  folder="pages"
+                  prefix="solutions"
+                />
+
+                <Input
+                  label="Image"
+                  {...register(`solutions.${index}.image`)}
+                  shrink={getValues(`solutions.${index}.image`)}
+                  fullWidth
+                />
+                <ImagePreview
+                  src={getValues(`solutions.${index}.image`)}
+                  width={264}
+                  height={216}
+                />
 
                 <Button
                   variant="outlined"

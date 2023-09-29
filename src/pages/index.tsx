@@ -45,7 +45,7 @@ const Home = (props: THomePageProps) => {
         <EventsBlock {...events} />
         <CustomSVGMap />
         <TestimonialsBlock {...testimonials} />
-        <Membership {...membership} />
+        {/* <Membership {...membership} /> */}
         <ContactBlock {...contacts} socialLinks={layoutData.social} />
       </Layout>
     </>

@@ -53,6 +53,7 @@ export type TButton = {
 
 export type TMetaFields = {
   id: number;
+  meta_title: string;
   page_title: string;
   meta_description: string;
   meta_keywords: string;

@@ -10,7 +10,7 @@ const nextConfig = {
   },
   images: {
     domains: ['onsite.iteca.kz', 'exhibitions.az', 'iteca.uz'], // разрешает загрузку изображений с основного домена
-    unoptimized: false,
+    unoptimized: true,
   },
 };
 

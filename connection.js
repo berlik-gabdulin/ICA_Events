@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 
 const connection = mysql.createConnection({

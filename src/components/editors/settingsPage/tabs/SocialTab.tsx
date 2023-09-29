@@ -51,7 +51,7 @@ const SocialTab = () => {
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
-      await updatePageBlock('settings', 'contacts', { content: JSON.stringify(formData) });
+      await updatePageBlock('settings', 'social', { content: JSON.stringify(formData) });
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

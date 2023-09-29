@@ -13,15 +13,15 @@ const SquareComponent: FC<{
   const isImage = !!imageSrc;
 
   return (
-    <SquareContainer onClick={onClick}>
+    <SquareContainer onClick={onClick} isImage={isImage}>
       <SquareContent>
         {isImage ? (
-          <SquareImage src={imageSrc} alt="Description" />
+          <SquareImage src={imageSrc} alt="Description" className="SquareImage" />
         ) : (
           <SquareTitle>{title}</SquareTitle>
         )}
         {subtitle && (
-          <SquareTextBlock>
+          <SquareTextBlock className="SquareTextBlock">
             <SquareSubtitle>{subtitle}</SquareSubtitle>
             <SquareText>{text}</SquareText>
           </SquareTextBlock>
@@ -34,12 +34,17 @@ const SquareComponent: FC<{
 export default SquareComponent;
 
 // Контейнер для квадрата
-export const SquareContainer = styled.div`
+const SquareContainer = styled.div<{ isImage: boolean }>`
   position: relative;
   width: 100%;
   padding-bottom: 100%;
   overflow: hidden;
   background-color: ${customTheme.main[100]};
+  cursor: ${(props) => (props.isImage ? 'pointer' : 'inherit')};
+
+  &:hover .SquareTextBlock {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
 `;
 
 // Содержимое квадрата
@@ -83,6 +88,7 @@ export const SquareTextBlock = styled.div`
   color: white;
   padding: 12px 40px;
   font-family: ${FONT_PRIMARY_BOLD};
+  transition: all 0.3s ease-in-out;
 `;
 
 export const SquareSubtitle = styled.h3`

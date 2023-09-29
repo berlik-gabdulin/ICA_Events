@@ -9,9 +9,14 @@ import { EventCard } from '../EventCard';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Button from '../Button';
 import { Arrow } from './styles';
+import { useRouter } from 'next/router';
 
 const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
-  // const { events } = content;
+  const router = useRouter();
+
+  const handleGoRoute = (route: string) => {
+    router.push(route);
+  };
 
   const settings = {
     dots: false,
@@ -63,7 +68,11 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
           <Typography variant="body2">No data</Typography>
         )}
 
-        <Button variant="outlined" style={{ margin: '60px auto 0' }}>
+        <Button
+          variant="outlined"
+          style={{ margin: '60px auto 0' }}
+          onClick={() => handleGoRoute('/events')}
+        >
           All Events
         </Button>
       </Container>

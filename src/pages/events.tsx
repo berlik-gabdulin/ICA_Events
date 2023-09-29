@@ -223,22 +223,8 @@ export async function getStaticProps() {
   const allEvents = { ...data.manual.content, ...data.events.content };
 
   const combinedEvents = Object.entries(allEvents)
-    .flatMap(([country, events]) =>
-      (events as TEvent[]).map((event: any) => ({
-        id: event.projectID ? event.projectID : event.id,
-        title: event.project ? event.project : event.title,
-        description: event.description,
-        image_profile: country !== 'Azerbaijan' ? event.logomini : event.image_profile,
-        beginDate: event.beginDate,
-        dateRange: formatDateRange(event),
-        location: event.location,
-        industry: event.industry,
-        website: event.programme ? event.programme : event.website,
-        country: country,
-        pastEvent: new Date() > new Date(event.endDate),
-      }))
-    )
-    .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.endDate).getTime());
+    .flatMap(([country, events]) => events as TEvent[])
+    .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.beginDate).getTime());
 
   return {
     props: {

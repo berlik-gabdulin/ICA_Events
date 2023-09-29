@@ -27,6 +27,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
   } = useForm<TMetaFields>({
     defaultValues: {
       page_title: '',
+      meta_title: '',
       meta_description: '',
       meta_keywords: '',
       og_description: '',
@@ -73,6 +74,15 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
       />
 
       <Input
+        label="Meta Title"
+        shrink={getValues('meta_title')}
+        fullWidth
+        {...register('meta_title', { required: 'This field is required' })}
+        error={Boolean(errors.meta_title)}
+        helperText={errors.meta_title?.message}
+      />
+
+      <Input
         label="Meta Description"
         shrink={getValues('meta_description')}
         fullWidth
@@ -80,6 +90,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
         error={Boolean(errors.meta_description)}
         helperText={errors.meta_description?.message}
       />
+
       <Input
         label="Meta Keywords"
         shrink={getValues('meta_keywords')}
@@ -88,6 +99,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
         error={Boolean(errors.meta_keywords)}
         helperText={errors.meta_keywords?.message}
       />
+
       <Input
         label="OG Description"
         shrink={getValues('og_description')}
@@ -96,6 +108,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
         error={Boolean(errors.og_description)}
         helperText={errors.og_description?.message}
       />
+
       <Input
         label="OG Locale"
         shrink={getValues('og_locale')}
@@ -104,6 +117,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
         error={Boolean(errors.og_locale)}
         helperText={errors.og_locale?.message}
       />
+
       <FileUploader
         inputName="og_image"
         setValue={setValue}

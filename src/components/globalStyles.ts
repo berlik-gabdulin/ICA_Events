@@ -5,6 +5,7 @@ import customTheme from 'src/theme/customTheme';
 import palette from 'src/theme/palette';
 
 export const DeviderStyled = styled('hr')`
+  width: 100%;
   border: 0.3px solid #eee;
   margin: 15px auto 30px;
 `;

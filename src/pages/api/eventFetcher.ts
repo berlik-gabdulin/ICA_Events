@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { fetchPageBlock } from 'src/utils/api';
 import fetch from 'node-fetch';
 import pool from 'src/utils/db';
+import { formatDateRange } from 'src/utils/formatDateRange';
 
 interface IAPIConfig {
   label: string;
@@ -11,15 +12,17 @@ interface IAPIConfig {
 }
 
 interface IEvent {
+  id: string;
   title: string;
   description: string;
-  website: string;
-  country: string;
   image_profile: string;
   beginDate: string;
-  endDate: string;
+  dateRange: string;
   location: string;
   industry: string;
+  website: string;
+  country: string;
+  pastEvent: boolean;
 }
 
 const fetchAPIConfigs = async (): Promise<IAPIConfig[]> => {
@@ -44,22 +47,52 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
   const allEvents: Record<string, IEvent[]> = {};
 
   for (const config of apiConfigs) {
-    console.log('config', config);
     const { apiUrl, apiKey, country } = config;
-    const events = await fetchDataFromAPI(apiUrl, apiKey);
-    console.log('events from API', events);
-    allEvents[country] = events;
+    const eventsFromAPI = await fetchDataFromAPI(apiUrl, apiKey);
+
+    // Преобразуем данные
+    const events: IEvent[] = eventsFromAPI.map((event: any) => ({
+      id: event.projectID ? event.projectID : event.id,
+      title: event.project ? event.project : event.title,
+      description: event.description,
+      image_profile: country !== 'Azerbaijan' ? event.logomini : event.image_profile,
+      beginDate: event.beginDate,
+      dateRange: formatDateRange(event),
+      location: event.location,
+      industry: event.industry,
+      website: event.programme ? event.programme : event.website,
+      country: country,
+      pastEvent: new Date() > new Date(event.endDate),
+    }));
+
+    // Добавляем события в объект по странам
+    allEvents[country] = allEvents[country] || [];
+    allEvents[country] = allEvents[country].concat(events);
+  }
+
+  // Сортируем события по дате начала
+  for (const [country, events] of Object.entries(allEvents)) {
+    allEvents[country] = allEvents[country].sort(
+      (a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.endDate).getTime()
+    );
   }
 
   return allEvents;
 };
 
 const saveEventsToDB = async (allEvents: Record<string, IEvent[]>, res: NextApiResponse) => {
+  const combinedEvents = Object.entries(allEvents)
+    .flatMap(([country, events]) => events as IEvent[])
+    .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.beginDate).getTime());
+  // const slicedEvents = allEvents.slice(0, 8);
   try {
     await pool.execute(`UPDATE page_events SET content = ? WHERE block_name = 'events'`, [
       JSON.stringify(allEvents),
     ]);
-    return res.status(200).json({ message: 'Changes have been saved' });
+    await pool.execute(`UPDATE page_home SET content = ? WHERE block_name = 'events'`, [
+      JSON.stringify(combinedEvents.slice(0, 8)),
+    ]);
+    return res.status(200).json({ message: 'Changes have been saved', events: allEvents });
   } catch (error) {
     return res.status(500).json({ error: 'Error during data update', message: error });
   }
