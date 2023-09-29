@@ -152,7 +152,7 @@ const Events = (props: TMaterialsPageProps) => {
                   >
                     {industries.map((industry) => (
                       <MenuItem key={industry} value={industry}>
-                        {industry}
+                        {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
                       </MenuItem>
                     ))}
                   </Select>
