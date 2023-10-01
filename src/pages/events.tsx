@@ -46,11 +46,35 @@ const Events = (props: TMaterialsPageProps) => {
 
   const { image } = api.content;
 
+  const [visibleEvents, setVisibleEvents] = useState<number>(6);
   const [search, setSearch] = useState('');
   const [filterCountry, setFilterCountry] = useState('');
   const [filterIndustry, setFilterIndustry] = useState('');
   const [eventsToShow, setEventsToShow] = useState<TEvent[]>([]);
   const [industries, setIndustries] = useState<string[]>([]);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleEvents((prev) => prev + 6); // увеличиваем количество видимых событий
+        }
+      });
+    }, options);
+
+    const target = document.getElementById('loadMore');
+    if (target) observer.observe(target);
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, []);
 
   useEffect(() => {
     const uniqueIndustries = Array.from(
@@ -105,7 +129,6 @@ const Events = (props: TMaterialsPageProps) => {
         <Section>
           <Container>
             <TitleH1>{page_title}</TitleH1>
-
             <SearchBox>
               <Box marginBottom={3}>
                 <SearchInput
@@ -157,12 +180,18 @@ const Events = (props: TMaterialsPageProps) => {
                 </FormControl>
               </Box>
             </SearchBox>
-
             <GridBox>
-              {eventsToShow.map((event: TEvent) =>
-                !event.pastEvent ? <EventCard event={event} key={event.id} /> : null
-              )}
+              {eventsToShow
+                .slice(0, visibleEvents)
+                .map((event: TEvent) =>
+                  !event.pastEvent ? <EventCard event={event} key={event.id} /> : null
+                )}
             </GridBox>
+            {visibleEvents !== eventsToShow.length && (
+              <div id="loadMore" style={{ height: '20px', margin: '0 auto' }}>
+                Loading...
+              </div>
+            )}
           </Container>
           <Path>
             <Image src={PathImg} layout="fill" alt="Path" />

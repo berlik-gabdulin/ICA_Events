@@ -71,6 +71,7 @@ export type TTitleBlock = {
     };
   };
   bgImage: string;
+  bgImageMobile: string;
 };
 
 export type TTitleTab = {

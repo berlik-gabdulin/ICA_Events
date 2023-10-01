@@ -17,7 +17,7 @@ import {
   ListItemButton,
 } from '@mui/material';
 // utils
-import { fToNow } from 'src/utils/formatTime';
+import { fToNow } from '../../../utils/formatTime';
 // _mock_
 import { _notifications } from '../../../_mock';
 // components

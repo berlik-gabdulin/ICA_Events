@@ -1,7 +1,6 @@
-// utils/api.ts
-
-import { API_BASE_URL } from 'src/config';
 import { IAPIError, ICreateBlockData, IPageBlock, IUpdateBlockData } from './types';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const fetchPageBlock = async (page: string, blockName: string): Promise<IPageBlock> => {
   const response = await fetch(`${API_BASE_URL}/api/${page}/${blockName}`);

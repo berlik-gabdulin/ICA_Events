@@ -5,7 +5,7 @@ import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
 // utils
-import cssStyles from 'src/utils/cssStyles';
+import cssStyles from '../../../utils/cssStyles';
 // config
 import { HEADER, NAVBAR } from '../../../config';
 // components
