@@ -7,6 +7,7 @@ import { TReport, TReportsBlockProps } from 'src/utils/types';
 import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import Button from '../Button';
+import { FONT_PRIMARY_BOLD } from 'src/theme/typography';
 
 const ReportsBlock: React.FC<{ block_title: string; content: TReportsBlockProps }> = ({
   block_title,
@@ -142,8 +143,8 @@ const ImageBlock = styled.div`
     }
 
     .SquareTextBlock {
-      height: 120px;
-      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      height: 150px;
+      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
     }
   }
 `;
@@ -161,14 +162,15 @@ const SquareTextBlock = styled.div`
   color: white;
   padding: 10px 10px 35px;
   transition: all 0.3s ease-in-out;
+  font-family: ${FONT_PRIMARY_BOLD};
 `;
 
 const SquareSubtitle = styled.h3`
   margin: 0;
-  font-size: 20px;
+  font-size: 28px;
 `;
 
 const SquareText = styled.p`
   margin: 0;
-  font-size: 16px;
+  font-size: 20px;
 `;
