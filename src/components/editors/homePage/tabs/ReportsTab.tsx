@@ -4,7 +4,7 @@ import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
 import Input from 'src/components/Input';
 import Button from 'src/components/Button';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 type FormData = {
   title: string;
@@ -17,7 +17,7 @@ type FormData = {
 const ReportsTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [galleries, setGalleries] = useState<any[]>([]);
-  const { register, handleSubmit, setValue, watch } = useForm<FormData>();
+  const { register, handleSubmit, watch } = useForm<FormData>();
   const { showError, showSuccess } = useSnackbar();
 
   useEffect(() => {

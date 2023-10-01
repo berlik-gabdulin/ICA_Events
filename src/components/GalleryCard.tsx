@@ -3,12 +3,12 @@ import React from 'react';
 import { Box, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TGallery } from 'src/utils/types';
+import { TReport } from 'src/utils/types';
 import styled from '@emotion/styled';
 import ImagePreview from './ImagePreview';
 
 type GalleryCardProps = {
-  gallery: TGallery;
+  gallery: TReport;
   onEdit: () => void;
   onDelete: (path: string) => void;
 };
