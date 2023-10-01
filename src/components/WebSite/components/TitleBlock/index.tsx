@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TPageType, TTitleBlock } from 'src/utils/types';
 import BGBox from '../BGBox';
 import Button from '../Button';
@@ -8,7 +8,7 @@ import ContactModal from 'src/components/ContactModal';
 import { useRouter } from 'next/router';
 
 const TitleBlock: React.FC<TPageType<TTitleBlock>> = ({ block_title, content }) => {
-  const { title, buttons, bgImage } = content;
+  const { title, buttons, bgImage,bgImageMobile } = content;
   const router = useRouter();
 
   const handleGoRoute = (route: string) => {
@@ -20,8 +20,28 @@ const TitleBlock: React.FC<TPageType<TTitleBlock>> = ({ block_title, content }) 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [isMobile, setIsMobile] = useState(false); // Новое состояние для определения, является ли экран мобильным
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Устанавливаем состояние в зависимости от ширины экрана
+    };
+
+    handleResize(); // Вызываем функцию при монтировании компонента
+
+    window.addEventListener('resize', handleResize); // Добавляем слушатель события при изменении размера окна
+
+    return () => {
+      window.removeEventListener('resize', handleResize); // Удаляем слушатель события при размонтировании компонента
+    };
+  }, []);
+
   return (
-    <BGBox textAlign="center" bgImage={bgImage} containerStyles={ContainerStyles}>
+    <BGBox
+      textAlign="center"
+      bgImage={isMobile ? bgImageMobile : bgImage}
+      containerStyles={ContainerStyles}
+    >
       <MainTitle>{title}</MainTitle>
       <Buttons gap="8px">
         {buttons?.events?.isActive ? (
