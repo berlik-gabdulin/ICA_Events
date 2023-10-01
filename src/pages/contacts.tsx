@@ -122,7 +122,7 @@ const Contacts = (props: TSolutionsPageProps) => {
 
 export default Contacts;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_contacts ORDER BY order_number ASC`

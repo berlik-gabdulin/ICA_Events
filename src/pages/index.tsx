@@ -10,7 +10,6 @@ import {
   TAboutTab,
   TContactsBlock,
   TEvent,
-  TReportProps,
   TLayoutProps,
   TMembership,
   TMetaFields,
@@ -21,7 +20,7 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import CustomSVGMap from 'src/components/WebSite/components/LocationBlock';
-import Membership from 'src/components/WebSite/components/Membership';
+// import Membership from 'src/components/WebSite/components/Membership';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import ReportsBlock from 'src/components/WebSite/components/ReportsBlock';
@@ -37,31 +36,12 @@ type THomePageProps = {
   meta: TPageType<TMetaFields>;
   layoutData: TLayoutProps;
 };
-const imageData: TReportProps[] = [
-  {
-    urls: ['https://example.com/image1a.jpg', 'https://example.com/image1b.jpg'],
-    alt: 'Image 1',
-    subtitle: 'Subtitle 1',
-    text: 'Description 1',
-  },
-  {
-    urls: ['https://example.com/image2a.jpg', 'https://example.com/image2b.jpg'],
-    alt: 'Image 2',
-    subtitle: 'Subtitle 2',
-    text: 'Description 2',
-  },
-  {
-    urls: ['https://example.com/image3a.jpg', 'https://example.com/image3b.jpg'],
-    alt: 'Image 3',
-    subtitle: 'Subtitle 3',
-    text: 'Description 3',
-  },
-];
-
-const reports = { title: 'Photo reports from our events', reports: imageData };
 
 const Home = (props: THomePageProps) => {
-  const { title, about, events, testimonials, membership, contacts, layoutData } = props;
+  const { title, about, events, testimonials, /*membership,*/ reports, contacts, layoutData } =
+    props;
+
+  console.log('reports', reports);
 
   return (
     <>
@@ -81,7 +61,7 @@ const Home = (props: THomePageProps) => {
 
 export default Home;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_home ORDER BY order_number ASC`

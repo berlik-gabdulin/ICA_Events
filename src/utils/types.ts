@@ -259,14 +259,8 @@ export type TUpload = {
   type: string;
 };
 
-export type TReportProps = {
-  urls: string[];
-  alt: string;
-  subtitle: string;
-  text: string;
-};
-
 export type TReportsBlockProps = {
-  reports: TReportProps[];
+  reports: TReport[];
+  buttonText: string;
   title: string;
 };

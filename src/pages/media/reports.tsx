@@ -145,7 +145,7 @@ const StyledLightBox = styled(Lightbox)`
   z-index: 10000;
 `;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_galleries ORDER BY order_number ASC`

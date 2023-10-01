@@ -175,7 +175,7 @@ const Events = (props: TMaterialsPageProps) => {
 
 export default Events;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_events ORDER BY order_number ASC`

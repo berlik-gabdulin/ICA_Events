@@ -17,26 +17,45 @@ type FormData = {
 const ReportsTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [galleries, setGalleries] = useState<any[]>([]);
-  const { register, handleSubmit, watch } = useForm<FormData>();
+  const { register, handleSubmit, setValue, watch } = useForm<FormData>();
   const { showError, showSuccess } = useSnackbar();
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPageBlock('galleries', 'page');
-      setGalleries(JSON.parse(data.content).galleries);
+      const homeData = await fetchPageBlock('home', 'reports');
+      const content = JSON.parse(data.content);
+      const blockContent = JSON.parse(homeData.content);
+
+      console.log(blockContent);
+
+      setValue('title', blockContent.title);
+      setValue('buttonText', blockContent.buttonText);
+      setValue('block1', blockContent.reports.block1.id);
+      setValue('block2', blockContent.reports.block2.id);
+      setValue('block3', blockContent.reports.block3.id);
+      setGalleries(content.galleries);
       setLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [setValue]);
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
       setLoading(true);
-      const selectedGalleries = galleries.filter((gallery) =>
-        [formData.block1, formData.block2, formData.block3].includes(gallery.id)
-      );
-      await updatePageBlock('home', 'reports', { content: JSON.stringify(selectedGalleries) });
+      const selectedGalleries = {
+        block1: galleries.find((gallery) => gallery.id === formData.block1),
+        block2: galleries.find((gallery) => gallery.id === formData.block2),
+        block3: galleries.find((gallery) => gallery.id === formData.block3),
+      };
+      await updatePageBlock('home', 'reports', {
+        content: JSON.stringify({
+          title: formData.title,
+          buttonText: formData.buttonText,
+          reports: selectedGalleries,
+        }),
+      });
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {
@@ -54,22 +73,23 @@ const ReportsTab: React.FC = () => {
 
           {[1, 2, 3].map((blockNumber) => (
             <FormControl fullWidth margin="normal" key={blockNumber}>
-              <InputLabel id={`block${blockNumber}-label`}>Block {blockNumber}</InputLabel>
+              <InputLabel
+                id={`block${blockNumber}-label`}
+                style={{ background: '#fff', padding: 3 }}
+              >
+                Block {blockNumber}
+              </InputLabel>
               <Select
                 labelId={`block${blockNumber}-label`}
-                {...register(`block${blockNumber}` as any)} // Используйте as const для обхода ошибки
+                {...register(`block${blockNumber}` as keyof FormData)}
+                defaultValue={watch(`block${blockNumber}` as keyof FormData)}
                 fullWidth
               >
-                {galleries
-                  .filter(
-                    (gallery) =>
-                      ![watch('block1'), watch('block2'), watch('block3')].includes(gallery.id)
-                  )
-                  .map((gallery) => (
-                    <MenuItem key={gallery.id} value={gallery.id}>
-                      {gallery.gallery_title}
-                    </MenuItem>
-                  ))}
+                {galleries.map((gallery) => (
+                  <MenuItem key={gallery.id} value={gallery.id}>
+                    {gallery.gallery_title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           ))}
