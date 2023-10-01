@@ -14,8 +14,6 @@ import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Path, Section, TitleH1 } from 'src/components/globalStyles';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-
-import { formatDateRange } from 'src/utils/formatDateRange';
 import { EventCard } from 'src/components/WebSite/components/EventCard';
 import {
   GridBox,

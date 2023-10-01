@@ -1,8 +1,7 @@
 import React, { MouseEvent, useState } from 'react';
 import Map from 'src/utils/mapData';
-import { eurasia, ourNetwork } from 'src/utils/network';
+import { eurasia, countries } from 'src/utils/network';
 import { Container, Title } from 'src/components/globalStyles';
-import palette from 'src/theme/palette';
 import { Popover, Tooltip } from '@mui/material';
 import { SectionLocation } from './styles';
 import customTheme from 'src/theme/customTheme';
@@ -29,7 +28,7 @@ const LocationBlock = () => {
 
         <svg viewBox={Map.viewBox} className="svg-map">
           {filteredLocations.map((location) => {
-            const isOurNetwork = ourNetwork.includes(location.name);
+            const isOurNetwork = countries.includes(location.name);
 
             return (
               <Tooltip

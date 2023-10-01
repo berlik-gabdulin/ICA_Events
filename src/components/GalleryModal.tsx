@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FileUploader from 'src/components/upload/FileUploader';
-import { TGalleryModalProps, TGallery } from 'src/utils/types';
+import { TReportModalProps, TReport } from 'src/utils/types';
 import Input from './Input';
 import Button from './Button';
 import { countries, galleryCountries } from 'src/utils/network';
@@ -25,10 +25,10 @@ import ImagePreview from './ImagePreview';
 import { removeFS } from 'src/utils/api';
 
 type FormData = {
-  gallery: TGallery;
+  gallery: TReport;
 };
 
-const GalleryModal: React.FC<TGalleryModalProps> = ({ open, onClose, gallery }) => {
+const GalleryModal: React.FC<TReportModalProps> = ({ open, onClose, gallery }) => {
   const [showForm, setShowForm] = useState(false);
   const [removedPhoto, setRemovedPhoto] = useState<string[]>([]);
 

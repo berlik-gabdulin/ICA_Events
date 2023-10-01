@@ -47,6 +47,7 @@ const SocialTab = () => {
       setLoading(false);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {

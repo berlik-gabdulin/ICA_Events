@@ -43,7 +43,7 @@ type FormData = {
 
 const EventInputPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const { register, handleSubmit, setValue, control, getValues, watch } = useForm<FormData>({
+  const { register, handleSubmit, setValue, control, watch } = useForm<FormData>({
     defaultValues: {
       events: [],
     },

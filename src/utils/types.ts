@@ -207,7 +207,7 @@ export type TContactsPage = {
   offices: TOffice[];
 };
 
-export type TGallery = {
+export type TReport = {
   id: string;
   gallery_title: string;
   country: string;
@@ -220,15 +220,15 @@ export type TGallery = {
   isNew: boolean;
 };
 
-export type TGalleries = {
+export type TReports = {
   image: string;
-  galleries: TGallery[];
+  galleries: TReport[];
 };
 
-export type TGalleryModalProps = {
+export type TReportModalProps = {
   open: boolean;
-  onClose: (updatedGallery?: TGallery) => void;
-  gallery: TGallery;
+  onClose: (updatedGallery?: TReport) => void;
+  gallery: TReport;
 };
 
 export type TImagePreviewProps = {
@@ -257,4 +257,16 @@ export type TUpload = {
   name: string;
   size: number;
   type: string;
+};
+
+export type TReportProps = {
+  urls: string[];
+  alt: string;
+  subtitle: string;
+  text: string;
+};
+
+export type TReportsBlockProps = {
+  reports: TReportProps[];
+  title: string;
 };

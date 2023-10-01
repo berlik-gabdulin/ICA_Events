@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import {
   IData,
   IPageBlock,
-  TGalleries,
-  TGallery,
+  TReports,
+  TReport,
   TLayoutProps,
   TMetaFields,
   TPageType,
@@ -25,14 +25,14 @@ import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
 
 type TSolutionsPageProps = {
-  page: TPageType<TGalleries>;
+  page: TPageType<TReports>;
   meta: TPageType<TMetaFields>;
   bgBox: TPageType<TTitleBlock>;
   layoutData: TLayoutProps;
 };
 
 const ReportsPage = (props: TSolutionsPageProps) => {
-  const [currentGallery, setCurrentGallery] = useState<TGallery | null>(null);
+  const [currentGallery, setCurrentGallery] = useState<TReport | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { meta, page, bgBox, layoutData } = props;
@@ -43,7 +43,7 @@ const ReportsPage = (props: TSolutionsPageProps) => {
 
   const { image, galleries } = page.content;
 
-  const openLightbox = (gallery: TGallery) => {
+  const openLightbox = (gallery: TReport) => {
     setCurrentGallery(gallery);
     setLightboxOpen(true);
   };
@@ -52,7 +52,7 @@ const ReportsPage = (props: TSolutionsPageProps) => {
     setLightboxOpen(false);
   };
 
-  const fillEmptyGalleries = (galleries: TGallery[]): TGallery[] => {
+  const fillEmptyGalleries = (galleries: TReport[]): TReport[] => {
     const emptyGallery = {
       id: 'empty',
       gallery_title: '',
@@ -71,8 +71,8 @@ const ReportsPage = (props: TSolutionsPageProps) => {
     return galleries;
   };
 
-  const groupedByCountry: { [key: string]: TGallery[] } = galleries.reduce<{
-    [key: string]: TGallery[];
+  const groupedByCountry: { [key: string]: TReport[] } = galleries.reduce<{
+    [key: string]: TReport[];
   }>((acc, gallery) => {
     const country = gallery.country;
     if (!acc[country]) {

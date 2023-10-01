@@ -12,14 +12,14 @@ import { fetchPageBlock, removeFS, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
 import Input from 'src/components/Input';
 import FileUploader from 'src/components/upload/FileUploader';
-import { TGalleries, TGallery } from 'src/utils/types';
+import { TReports, TReport } from 'src/utils/types';
 import GalleryCard from 'src/components/GalleryCard';
 import GalleryModal from 'src/components/GalleryModal';
 import Button from 'src/components/Button';
 import ImagePreview from 'src/components/ImagePreview';
 
 type FormData = {
-  galleries: TGalleries;
+  galleries: TReports;
 };
 
 export const InitialGallery = {
@@ -39,8 +39,8 @@ const PageTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [toBeDeleted, setToBeDeleted] = useState<TGallery | null>(null);
-  const [selectedGallery, setSelectedGallery] = useState<TGallery | null>(null);
+  const [toBeDeleted, setToBeDeleted] = useState<TReport | null>(null);
+  const [selectedGallery, setSelectedGallery] = useState<TReport | null>(null);
   const { register, handleSubmit, setValue, getValues } = useForm<FormData>();
   const { showError, showSuccess } = useSnackbar();
 
@@ -54,7 +54,7 @@ const PageTab: React.FC = () => {
     fetchData();
   }, [setValue]);
 
-  const handleCloseModal = (updatedGallery?: TGallery) => {
+  const handleCloseModal = (updatedGallery?: TReport) => {
     if (updatedGallery) {
       const currentGalleries = getValues('galleries.galleries');
       let newGalleries;
@@ -77,12 +77,12 @@ const PageTab: React.FC = () => {
     handleSubmit(handleSave)();
   };
 
-  const handleEditGallery = (gallery: TGallery) => {
+  const handleEditGallery = (gallery: TReport) => {
     setSelectedGallery(gallery);
     setOpenModal(true);
   };
 
-  const handleDeleteGallery = async (gallery: TGallery) => {
+  const handleDeleteGallery = async (gallery: TReport) => {
     await removeFS({ folder: `galleries/${gallery.path}` });
 
     const galleries = getValues('galleries.galleries').filter((item) => item.id !== gallery.id);
@@ -134,7 +134,7 @@ const PageTab: React.FC = () => {
             Add New Gallery
           </Button>
           <Stack direction="row" spacing={2} marginBottom={3} marginTop={3} flexWrap="wrap">
-            {getValues('galleries.galleries').map((gallery: TGallery, index: number) => (
+            {getValues('galleries.galleries').map((gallery: TReport, index: number) => (
               <GalleryCard
                 key={index}
                 gallery={gallery}

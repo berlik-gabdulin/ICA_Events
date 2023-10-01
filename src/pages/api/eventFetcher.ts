@@ -71,6 +71,7 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
   }
 
   // Сортируем события по дате начала
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const [country, events] of Object.entries(allEvents)) {
     allEvents[country] = allEvents[country].sort(
       (a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.endDate).getTime()
