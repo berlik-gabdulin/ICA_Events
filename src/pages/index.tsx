@@ -61,7 +61,7 @@ const Home = (props: THomePageProps) => {
 
 export default Home;
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_home ORDER BY order_number ASC`

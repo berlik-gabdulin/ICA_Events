@@ -61,7 +61,7 @@ const About = (props: TAboutPageProps) => {
 
 export default About;
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_about ORDER BY order_number ASC`
