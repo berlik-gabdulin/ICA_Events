@@ -78,16 +78,10 @@ const TitleStyled = styled(Title)`
 const ContainerGrid = styled(Container)`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  height: 100vh;
-  max-height: 620px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  @media (max-width: 480px) {
-    height: auto;
+    grid-template-rows: auto auto;
   }
 `;
 
@@ -98,53 +92,58 @@ const TextBlock = styled.div`
   justify-content: space-between;
   background-color: ${customTheme.main[100]};
   padding: 20px;
+  padding-bottom: 40px;
 `;
 
 const ImageContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-auto-rows: minmax(300px, auto);
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    grid-auto-rows: minmax(300px, auto);
   }
 `;
 
 const ImageStyled = styled(Image)`
   filter: grayscale(1);
   transition: all 0.3s ease-in-out;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
 `;
 
 const ImageBlock = styled.div`
   position: relative;
+  overflow: hidden;
 
   img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
+    transition: all 0.3s ease-in-out;
   }
 
   &:first-child {
     grid-row: span 2;
+
+    @media (max-width: 768px) {
+      grid-row: span 1;
+    }
   }
 
   &:hover {
     cursor: pointer;
-    .ImageStyled {
-      filter: grayscale(0);
-      transform: scale(1.2);
-      img {
-      }
-    }
-    .SquareTextBlock {
-      height: 100px;
-    }
-  }
 
-  @media (max-width: 480px) {
-    &:first-child {
-      grid-row: span 1;
+    img {
+      filter: grayscale(0);
+      transform: scale(1.1);
+    }
+
+    .SquareTextBlock {
+      height: 120px;
+      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
     }
   }
 `;
@@ -158,9 +157,9 @@ const SquareTextBlock = styled.div`
   left: 0;
   right: 0;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
   color: white;
-  padding: 10px;
+  padding: 10px 10px 35px;
   transition: all 0.3s ease-in-out;
 `;
 
