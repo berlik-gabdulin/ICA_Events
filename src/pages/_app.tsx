@@ -10,8 +10,8 @@ import 'react-lazy-load-image-component/src/effects/opacity.css';
 import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 
 // React-slick lib
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import '/public/assets/slick-carousel/slick/slick.css';
+import '/public/assets/slick-carousel/slick/slick-theme.css';
 
 // Fonts
 import '../../public/fonts/index.css';
