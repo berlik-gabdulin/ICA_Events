@@ -126,7 +126,7 @@ const ImageBlock = styled.div`
     transition: all 0.3s ease-in-out;
   }
 
-  &:first-child {
+  &:first-of-type {
     grid-row: span 2;
 
     @media (max-width: 768px) {
