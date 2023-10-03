@@ -44,6 +44,7 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
       {
         breakpoint: 768,
         settings: {
+          arrows: false,
           slidesToShow: 1,
           slidesToScroll: 1,
         },
@@ -63,7 +64,7 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
             ))}
           </Slider>
         ) : (
-          <Typography variant="body2">No data</Typography>
+          <Typography variant="body2">There is no upcomming events...</Typography>
         )}
 
         <Button

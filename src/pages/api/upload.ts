@@ -41,7 +41,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
 
       for (const file of fileArray) {
-        console.log(file);
         const fileData = file as unknown as File;
         const newPath = path.join((form as any).uploadDir, (fileData as any).originalFilename);
 

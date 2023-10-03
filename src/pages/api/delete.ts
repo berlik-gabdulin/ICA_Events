@@ -30,7 +30,7 @@ export default async function deleteFileOrDirectory(req: NextApiRequest, res: Ne
 
   if (folder) {
     const folderPath = path.join(process.cwd(), 'public/uploads/', folder as string);
-    console.log(folderPath);
+
     try {
       if (fs.existsSync(folderPath)) {
         fs.rmdirSync(folderPath, { recursive: true });

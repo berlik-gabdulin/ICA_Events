@@ -39,7 +39,6 @@ const GalleryModal: React.FC<TReportModalProps> = ({ open, onClose, gallery }) =
   const setPath = () => {
     // Проверяем, существует ли имя галереи и не является ли оно пустой строкой
     if (watch('gallery.isNew') && getValues('gallery.gallery_title').length > 8) {
-      console.log('asdf');
       // Преобразуем имя галереи в snake_case
       const initialFolderName = getValues('gallery.gallery_title')
         .replace(/[\s&]/g, '_')

@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import { LogoBox, MenuBox, MenuButton, NavBox, NavItem, NavLink, SocialBox, SubNav } from './style';
 import { useRouter } from 'next/router';
 import { AppBar, Toolbar } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,41 +11,59 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import Logo from '/public/logo/logo.svg';
 import Image from 'next/image';
-import { LogoBox, MenuBox, MenuButton, NavBox, NavItem, NavLink, SocialBox, SubNav } from './style';
 import Link from 'next/link';
 import { Container } from 'src/components/globalStyles';
 import MenuIcon from '@mui/icons-material/Menu';
 import MobileMenu from './MobileMenu';
 import { TNavigation, TSocialLinks } from 'src/utils/types';
+import useResponsive from 'src/hooks/useResponsive';
 
 const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social, navigation }) => {
+  const isMobile = useResponsive('down', 'md');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
-
   const hasActiveLink = Object.values(social).some((link) => link.isActive);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <AppBar
+        position="static"
+        style={{ height: 150, backgroundColor: '#044e4e' }}
+        className="header"
+      />
+    );
+  }
+
   return (
-    <AppBar position="static" style={{ backgroundColor: '#044e4e' }}>
+    <AppBar position="static" style={{ backgroundColor: '#044e4e' }} className="header">
       <Container>
         <Toolbar style={{ padding: 0 }}>
-          <LogoBox display="flex" flexGrow={1}>
+          <LogoBox>
             <Link href="/" passHref>
               <a>
                 <Image src={Logo} width={150} height={120} alt="ICA Events" priority />
               </a>
             </Link>
           </LogoBox>
-          <MenuButton edge="start" color="inherit" onClick={() => setMobileMenuOpen(true)}>
-            <MenuIcon
-              style={{
-                width: 30,
-                height: 30,
-              }}
-            />
-          </MenuButton>
+          {isMobile ? (
+            <MenuButton edge="start" color="inherit" onClick={() => setMobileMenuOpen(true)}>
+              <MenuIcon
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+              />
+            </MenuButton>
+          ) : null}
           <MenuBox display="flex" flexDirection="column">
             {hasActiveLink ? (
-              <SocialBox>
+              <SocialBox className="SocialBox">
                 {social?.linkedin?.isActive ? (
                   <Link href={social?.linkedin?.url}>
                     <a target="_blank" aria-label="LinkedIn">
@@ -75,7 +94,7 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
                 ) : null}
               </SocialBox>
             ) : null}
-            <NavBox>
+            <NavBox className="NavBox">
               {navigation.map((item) =>
                 item.isActive ? (
                   <NavItem key={item.path}>
@@ -105,12 +124,14 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
           </MenuBox>
         </Toolbar>
       </Container>
-      <MobileMenu
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        navigation={navigation}
-        social={social}
-      />
+      {isMobile ? (
+        <MobileMenu
+          open={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
+          navigation={navigation}
+          social={social}
+        />
+      ) : null}
     </AppBar>
   );
 };

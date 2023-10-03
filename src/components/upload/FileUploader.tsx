@@ -41,7 +41,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
       try {
         const data = await uploadFiles(folder || 'default', formData);
-        console.log('uploader data', data.files[0].type);
+
         setFiles([...files, ...data.files]);
         setValue(inputName, maxFiles === 1 ? data.urls[0] : data.urls);
         if (onUpload) onUpload(data.files);

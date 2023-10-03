@@ -54,7 +54,7 @@ export const SocialBox = styled(Box)`
       }
     }
     &:first-of-type {
-      margin-left: -8px;
+      margin-left: 0;
       @media screen and (max-width: 992px) {
         margin-left: 0;
       }

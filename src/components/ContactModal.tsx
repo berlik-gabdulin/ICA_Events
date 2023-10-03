@@ -12,43 +12,54 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import { countries, industries } from 'src/utils/network';
+import { TEvent } from 'src/utils/types';
+import styled from '@emotion/styled';
 
 interface IFormInput {
   name: string;
   email: string;
   phone: string;
   message: string;
-  exhibition: string;
-  country: string;
   industry: string;
+  country: string;
 }
 
 interface ContactModalProps {
   open: boolean;
   onClose: () => void;
-  countries: string[];
-  industries: string[];
-  exhibitions: string[];
+  events: TEvent[];
 }
 
-const ContactModal: React.FC<ContactModalProps> = ({
-  open,
-  onClose,
-  countries,
-  industries,
-  exhibitions,
-}) => {
+const ContactModal: React.FC<ContactModalProps> = ({ open, onClose, events }) => {
   const { control, handleSubmit, reset } = useForm<IFormInput>();
 
   const onSubmit = (data: IFormInput) => {
-    console.log(data);
-    // TODO: Call API to send email
-    reset();
-    onClose();
+    const formData = new URLSearchParams();
+
+    Object.keys(data).forEach((key) => {
+      formData.append(key, (data as any)[key]);
+    });
+
+    fetch('/public/sendmail.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        reset();
+        onClose();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <DialogStyled open={open} onClose={onClose}>
       <DialogTitle>Contact Us</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -58,6 +69,16 @@ const ContactModal: React.FC<ContactModalProps> = ({
             defaultValue=""
             render={({ field }) => <TextField {...field} label="Name" fullWidth margin="normal" />}
           />
+
+          <Controller
+            name="email"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField {...field} label="E-Mail" fullWidth margin="normal" />
+            )}
+          />
+
           <Controller
             name="message"
             control={control}
@@ -66,18 +87,18 @@ const ContactModal: React.FC<ContactModalProps> = ({
               <TextField {...field} label="Messege" fullWidth margin="normal" />
             )}
           />
-          {/* ... other fields */}
+
           <FormControl fullWidth margin="normal">
-            <InputLabel id="exhibition-label">Exhibition</InputLabel>
+            <InputLabel id="exhibition-label">Industry</InputLabel>
             <Controller
-              name="exhibition"
+              name="industry"
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <Select {...field} label="Exhibition">
-                  {exhibitions.map((exhibition) => (
-                    <MenuItem key={exhibition} value={exhibition}>
-                      {exhibition}
+                <Select {...field} label="Industry">
+                  {industries.map((industry: string) => (
+                    <MenuItem key={industry} value={industry}>
+                      {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
                     </MenuItem>
                   ))}
                 </Select>
@@ -93,26 +114,9 @@ const ContactModal: React.FC<ContactModalProps> = ({
               defaultValue=""
               render={({ field }) => (
                 <Select {...field} label="Country">
-                  {countries.map((country) => (
+                  {countries.map((country: string) => (
                     <MenuItem key={country} value={country}>
                       {country}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="industry-label">Industry</InputLabel>
-            <Controller
-              name="industry"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select {...field} label="Country">
-                  {industries.map((industry) => (
-                    <MenuItem key={industry} value={industry}>
-                      {industry}
                     </MenuItem>
                   ))}
                 </Select>
@@ -125,8 +129,16 @@ const ContactModal: React.FC<ContactModalProps> = ({
           <Button type="submit">Send</Button>
         </DialogActions>
       </form>
-    </Dialog>
+    </DialogStyled>
   );
 };
 
 export default ContactModal;
+
+const DialogStyled = styled(Dialog)`
+  .MuiPaper-rounded,
+  .MuiInputBase-root,
+  .MuiButtonBase-root {
+    border-radius: 0;
+  }
+`;

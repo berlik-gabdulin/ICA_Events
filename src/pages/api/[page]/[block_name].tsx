@@ -6,8 +6,6 @@ import { RowDataPacket } from 'mysql2';
 const GetPageBlock = async (req: NextApiRequest, res: NextApiResponse<IPageBlock | IAPIError>) => {
   const { page, block_name } = req.query;
 
-  console.log(page, block_name);
-
   if (req.method === 'GET') {
     try {
       const [rows] = await pool.execute<RowDataPacket[]>(
@@ -24,17 +22,11 @@ const GetPageBlock = async (req: NextApiRequest, res: NextApiResponse<IPageBlock
     }
   } else if (req.method === 'POST') {
     const updateData: IUpdateBlockData = req.body;
-    console.log(updateData);
+
     const fieldsToUpdate = Object.keys(updateData)
       .map((key) => `${key} = ?`)
       .join(', ');
     const valuesToUpdate = Object.values(updateData);
-
-    console.log('valuesToUpdate', valuesToUpdate);
-
-    console.log(
-      `UPDATE page_${page} SET content = ${valuesToUpdate} WHERE block_name = ${block_name}`
-    );
 
     try {
       await pool.execute(`UPDATE page_${page} SET ${fieldsToUpdate} WHERE block_name = ?`, [

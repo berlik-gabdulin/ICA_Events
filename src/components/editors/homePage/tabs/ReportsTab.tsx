@@ -27,8 +27,6 @@ const ReportsTab: React.FC = () => {
       const content = JSON.parse(data.content);
       const blockContent = JSON.parse(homeData.content);
 
-      console.log(blockContent);
-
       setValue('title', blockContent.title);
       setValue('buttonText', blockContent.buttonText);
       setValue('block1', blockContent.reports.block1.id);

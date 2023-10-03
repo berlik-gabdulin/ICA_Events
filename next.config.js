@@ -4,9 +4,7 @@ const nextConfig = {
     DATABASE_URL: process.env.DATABASE_URL,
   },
   images: {
-    domains: ['onsite.iteca.kz', 'exhibitions.az', 'iteca.uz'],
-    formats: ['image/avif', 'image/webp'], // Добавьте поддержку современных форматов изображений
-    loader: 'default',
+    domains: ['onsite.iteca.kz', 'exhibitions.az', 'iteca.uz'], // разрешает загрузку изображений с основного домена
   },
   async headers() {
     return [
@@ -41,15 +39,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-  webpack: (config, { dev, isServer }) => {
-    // Дополнительные настройки webpack, если они вам нужны
-
-    if (!dev && isServer) {
-      // Оптимизация изображений на стороне сервера, если это необходимо
-    }
-
-    return config;
   },
 };
 

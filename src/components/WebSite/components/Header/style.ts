@@ -3,7 +3,9 @@ import { Box, IconButton } from '@mui/material';
 import customTheme from 'src/theme/customTheme';
 import { NavLinkProps } from 'src/utils/types';
 
-export const LogoBox = styled(Box)`
+export const LogoBox = styled.div`
+  display: flex;
+  flex-grow: 1;
   padding-top: 8px;
   padding-bottom: 14px;
   img {
@@ -13,7 +15,7 @@ export const LogoBox = styled(Box)`
   }
 `;
 
-export const SocialBox = styled(Box)`
+export const SocialBox = styled.div`
   display: flex;
   margin-bottom: 16px;
   justify-content: flex-end;
@@ -121,7 +123,6 @@ export const SubNav = styled.div`
     margin: 10px;
     color: #fff !important;
     padding: 4px 2px;
-    transition: all 0.3s ease-in-out;
     &:after {
       display: none;
     }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   IData,
   IPageBlock,
@@ -13,7 +14,7 @@ import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Path, Section, TitleH1 } from 'src/components/globalStyles';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { EventCard } from 'src/components/WebSite/components/EventCard';
 import {
   GridBox,
@@ -25,12 +26,12 @@ import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
-import { countries } from 'src/utils/network';
+import { countries, industries } from 'src/utils/network';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;
   api: any;
-  combinedEvents: TEvent[];
+  allEvents: TEvent[];
   page: TPageType<TEvents>;
   meta: TPageType<TMetaFields>;
   bgBox: TPageType<TTitleBlock>;
@@ -38,7 +39,7 @@ type TMaterialsPageProps = {
 };
 
 const Events = (props: TMaterialsPageProps) => {
-  const { meta, api, bgBox, layoutData, combinedEvents } = props;
+  const { meta, api, bgBox, layoutData, allEvents } = props;
 
   const { title, bgImage } = bgBox.content;
 
@@ -46,12 +47,12 @@ const Events = (props: TMaterialsPageProps) => {
 
   const { image } = api.content;
 
+  const router = useRouter();
   const [visibleEvents, setVisibleEvents] = useState<number>(6);
   const [search, setSearch] = useState('');
   const [filterCountry, setFilterCountry] = useState('');
   const [filterIndustry, setFilterIndustry] = useState('');
   const [eventsToShow, setEventsToShow] = useState<TEvent[]>([]);
-  const [industries, setIndustries] = useState<string[]>([]);
 
   useEffect(() => {
     const options = {
@@ -62,8 +63,12 @@ const Events = (props: TMaterialsPageProps) => {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setVisibleEvents((prev) => prev + 6); // увеличиваем количество видимых событий
+        if (
+          entry.isIntersecting &&
+          entry.intersectionRatio >= 0.5 &&
+          visibleEvents < eventsToShow.length
+        ) {
+          setVisibleEvents((prev) => Math.min(prev + 6, eventsToShow.length)); // увеличиваем количество видимых событий
         }
       });
     }, options);
@@ -74,21 +79,22 @@ const Events = (props: TMaterialsPageProps) => {
     return () => {
       if (target) observer.unobserve(target);
     };
-  }, []);
+  }, [visibleEvents, eventsToShow.length]);
 
   useEffect(() => {
-    const uniqueIndustries = Array.from(
-      new Set(combinedEvents.flatMap((event) => event.industry || []))
-    );
-
-    setIndustries(uniqueIndustries);
-  }, [combinedEvents]);
+    if (router.query) {
+      const { country, industry } = router.query;
+      if (country) setFilterCountry(Array.isArray(country) ? country[0] : country);
+      if (industry) setFilterIndustry(Array.isArray(industry) ? industry[0] : industry);
+    }
+  }, [router.query]);
 
   // 2. Добавим функцию filterEventsArray для фильтрации событий
   const filterEventsArray = () => {
+    setEventsToShow([]);
     const searchLCase = search.toLowerCase();
 
-    const filteredEvents = combinedEvents.filter((event) => {
+    const filteredEvents = allEvents.filter((event) => {
       const title = event.title.toLowerCase(),
         description = event.description.toLowerCase(),
         location = event.location.toLowerCase(),
@@ -113,7 +119,7 @@ const Events = (props: TMaterialsPageProps) => {
   useEffect(() => {
     filterEventsArray();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, filterCountry, filterIndustry, combinedEvents]);
+  }, [search, filterCountry, filterIndustry]);
 
   return (
     <>
@@ -151,6 +157,7 @@ const Events = (props: TMaterialsPageProps) => {
                     style={{ borderRadius: 0 }}
                     defaultValue="Choose country"
                   >
+                    <MenuItem value="">All countries</MenuItem>
                     {countries.map((country) => (
                       <MenuItem key={country} value={country}>
                         {country}
@@ -171,6 +178,7 @@ const Events = (props: TMaterialsPageProps) => {
                     style={{ borderRadius: 0 }}
                     defaultValue="Choose industry"
                   >
+                    <MenuItem value="">All industries</MenuItem>
                     {industries.map((industry) => (
                       <MenuItem key={industry} value={industry}>
                         {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
@@ -180,17 +188,30 @@ const Events = (props: TMaterialsPageProps) => {
                 </FormControl>
               </Box>
             </SearchBox>
-            <GridBox>
-              {eventsToShow
-                .slice(0, visibleEvents)
-                .map((event: TEvent) =>
-                  !event.pastEvent ? <EventCard event={event} key={event.id} /> : null
-                )}
-            </GridBox>
-            {visibleEvents !== eventsToShow.length && (
-              <div id="loadMore" style={{ height: '20px', margin: '0 auto' }}>
+
+            {eventsToShow.length ? (
+              <GridBox>
+                {eventsToShow
+                  .slice(0, visibleEvents)
+                  .map((event: TEvent) =>
+                    !event.pastEvent ? <EventCard event={event} key={event.id} /> : null
+                  )}
+              </GridBox>
+            ) : (
+              <Typography variant="h5" textAlign="center">
+                There are no events for the selected request
+              </Typography>
+            )}
+
+            {visibleEvents < eventsToShow.length && (
+              <Typography
+                variant="h5"
+                textAlign="center"
+                id="loadMore"
+                style={{ height: '20px', margin: '0 auto' }}
+              >
                 Loading...
-              </div>
+              </Typography>
             )}
           </Container>
           <Path>
@@ -245,12 +266,6 @@ export async function getStaticProps() {
     };
   });
 
-  const allEvents = { ...data.manual.content, ...data.events.content };
-
-  const combinedEvents = Object.entries(allEvents)
-    .flatMap(([country, events]) => events as TEvent[])
-    .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.beginDate).getTime());
-
   return {
     props: {
       ...data,
@@ -259,7 +274,7 @@ export async function getStaticProps() {
         content: JSON.parse(titleData[0].content),
       },
       layoutData,
-      combinedEvents,
+      allEvents: data.allEvents.content,
     },
   };
 }

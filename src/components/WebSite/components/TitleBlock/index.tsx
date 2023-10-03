@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { TPageType, TTitleBlock } from 'src/utils/types';
+import React, { useState, useEffect, useCallback } from 'react';
+import { TEvent, TPageType, TTitleBlock } from 'src/utils/types';
 import BGBox from '../BGBox';
 import Button from '../Button';
 import { MainTitle } from 'src/components/globalStyles';
@@ -7,34 +7,50 @@ import { Buttons, ContainerStyles } from './styles';
 import ContactModal from 'src/components/ContactModal';
 import { useRouter } from 'next/router';
 
-const TitleBlock: React.FC<TPageType<TTitleBlock>> = ({ block_title, content }) => {
-  const { title, buttons, bgImage,bgImageMobile } = content;
-  const router = useRouter();
+type TitleBlockProps = TPageType<TTitleBlock> & {
+  events: TEvent[];
+};
 
-  const handleGoRoute = (route: string) => {
-    router.push(route);
-  };
+const TitleBlock: React.FC<TitleBlockProps> = ({ block_title, content, events }) => {
+  const { title, buttons, bgImage, bgImageMobile } = content;
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleGoRoute = useCallback(
+    (route: string) => {
+      router.push(route);
+    },
+    [router]
+  );
 
-  const [isMobile, setIsMobile] = useState(false); // Новое состояние для определения, является ли экран мобильным
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
+
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768); // Устанавливаем состояние в зависимости от ширины экрана
+      setIsMobile(window.innerWidth < 768);
     };
 
-    handleResize(); // Вызываем функцию при монтировании компонента
+    handleResize();
 
-    window.addEventListener('resize', handleResize); // Добавляем слушатель события при изменении размера окна
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize); // Удаляем слушатель события при размонтировании компонента
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const renderButton = useCallback(
+    (type: string, label: string, onClick: () => void) => (
+      <Button variant="outlined" type="button" onClick={onClick}>
+        {label}
+      </Button>
+    ),
+    []
+  );
 
   return (
     <BGBox
@@ -44,29 +60,13 @@ const TitleBlock: React.FC<TPageType<TTitleBlock>> = ({ block_title, content }) 
     >
       <MainTitle>{title}</MainTitle>
       <Buttons gap="8px">
-        {buttons?.events?.isActive ? (
-          <Button variant="outlined" type="button" onClick={() => handleGoRoute('/events')}>
-            {buttons.events.label}
-          </Button>
-        ) : null}
-        {buttons?.stand?.isActive ? (
-          <Button variant="outlined" type="button" onClick={handleOpen}>
-            {buttons.stand.label}
-          </Button>
-        ) : null}
-        {buttons?.contact?.isActive ? (
-          <Button variant="outlined" type="button" onClick={() => handleGoRoute('/contacts')}>
-            {buttons.contact.label}
-          </Button>
-        ) : null}
+        {buttons?.events?.isActive &&
+          renderButton('events', buttons.events.label, () => handleGoRoute('/events'))}
+        {buttons?.stand?.isActive && renderButton('stand', buttons.stand.label, handleOpen)}
+        {buttons?.contact?.isActive &&
+          renderButton('contact', buttons.contact.label, () => handleGoRoute('/contacts'))}
       </Buttons>
-      <ContactModal
-        open={open}
-        onClose={handleClose}
-        countries={[]}
-        industries={[]}
-        exhibitions={[]}
-      />
+      <ContactModal open={open} onClose={handleClose} events={events} />
     </BGBox>
   );
 };

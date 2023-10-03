@@ -1,8 +1,8 @@
 import { FC, ReactNode } from 'react';
-import Footer from './Footer';
 import Header from './Header';
-import { TLayoutProps } from 'src/utils/types';
 import MetaHead from 'src/components/MetaHead';
+import Footer from './Footer';
+import { TLayoutProps } from 'src/utils/types';
 
 const Layout: FC<{ data: TLayoutProps; children: ReactNode }> = ({ data, children }) => (
   <>

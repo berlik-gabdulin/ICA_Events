@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import Image from 'next/image';
 import { Section } from 'src/components/globalStyles';
 
 export const SectionStyled = styled(Section)`
@@ -25,17 +24,6 @@ export const SectionStyled = styled(Section)`
   @media screen and (max-width: 480px) {
     min-height: 150px !important;
   }
-`;
-
-export const BGImage = styled(Image)`
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  object-fit: cover;
 `;
 
 export const Heading = styled.h3`

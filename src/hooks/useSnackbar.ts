@@ -10,7 +10,6 @@ const useSnackbar = () => {
 
   const showSuccess = (message: string) => {
     dispatch(showNotification({ message, type: 'success' }));
-    console.log('Success');
   };
 
   return { showError, showSuccess };

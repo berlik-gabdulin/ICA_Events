@@ -16,7 +16,6 @@ export const fetchAllPageData = async (page: string): Promise<IPageBlock[]> => {
 
   if (!response.ok) {
     const data = (await response.json()) as IAPIError;
-    console.log('API data', data);
     throw new Error(data.error);
   }
   return response.json();
@@ -27,7 +26,6 @@ export const updatePageBlock = async (
   blockName: string,
   updateData: IUpdateBlockData
 ) => {
-  // console.log('dataIsFetched', page, blockName);
   const response = await fetch(`${API_BASE_URL}/api/${page}/${blockName}`, {
     method: 'POST',
     headers: {
@@ -35,7 +33,6 @@ export const updatePageBlock = async (
     },
     body: JSON.stringify(updateData),
   });
-  // console.log('data is posted');
   if (!response.ok) {
     const data = (await response.json()) as IAPIError;
     throw new Error(data.error);

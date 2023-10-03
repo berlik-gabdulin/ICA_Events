@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import useSnackbar from 'src/hooks/useSnackbar';
 import { useForm, SubmitHandler, useFieldArray, Controller } from 'react-hook-form';
 import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
-import useSnackbar from 'src/hooks/useSnackbar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Input from 'src/components/Input';
 import Button from 'src/components/Button';
@@ -21,10 +21,11 @@ import FileUploader from 'src/components/upload/FileUploader';
 import ImagePreview from 'src/components/ImagePreview';
 import { v4 as uuidv4 } from 'uuid';
 import { formatDateRange } from 'src/utils/formatDateRange';
-import { countries } from 'src/utils/network';
+import { countries, industries } from 'src/utils/network';
+import { TEvent } from 'src/utils/types';
 
 const InitEvent = {
-  id: uuidv4(),
+  id: '',
   title: '',
   description: '',
   website: '',
@@ -57,7 +58,7 @@ const EventInputPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPageBlock('events', 'manual');
-      setValue('events', JSON.parse(data.content).events);
+      setValue('events', JSON.parse(data.content));
       setLoading(false);
     };
 
@@ -65,22 +66,42 @@ const EventInputPage: React.FC = () => {
   }, [setValue]);
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
-    const events = formData.events.map((event: any) => ({
+    const eventsFromForm = formData.events.map((event: any) => ({
       ...event,
       dateRange: formatDateRange(event),
     }));
 
-    console.log(events);
+    // Получение событий из page_events
+    const pageEventsData = await fetchPageBlock('events', 'events');
+    const pageEvents = JSON.parse(pageEventsData.content);
+
+    const pageEventsArr: TEvent[] = [];
+    Object.values(pageEvents).map((item: any) => pageEventsArr.push(...item));
+
+    // Объединение событий из формы и page_events
+    const allEvents = [...eventsFromForm, ...pageEventsArr].sort((a, b) =>
+      a.beginDate.localeCompare(b.beginDate)
+    ); // Сортировка событий по дате начала
 
     try {
       setLoading(true);
-      await updatePageBlock('events', 'manual', { content: JSON.stringify({ events }) });
+
+      // Сохранение событий из формы
+      await updatePageBlock('events', 'manual', {
+        content: JSON.stringify(eventsFromForm),
+      });
+
+      // Сохранение всех событий в строку allEvents
+      await updatePageBlock('events', 'allEvents', { content: JSON.stringify(allEvents) });
+
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {
       showError('An error occurred');
     }
   };
+
+  useEffect(() => console.log(watch()), [watch]);
 
   return (
     <form onSubmit={handleSubmit(handleSave)}>
@@ -93,6 +114,7 @@ const EventInputPage: React.FC = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Box display="flex" flexDirection="column" gap={2}>
+                  <Input name="id" fullWidth hidden value={uuidv4()} style={{ display: 'none' }} />
                   <Input label="Title" fullWidth {...register(`events.${index}.title`)} />
                   <Input
                     label="Description"
@@ -109,8 +131,23 @@ const EventInputPage: React.FC = () => {
                   <Input label="Begin Date" fullWidth {...register(`events.${index}.beginDate`)} />
                   <Input label="End Date" fullWidth {...register(`events.${index}.endDate`)} />
                   <Input label="Location" fullWidth {...register(`events.${index}.location`)} />
-                  <Input label="Industry" fullWidth {...register(`events.${index}.industry`)} />
 
+                  <FormControl fullWidth>
+                    <InputLabel id={`country-label}`}>Industry</InputLabel>
+                    <Controller
+                      name={`events.${index}.industry`}
+                      control={control}
+                      render={({ field }) => (
+                        <Select label="Country" fullWidth {...field} style={{ marginBottom: 15 }}>
+                          {industries.map((industry) => (
+                            <MenuItem key={industry} value={industry}>
+                              {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </FormControl>
                   <FormControl fullWidth>
                     <InputLabel id={`country-label}`}>Country</InputLabel>
                     <Controller

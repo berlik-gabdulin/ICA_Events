@@ -8,6 +8,7 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import Button from '../Button';
 import { FONT_PRIMARY_BOLD } from 'src/theme/typography';
+import { useRouter } from 'next/router';
 
 const ReportsBlock: React.FC<{ block_title: string; content: TReportsBlockProps }> = ({
   block_title,
@@ -17,6 +18,11 @@ const ReportsBlock: React.FC<{ block_title: string; content: TReportsBlockProps 
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentGallery, setCurrentGallery] = useState<TReport | null>(null);
+  const router = useRouter();
+
+  const handleGoRoute = (route: string) => {
+    router.push(route);
+  };
 
   const openLightbox = (image: TReport) => {
     setCurrentGallery(image);
@@ -34,7 +40,11 @@ const ReportsBlock: React.FC<{ block_title: string; content: TReportsBlockProps 
         <TextBlock>
           <TitleStyled>{title}</TitleStyled>
           <div>
-            <Button type="button" variant="outlined">
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => handleGoRoute('/media/reports')}
+            >
               {buttonText}
             </Button>
           </div>

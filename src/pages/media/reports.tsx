@@ -82,8 +82,6 @@ const ReportsPage = (props: TSolutionsPageProps) => {
     return acc;
   }, {});
 
-  console.log(groupedByCountry);
-
   Object.keys(groupedByCountry).forEach((country) => {
     groupedByCountry[country] = fillEmptyGalleries(groupedByCountry[country]);
   });

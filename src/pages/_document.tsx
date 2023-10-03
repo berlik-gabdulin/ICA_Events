@@ -6,7 +6,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import createEmotionServer from '@emotion/server/create-instance';
 // theme
-import palette from '../theme/palette';
+import customTheme from 'src/theme/customTheme';
 
 // ----------------------------------------------------------------------
 
@@ -22,12 +22,10 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
 
           <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
-
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
-
-          <meta name="theme-color" content={palette.light.primary.main} />
+          <link rel="manifest" href="/favicon/site.webmanifest" />
+          <meta name="theme-color" content={customTheme.main[100]} />
 
           <link rel="manifest" href="/manifest.json" />
 

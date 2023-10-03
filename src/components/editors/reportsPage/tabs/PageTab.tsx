@@ -93,7 +93,6 @@ const PageTab: React.FC = () => {
   };
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
-    console.log('Saved');
     try {
       setLoading(true);
       await updatePageBlock('galleries', 'page', { content: JSON.stringify(formData.galleries) });

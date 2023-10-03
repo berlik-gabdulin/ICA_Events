@@ -43,6 +43,18 @@ const fetchDataFromAPI = async (apiUrl: string, apiKey: string): Promise<IEvent[
   return data.confList;
 };
 
+const dateFormatter = (date: string): string => {
+  if (!date.includes('.')) return date;
+
+  if (date.includes('.')) {
+    const splitDate = date.split('.');
+    const rightDate = `${splitDate[2]}-${splitDate[1]}-${splitDate[0]}`;
+    return rightDate;
+  }
+
+  return date;
+};
+
 const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, IEvent[]>> => {
   const allEvents: Record<string, IEvent[]> = {};
 
@@ -52,17 +64,17 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
 
     // Преобразуем данные
     const events: IEvent[] = eventsFromAPI.map((event: any) => ({
-      id: event.projectID ? event.projectID : event.id,
+      id: event.projectID ? `${event.projectID}` : `${event.id}`,
       title: event.project ? event.project : event.title,
       description: event.description,
       image_profile: country !== 'Azerbaijan' ? event.logomini : event.image_profile,
-      beginDate: event.beginDate,
+      beginDate: dateFormatter(event.beginDate),
       dateRange: formatDateRange(event),
       location: event.location,
       industry: event.industry,
       website: event.programme ? event.programme : event.website,
       country: country,
-      pastEvent: new Date() > new Date(event.endDate),
+      pastEvent: new Date() > new Date(dateFormatter(event.endDate)),
     }));
 
     // Добавляем события в объект по странам
@@ -73,8 +85,8 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
   // Сортируем события по дате начала
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const [country, events] of Object.entries(allEvents)) {
-    allEvents[country] = allEvents[country].sort(
-      (a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.endDate).getTime()
+    allEvents[country] = allEvents[country].sort((a: any, b: any) =>
+      a.beginDate.localeCompare(b.beginDate)
     );
   }
 
@@ -93,7 +105,7 @@ const saveEventsToDB = async (allEvents: Record<string, IEvent[]>, res: NextApiR
     await pool.execute(`UPDATE page_home SET content = ? WHERE block_name = 'events'`, [
       JSON.stringify(combinedEvents.slice(0, 8)),
     ]);
-    return res.status(200).json({ message: 'Changes have been saved', events: allEvents });
+    return res.status(200).json({ message: 'Changes have been saved' });
   } catch (error) {
     return res.status(500).json({ error: 'Error during data update', message: error });
   }

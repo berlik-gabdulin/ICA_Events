@@ -1,9 +1,6 @@
 import React from 'react';
 import TitleBlock from 'src/components/WebSite/components/TitleBlock';
 import AboutBlock from 'src/components/WebSite/components/AboutBlock';
-import EventsBlock from 'src/components/WebSite/components/EventsBlock';
-import TestimonialsBlock from 'src/components/WebSite/components/TestimonialsBlock';
-import ContactBlock from 'src/components/WebSite/components/ContactBlock';
 import {
   IData,
   IPageBlock,
@@ -19,11 +16,9 @@ import {
   TTitleBlock,
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
-import CustomSVGMap from 'src/components/WebSite/components/LocationBlock';
-// import Membership from 'src/components/WebSite/components/Membership';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
-import ReportsBlock from 'src/components/WebSite/components/ReportsBlock';
+import dynamic from 'next/dynamic';
 
 type THomePageProps = {
   title: TPageType<TTitleBlock>;
@@ -35,21 +30,38 @@ type THomePageProps = {
   contacts: TPageType<TContactsBlock>;
   meta: TPageType<TMetaFields>;
   layoutData: TLayoutProps;
+  allEvents: TEvent[];
 };
 
 const Home = (props: THomePageProps) => {
-  const { title, about, events, testimonials, /*membership,*/ reports, contacts, layoutData } =
-    props;
+  const {
+    title,
+    about,
+    events,
+    testimonials,
+    /*membership,*/ reports,
+    contacts,
+    layoutData,
+    allEvents,
+  } = props;
 
-  console.log('reports', reports);
+  // Динамически загружаемые компоненты
+  const EventsBlock = dynamic(() => import('src/components/WebSite/components/EventsBlock'));
+  const CustomSVGMap = dynamic(() => import('src/components/WebSite/components/LocationBlock'));
+  const ReportsBlock = dynamic(() => import('src/components/WebSite/components/ReportsBlock'));
+  // const Membership = dynamic(() => import('src/components/WebSite/components/Membership'));
+  const TestimonialsBlock = dynamic(
+    () => import('src/components/WebSite/components/TestimonialsBlock')
+  );
+  const ContactBlock = dynamic(() => import('src/components/WebSite/components/ContactBlock'));
 
   return (
     <>
       <Layout data={layoutData}>
-        <TitleBlock {...title} />
+        <TitleBlock {...title} events={allEvents} />
         <AboutBlock {...about} />
         <EventsBlock {...events} />
-        <CustomSVGMap />
+        <CustomSVGMap events={allEvents} />
         <ReportsBlock {...reports} />
         <TestimonialsBlock {...testimonials} />
         {/* <Membership {...membership} /> */}
@@ -69,6 +81,10 @@ export async function getStaticProps() {
 
   const [settings] = (await db.execute(
     `SELECT * FROM page_settings ORDER BY order_number ASC`
+  )) as RowDataPacket[];
+
+  const [allEvents] = (await db.execute(
+    `SELECT content FROM page_events WHERE block_name = 'allEvents'`
   )) as RowDataPacket[];
 
   const settingsData: IData = {};
@@ -100,6 +116,7 @@ export async function getStaticProps() {
   return {
     props: {
       ...data,
+      allEvents: JSON.parse(allEvents[0].content),
       layoutData,
     },
   };

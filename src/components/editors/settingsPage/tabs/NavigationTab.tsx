@@ -5,9 +5,11 @@ import Input from 'src/components/Input';
 import Button from 'src/components/Button';
 import { Box, FormControlLabel, Switch } from '@mui/material';
 import { TNavigation } from 'src/utils/types';
+import useSnackbar from 'src/hooks/useSnackbar';
 
 const NavigationTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const { showError, showSuccess } = useSnackbar();
   const { register, handleSubmit, setValue, watch } = useForm<{ nav: TNavigation }>({
     defaultValues: {
       nav: [],
@@ -31,9 +33,9 @@ const NavigationTab: React.FC = () => {
   const handleSave: SubmitHandler<{ nav: TNavigation }> = async (formData) => {
     try {
       await updatePageBlock('settings', 'navigation', { content: JSON.stringify(formData) });
-      console.log('Successfully saved!');
+      showSuccess('Successfully saved!');
     } catch (error) {
-      console.error('An error occurred');
+      showError('An error occurred');
     }
   };
 

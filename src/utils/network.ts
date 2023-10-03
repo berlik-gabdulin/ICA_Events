@@ -91,3 +91,22 @@ export const countries = [
   'Azerbaijan',
   'Uzbekistan',
 ];
+
+export const industries = [
+  'Transport_Logistics',
+  'Energy_Electrical_Equipment',
+  'Healthcare_Beauty',
+  'Travel_Tourism',
+  'Security_Safety',
+  'OilGas',
+  'Military',
+  'Textile',
+  'Chemie',
+  'Heat_Vent',
+  'Hotels,_Restaurants,_Cleaning',
+  'Food_Pack,Agriculture',
+  'Occupational_Safety_and_Health',
+  'Mining_Industry',
+  'Building_Interiors',
+  'Furniture_Woodwork',
+];
