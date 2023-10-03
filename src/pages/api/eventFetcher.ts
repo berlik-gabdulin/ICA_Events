@@ -3,6 +3,7 @@ import { fetchPageBlock } from 'src/utils/api';
 import fetch from 'node-fetch';
 import pool from 'src/utils/db';
 import { formatDateRange } from 'src/utils/formatDateRange';
+import dateFormatter from 'src/utils/dateFormatter';
 
 interface IAPIConfig {
   label: string;
@@ -41,18 +42,6 @@ const fetchDataFromAPI = async (apiUrl: string, apiKey: string): Promise<IEvent[
   });
   const data: any = await response.json();
   return data.confList;
-};
-
-const dateFormatter = (date: string): string => {
-  if (!date.includes('.')) return date;
-
-  if (date.includes('.')) {
-    const splitDate = date.split('.');
-    const rightDate = `${splitDate[2]}-${splitDate[1]}-${splitDate[0]}`;
-    return rightDate;
-  }
-
-  return date;
 };
 
 const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, IEvent[]>> => {

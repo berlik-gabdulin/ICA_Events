@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { formatDateRange } from 'src/utils/formatDateRange';
 import { countries, industries } from 'src/utils/network';
 import { TEvent } from 'src/utils/types';
+import dateFormatter from 'src/utils/dateFormatter';
 
 const InitEvent = {
   id: '',
@@ -36,6 +37,7 @@ const InitEvent = {
   location: '',
   industry: '',
   country: '',
+  pastEvent: false,
 };
 
 type FormData = {
@@ -69,6 +71,7 @@ const EventInputPage: React.FC = () => {
     const eventsFromForm = formData.events.map((event: any) => ({
       ...event,
       dateRange: formatDateRange(event),
+      pastEvent: new Date() > new Date(dateFormatter(event.endDate)),
     }));
 
     // Получение событий из page_events

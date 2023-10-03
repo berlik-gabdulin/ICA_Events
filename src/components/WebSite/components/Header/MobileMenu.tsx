@@ -64,7 +64,6 @@ const MobileMenu: FC<{
           )}
         </List>
         <SocialBox
-          display="flex"
           style={{
             justifyContent: 'flex-start',
             opacity: 0,
