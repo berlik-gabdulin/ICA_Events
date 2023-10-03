@@ -1,5 +1,5 @@
 // Reset styles
-import '/public/assets/reset.css';
+import '../../public/assets/reset.css';
 
 // scroll bar
 import 'simplebar/src/simplebar.css';
@@ -24,9 +24,13 @@ import Head from 'next/head';
 import App, { AppProps, AppContext } from 'next/app';
 // utils
 import { getSettings } from '../utils/getSettings';
+// contexts
+import { SettingsProvider } from '../contexts/SettingsContext';
 import { CollapseDrawerProvider } from '../contexts/CollapseDrawerContext';
 // theme
 import ThemeProvider from '../theme';
+// components
+import ThemeSettings from '../components/settings';
 import { SettingsValueProps } from '../components/settings/type';
 import ProgressBar from '../components/ProgressBar';
 import MotionLazyContainer from '../components/animate/MotionLazyContainer';
@@ -45,7 +49,7 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
-  const { Component, pageProps } = props;
+  const { Component, pageProps, settings } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -56,12 +60,16 @@ export default function MyApp(props: MyAppProps) {
       </Head>
 
       <CollapseDrawerProvider>
-        <MotionLazyContainer>
-          <ThemeProvider>
-            <ProgressBar />
-            {getLayout(<Component {...pageProps} />)}
-          </ThemeProvider>
-        </MotionLazyContainer>
+        <SettingsProvider defaultSettings={settings}>
+          <MotionLazyContainer>
+            <ThemeProvider>
+              <ThemeSettings>
+                <ProgressBar />
+                {getLayout(<Component {...pageProps} />)}
+              </ThemeSettings>
+            </ThemeProvider>
+          </MotionLazyContainer>
+        </SettingsProvider>
       </CollapseDrawerProvider>
     </Provider>
   );

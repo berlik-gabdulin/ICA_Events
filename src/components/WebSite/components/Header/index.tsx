@@ -24,22 +24,6 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
   const router = useRouter();
   const hasActiveLink = Object.values(social).some((link) => link.isActive);
 
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
-  if (!isLoaded) {
-    return (
-      <AppBar
-        position="static"
-        style={{ height: 150, backgroundColor: '#044e4e' }}
-        className="header"
-      />
-    );
-  }
-
   return (
     <AppBar position="static" style={{ backgroundColor: '#044e4e' }} className="header">
       <Container>
