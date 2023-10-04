@@ -96,6 +96,9 @@ const EventInputPage: React.FC = () => {
 
       // Сохранение всех событий в строку allEvents
       await updatePageBlock('events', 'allEvents', { content: JSON.stringify(allEvents) });
+      await updatePageBlock('home', 'events', {
+        content: JSON.stringify(allEvents.filter((event: TEvent) => !event.pastEvent).splice(0, 8)),
+      });
 
       showSuccess('Successfully saved!');
       setLoading(false);
