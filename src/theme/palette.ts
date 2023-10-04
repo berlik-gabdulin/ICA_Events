@@ -1,4 +1,5 @@
 import { alpha } from '@mui/material/styles';
+import customTheme from './customTheme';
 
 // ----------------------------------------------------------------------
 
@@ -69,11 +70,11 @@ const PRIMARY = {
   darker: '#003744',
 };
 const SECONDARY = {
-  lighter: '#D6E4FF',
-  light: '#84A9FF',
-  main: '#3366FF',
-  dark: '#1939B7',
-  darker: '#091A7A',
+  lighter: '#C8FACD',
+  light: '#94c698',
+  main: '#367171',
+  dark: '#045050',
+  darker: '#003744',
 };
 const INFO = {
   lighter: '#D0F2FF',
@@ -83,11 +84,11 @@ const INFO = {
   darker: '#04297A',
 };
 const SUCCESS = {
-  lighter: '#E9FCD4',
-  light: '#AAF27F',
-  main: '#54D62C',
-  dark: '#229A16',
-  darker: '#08660D',
+  lighter: `${customTheme.light[60]}`,
+  light: `${customTheme.light[100]}`,
+  main: `${customTheme.main[100]}`,
+  dark: `${customTheme.dark[100]}`,
+  darker: `${customTheme.darker[100]}`,
 };
 const WARNING = {
   lighter: '#FFF7CD',

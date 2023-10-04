@@ -19,6 +19,7 @@ import Layout from 'src/components/WebSite/components/Layout';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import dynamic from 'next/dynamic';
+import useResponsive from 'src/hooks/useResponsive';
 
 type THomePageProps = {
   title: TPageType<TTitleBlock>;
@@ -45,6 +46,8 @@ const Home = (props: THomePageProps) => {
     allEvents,
   } = props;
 
+  const isMobile = useResponsive('down', 'md');
+
   // Динамически загружаемые компоненты
   const EventsBlock = dynamic(() => import('src/components/WebSite/components/EventsBlock'));
   const CustomSVGMap = dynamic(() => import('src/components/WebSite/components/LocationBlock'));
@@ -61,7 +64,7 @@ const Home = (props: THomePageProps) => {
         <TitleBlock {...title} events={allEvents} />
         <AboutBlock {...about} />
         <EventsBlock {...events} />
-        <CustomSVGMap events={allEvents} />
+        {!isMobile ? <CustomSVGMap events={allEvents} /> : null}
         <ReportsBlock {...reports} />
         <TestimonialsBlock {...testimonials} />
         {/* <Membership {...membership} /> */}

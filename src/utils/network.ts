@@ -94,7 +94,7 @@ export const countries = [
 
 export const industries = [
   'Transport_Logistics',
-  'Energy_Electrical_Equipment',
+  'Energy',
   'Healthcare_Beauty',
   'Travel_Tourism',
   'Security_Safety',

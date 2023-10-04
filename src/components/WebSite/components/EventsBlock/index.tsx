@@ -5,9 +5,9 @@ import { Typography } from '@mui/material';
 import { TEvent, TPageType } from 'src/utils/types';
 import { EventCard } from '../EventCard';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Button from '../Button';
-import { Arrow } from './styles';
+import { Arrow, ButtonStyled } from './styles';
 import { useRouter } from 'next/router';
+import customTheme from 'src/theme/customTheme';
 
 const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
   const router = useRouter();
@@ -55,7 +55,7 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
   return (
     <Section>
       <Container>
-        <Title>{block_title}</Title>
+        <Title color={customTheme.main[100]}>{block_title}</Title>
 
         {content && content.length ? (
           <Slider {...settings}>
@@ -67,13 +67,14 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
           <Typography variant="body2">There is no upcomming events...</Typography>
         )}
 
-        <Button
+        <ButtonStyled
           variant="outlined"
           style={{ margin: '60px auto 0' }}
+          customcolor={customTheme.main[100]}
           onClick={() => handleGoRoute('/events')}
         >
           All Events
-        </Button>
+        </ButtonStyled>
       </Container>
     </Section>
   );

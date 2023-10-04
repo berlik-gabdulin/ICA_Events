@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import palette from 'src/theme/palette';
+import Button from '../Button';
 
 export const Arrow = styled.span`
   display: flex !important;
@@ -35,5 +36,11 @@ export const Arrow = styled.span`
   &:before,
   &:after {
     display: none;
+  }
+`;
+
+export const ButtonStyled = styled(Button)`
+  &:hover {
+    color: #fff;
   }
 `;

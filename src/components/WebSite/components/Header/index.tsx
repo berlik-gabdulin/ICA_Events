@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { LogoBox, MenuBox, MenuButton, NavBox, NavItem, NavLink, SocialBox, SubNav } from './style';
 import { useRouter } from 'next/router';
 import { AppBar, Toolbar } from '@mui/material';

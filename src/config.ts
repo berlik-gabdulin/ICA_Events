@@ -48,7 +48,7 @@ export const defaultSettings: SettingsValueProps = {
   themeDirection: 'ltr',
   themeContrast: 'default',
   themeLayout: 'horizontal',
-  themeColorPresets: 'blue',
+  themeColorPresets: 'default',
   themeStretch: false,
 };
 

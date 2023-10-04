@@ -61,6 +61,10 @@ export const NavItem = styled.li`
     > div {
       visibility: visible;
       transform: translate(-50%, 0);
+      @media screen and (max-width: 1010px) {
+        padding-top: 15px;
+        transform: translate(0, 0);
+      }
     }
   }
 `;
@@ -71,6 +75,9 @@ export const NavLink = styled.a<NavLinkProps>`
   padding: 0 8px;
   color: #fff;
   text-decoration: none;
+  @media screen and (max-width: 1010px) {
+    padding: 4px 8px;
+  }
 
   &::after {
     content: '';

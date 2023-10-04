@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Drawer, List, Paper } from '@mui/material';
 import { TNavigation, TSocialLinks } from 'src/utils/types';
 import { MenuButton, NavItem, NavLink, SocialBox } from './style';
@@ -22,6 +22,15 @@ const MobileMenu: FC<{
   social: TSocialLinks;
 }> = ({ open, onClose, navigation, social }) => {
   const router = useRouter();
+  const [openSubMenu, setOpenSubMenu] = useState<number | null>(null);
+
+  const toggleSubMenu = (index: number) => {
+    if (openSubMenu === index) {
+      setOpenSubMenu(null);
+    } else {
+      setOpenSubMenu(index);
+    }
+  };
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
@@ -53,12 +62,33 @@ const MobileMenu: FC<{
                 style={{
                   opacity: 0,
                   animation: `bounceLeft 0.6s ease ${index * 0.1}s forwards`,
-                  animationDelay: `${open ? index * 0.1 : 0}s`, // Добавьте задержку при открытии
+                  animationDelay: `${open ? index * 0.1 : 0}s`,
                 }}
               >
                 <Link passHref href={item.path}>
-                  <NavLink isActive={router.pathname === item.path}>{item.label}</NavLink>
+                  <NavLink
+                    isActive={router.pathname === item.path}
+                    onClick={() => toggleSubMenu(index)}
+                  >
+                    {item.label}
+                  </NavLink>
                 </Link>
+                {item.subMenu && item.subMenu.length > 0 && openSubMenu === index && (
+                  <SubNav className={openSubMenu === index ? 'open' : ''}>
+                    {item.subMenu.map((subItem) =>
+                      subItem.isActive ? (
+                        <Link passHref href={subItem.path} key={subItem.path}>
+                          <NavLink
+                            isActive={router.pathname === subItem.path}
+                            style={{ color: '#000' }}
+                          >
+                            {subItem.label}
+                          </NavLink>
+                        </Link>
+                      ) : null
+                    )}
+                  </SubNav>
+                )}
               </NavItem>
             ) : null
           )}
@@ -163,6 +193,35 @@ const CustomPaper = styled(Paper)`
     100% {
       opacity: 1;
       transform: translateY(0%);
+    }
+  }
+`;
+
+const SubNav = styled.div`
+  position: static;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  padding-left: 20px;
+  opacity: 0;
+  max-height: 0;
+  background-color: ${customTheme.light[20]};
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+  &.open {
+    opacity: 1;
+    max-height: 500px; // Вы можете изменить это значение в зависимости от вашего дизайна
+  }
+
+  a {
+    color: #fff !important;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: #ffd700; // Вы можете изменить цвет на любой, который вам нравится
     }
   }
 `;

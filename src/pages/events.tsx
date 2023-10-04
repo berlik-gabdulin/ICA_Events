@@ -27,6 +27,7 @@ import db from 'src/utils/db';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
 import { countries, industries } from 'src/utils/network';
+import customTheme from 'src/theme/customTheme';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;
@@ -143,6 +144,7 @@ const Events = (props: TMaterialsPageProps) => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   fullWidth
+                  color="primary"
                 />
               </Box>
               <Box marginBottom={3} display="flex">
@@ -156,6 +158,7 @@ const Events = (props: TMaterialsPageProps) => {
                     onChange={(e) => setFilterCountry(e.target.value)}
                     style={{ borderRadius: 0 }}
                     defaultValue="Choose country"
+                    color="primary"
                   >
                     <MenuItem value="">All countries</MenuItem>
                     {countries.map((country) => (
@@ -177,6 +180,7 @@ const Events = (props: TMaterialsPageProps) => {
                     onChange={(e) => setFilterIndustry(e.target.value)}
                     style={{ borderRadius: 0 }}
                     defaultValue="Choose industry"
+                    color="primary"
                   >
                     <MenuItem value="">All industries</MenuItem>
                     {industries.map((industry) => (
