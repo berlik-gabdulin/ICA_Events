@@ -10,9 +10,18 @@ const Button: FC<TButton> = ({
   color = 'primary',
   style,
   children,
+  loading = false,
   ...props
 }) => (
-  <ButtonStyled type={type} variant={variant} color={color} size={size} style={style} {...props}>
+  <ButtonStyled
+    type={type}
+    variant={variant}
+    color={color}
+    size={size}
+    style={style}
+    {...props}
+    disabled={loading}
+  >
     {children}
   </ButtonStyled>
 );

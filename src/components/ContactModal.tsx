@@ -12,7 +12,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { countries, industries } from 'src/utils/network';
+import { countriesDropdown, industries } from 'src/utils/network';
 import { TEvent } from 'src/utils/types';
 import styled from '@emotion/styled';
 
@@ -114,7 +114,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, onClose, events }) =>
               defaultValue=""
               render={({ field }) => (
                 <Select {...field} label="Country">
-                  {countries.map((country: string) => (
+                  {countriesDropdown.map((country: string) => (
                     <MenuItem key={country} value={country}>
                       {country}
                     </MenuItem>

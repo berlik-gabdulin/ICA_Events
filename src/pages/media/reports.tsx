@@ -23,6 +23,7 @@ import db from 'src/utils/db';
 import { RowDataPacket } from 'mysql2';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
+import { getLayoutData } from 'src/utils/getLayoutData';
 
 type TSolutionsPageProps = {
   page: TPageType<TReports>;
@@ -63,6 +64,7 @@ const ReportsPage = (props: TSolutionsPageProps) => {
       location: '',
       urls: [],
       path: '',
+      order: 999,
       isNew: true,
     };
     while (galleries.length < 5) {
@@ -71,19 +73,8 @@ const ReportsPage = (props: TSolutionsPageProps) => {
     return galleries;
   };
 
-  const groupedByCountry: { [key: string]: TReport[] } = galleries.reduce<{
-    [key: string]: TReport[];
-  }>((acc, gallery) => {
-    const country = gallery.country;
-    if (!acc[country]) {
-      acc[country] = [];
-    }
-    acc[country].push(gallery);
-    return acc;
-  }, {});
-
-  Object.keys(groupedByCountry).forEach((country) => {
-    groupedByCountry[country] = fillEmptyGalleries(groupedByCountry[country]);
+  Object.keys(galleries).forEach((country) => {
+    galleries[country] = fillEmptyGalleries(galleries[country]);
   });
 
   return (
@@ -97,14 +88,14 @@ const ReportsPage = (props: TSolutionsPageProps) => {
             <TitleH1>{page_title}</TitleH1>
           </Container>
         </Section>
-        {Object.keys(groupedByCountry).map((country, index) => (
+        {Object.keys(galleries).map((country, index) => (
           <ThemeSection key={country} style={{ padding: '40px 0' }}>
             <Container>
               <Grid container spacing="24px">
                 <Grid item xs={12} sm={6} md={4}>
                   <SquareComponent title={country} />
                 </Grid>
-                {groupedByCountry[country].slice(0, 5).map((gallery) => (
+                {galleries[country].slice(0, 5).map((gallery) => (
                   <Grid item xs={12} sm={6} md={4} key={gallery.id} className={gallery.id}>
                     <SquareComponent
                       imageSrc={gallery.preview}
@@ -118,7 +109,7 @@ const ReportsPage = (props: TSolutionsPageProps) => {
                 ))}
               </Grid>
             </Container>
-            {Object.keys(groupedByCountry).length === index + 1 ? (
+            {Object.keys(galleries).length === index + 1 ? (
               <Path>
                 <Image src={PathImg} layout="fill" alt="Path" />
               </Path>
@@ -169,12 +160,7 @@ export async function getStaticProps() {
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
 
-  const layoutData = {
-    social: settingsData.social?.content?.socialLinks || {},
-    footer: settingsData.main?.content?.footer || '',
-    navigation: settingsData.navigation?.content?.nav || [],
-    meta: metaContent,
-  };
+  const layoutData = getLayoutData(settingsData, metaContent);
 
   const data: IData = {};
   pageData.map((block: IPageBlock) => {

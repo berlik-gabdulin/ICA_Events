@@ -25,7 +25,7 @@ export const EventCard = ({ event }: { event: TEvent }) => {
     <CardWrapper>
       <Card>
         <CardImgWrp>
-          <Image src={event.image_profile} alt={event.title} width={390} height={195} />
+          <Image src={event.image_profile} alt={event.title} width={390} height={195} priority />
         </CardImgWrp>
         <CardInner>
           <CardTitle>{event.title}</CardTitle>

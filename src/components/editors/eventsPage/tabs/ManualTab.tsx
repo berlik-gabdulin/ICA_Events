@@ -22,8 +22,6 @@ import ImagePreview from 'src/components/ImagePreview';
 import { v4 as uuidv4 } from 'uuid';
 import { formatDateRange } from 'src/utils/formatDateRange';
 import { countries, industries } from 'src/utils/network';
-import { TEvent } from 'src/utils/types';
-import dateFormatter from 'src/utils/dateFormatter';
 
 const InitEvent = {
   id: '',
@@ -32,12 +30,11 @@ const InitEvent = {
   website: '',
   image_profile: '',
   beginDate: '',
-  dateRange: '',
   endDate: '',
+  dateRange: '',
   location: '',
   industry: '',
   country: '',
-  pastEvent: false,
 };
 
 type FormData = {
@@ -71,20 +68,7 @@ const EventInputPage: React.FC = () => {
     const eventsFromForm = formData.events.map((event: any) => ({
       ...event,
       dateRange: formatDateRange(event),
-      pastEvent: new Date() > new Date(dateFormatter(event.endDate)),
     }));
-
-    // Получение событий из page_events
-    const pageEventsData = await fetchPageBlock('events', 'events');
-    const pageEvents = JSON.parse(pageEventsData.content);
-
-    const pageEventsArr: TEvent[] = [];
-    Object.values(pageEvents).map((item: any) => pageEventsArr.push(...item));
-
-    // Объединение событий из формы и page_events
-    const allEvents = [...eventsFromForm, ...pageEventsArr].sort((a, b) =>
-      a.beginDate.localeCompare(b.beginDate)
-    ); // Сортировка событий по дате начала
 
     try {
       setLoading(true);
@@ -94,11 +78,7 @@ const EventInputPage: React.FC = () => {
         content: JSON.stringify(eventsFromForm),
       });
 
-      // Сохранение всех событий в строку allEvents
-      await updatePageBlock('events', 'allEvents', { content: JSON.stringify(allEvents) });
-      await updatePageBlock('home', 'events', {
-        content: JSON.stringify(allEvents.filter((event: TEvent) => !event.pastEvent).splice(0, 8)),
-      });
+      await (await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/combineEvents`)).json();
 
       showSuccess('Successfully saved!');
       setLoading(false);
@@ -106,8 +86,6 @@ const EventInputPage: React.FC = () => {
       showError('An error occurred');
     }
   };
-
-  useEffect(() => console.log(watch()), [watch]);
 
   return (
     <form onSubmit={handleSubmit(handleSave)}>

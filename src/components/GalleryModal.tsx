@@ -142,6 +142,8 @@ const GalleryModal: React.FC<TReportModalProps> = ({ open, onClose, gallery }) =
 
               <Input label="Year" fullWidth {...register('gallery.year')} />
 
+              <Input label="Order" fullWidth {...register('gallery.order')} />
+
               <FileUploader
                 inputName="gallery.urls"
                 setValue={setValue}

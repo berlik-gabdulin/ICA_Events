@@ -16,6 +16,7 @@ const ImagePreview: FC<TImagePreviewProps> = ({
       alt={alt}
       layout="fill"
       objectFit="cover"
+      priority
     />
   </Box>
 );

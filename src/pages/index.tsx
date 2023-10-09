@@ -20,6 +20,7 @@ import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import dynamic from 'next/dynamic';
 import useResponsive from 'src/hooks/useResponsive';
+import { getLayoutData } from 'src/utils/getLayoutData';
 
 type THomePageProps = {
   title: TPageType<TTitleBlock>;
@@ -101,12 +102,7 @@ export async function getStaticProps() {
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
 
-  const layoutData = {
-    social: settingsData.social?.content?.socialLinks || {},
-    footer: settingsData.main?.content?.footer || '',
-    navigation: settingsData.navigation?.content?.nav || [],
-    meta: metaContent,
-  };
+  const layoutData = getLayoutData(settingsData, metaContent);
 
   const data: IData = {};
   pageData.map((block: IPageBlock) => {

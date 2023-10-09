@@ -5,6 +5,8 @@ import useSnackbar from 'src/hooks/useSnackbar';
 import Button from 'src/components/Button';
 import { TSettingsMain } from 'src/utils/types';
 import CustomEditor from 'src/components/CustomEditor';
+import { DeviderStyled } from 'src/components/globalStyles';
+import { Typography } from '@mui/material';
 
 const MainTab = () => {
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,7 @@ const MainTab = () => {
   const { handleSubmit, setValue, watch, control } = useForm<TSettingsMain>({
     defaultValues: {
       footer: '',
+      privacyPolicy: '',
     },
   });
   const { showError, showSuccess } = useSnackbar();
@@ -21,6 +24,7 @@ const MainTab = () => {
       const data = await fetchPageBlock('settings', 'main');
       const parsedData = JSON.parse(data.content);
       setValue('footer', parsedData.footer);
+      setValue('privacyPolicy', parsedData.privacyPolicy);
 
       setLoading(false);
     };
@@ -40,7 +44,15 @@ const MainTab = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
+          <Typography variant="h3" marginBottom="15px">
+            Footer
+          </Typography>
           <CustomEditor name="footer" watch={watch} control={control} />
+          <DeviderStyled />
+          <Typography variant="h3" marginBottom="15px">
+            Privacy Policy
+          </Typography>
+          <CustomEditor name="privacyPolicy" watch={watch} control={control} />
 
           <Button>Save</Button>
         </>

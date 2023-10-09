@@ -27,6 +27,7 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import customTheme from 'src/theme/customTheme';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
+import { getLayoutData } from 'src/utils/getLayoutData';
 
 type TSolutionsPageProps = {
   page: TPageType<TContactsPage>;
@@ -148,12 +149,7 @@ export async function getStaticProps() {
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
 
-  const layoutData = {
-    social: settingsData.social?.content?.socialLinks || {},
-    footer: settingsData.main?.content?.footer || '',
-    navigation: settingsData.navigation?.content?.nav || [],
-    meta: metaContent,
-  };
+  const layoutData = getLayoutData(settingsData, metaContent);
 
   const data: IData = {};
   pageData.map((block: IPageBlock) => {

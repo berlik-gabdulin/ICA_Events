@@ -26,8 +26,9 @@ import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
-import { countries, industries } from 'src/utils/network';
-import customTheme from 'src/theme/customTheme';
+import { countriesDropdown, industries } from 'src/utils/network';
+import { getLayoutData } from 'src/utils/getLayoutData';
+import dateFormatter from 'src/utils/dateFormatter';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;
@@ -96,21 +97,23 @@ const Events = (props: TMaterialsPageProps) => {
     const searchLCase = search.toLowerCase();
 
     const filteredEvents = allEvents.filter((event) => {
-      const title = event.title.toLowerCase(),
-        description = event.description.toLowerCase(),
-        location = event.location.toLowerCase(),
-        textDate = event.dateRange,
-        country = event.country.toLowerCase(),
-        industry = event.industry ? event.industry.toLowerCase() : '';
+      if (new Date() < new Date(dateFormatter(event.endDate))) {
+        const title = event.title.toLowerCase(),
+          description = event.description.toLowerCase(),
+          location = event.location.toLowerCase(),
+          textDate = event.dateRange,
+          country = event.country.toLowerCase(),
+          industry = event.industry ? event.industry.toLowerCase() : '';
 
-      return (
-        (title.includes(searchLCase) ||
-          description.includes(searchLCase) ||
-          location.includes(searchLCase) ||
-          textDate.includes(searchLCase)) &&
-        country.includes(filterCountry.toLowerCase()) &&
-        industry.includes(filterIndustry.toLowerCase())
-      );
+        return (
+          (title.includes(searchLCase) ||
+            description.includes(searchLCase) ||
+            location.includes(searchLCase) ||
+            textDate.includes(searchLCase)) &&
+          country.includes(filterCountry.toLowerCase()) &&
+          industry.includes(filterIndustry.toLowerCase())
+        );
+      } else null;
     });
 
     setEventsToShow(filteredEvents);
@@ -161,7 +164,7 @@ const Events = (props: TMaterialsPageProps) => {
                     color="primary"
                   >
                     <MenuItem value="">All countries</MenuItem>
-                    {countries.map((country) => (
+                    {countriesDropdown.map((country) => (
                       <MenuItem key={country} value={country}>
                         {country}
                       </MenuItem>
@@ -195,11 +198,9 @@ const Events = (props: TMaterialsPageProps) => {
 
             {eventsToShow.length ? (
               <GridBox>
-                {eventsToShow
-                  .slice(0, visibleEvents)
-                  .map((event: TEvent) =>
-                    !event.pastEvent ? <EventCard event={event} key={event.id} /> : null
-                  )}
+                {eventsToShow.slice(0, visibleEvents).map((event: TEvent) => (
+                  <EventCard event={event} key={event.id} />
+                ))}
               </GridBox>
             ) : (
               <Typography variant="h5" textAlign="center">
@@ -255,12 +256,7 @@ export async function getStaticProps() {
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
 
-  const layoutData = {
-    social: settingsData.social?.content?.socialLinks || {},
-    footer: settingsData.main?.content?.footer || '',
-    navigation: settingsData.navigation?.content?.nav || [],
-    meta: metaContent,
-  };
+  const layoutData = getLayoutData(settingsData, metaContent);
 
   const data: IData = {};
   pageData.map((block: IPageBlock) => {

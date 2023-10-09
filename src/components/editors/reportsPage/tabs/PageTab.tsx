@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
+  AccordionDetails,
+  AccordionSummary,
   Dialog,
   DialogActions,
   DialogContent,
@@ -17,6 +19,8 @@ import GalleryCard from 'src/components/GalleryCard';
 import GalleryModal from 'src/components/GalleryModal';
 import Button from 'src/components/Button';
 import ImagePreview from 'src/components/ImagePreview';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { AccordionCustom } from 'src/components/globalStyles';
 
 type FormData = {
   galleries: TReports;
@@ -32,6 +36,7 @@ export const InitialGallery = {
   location: '',
   urls: [],
   path: '',
+  order: 0,
   isNew: true,
 };
 
@@ -56,20 +61,24 @@ const PageTab: React.FC = () => {
 
   const handleCloseModal = (updatedGallery?: TReport) => {
     if (updatedGallery) {
-      const currentGalleries = getValues('galleries.galleries');
-      let newGalleries;
+      const currentGalleries = { ...getValues('galleries.galleries') };
+      const country = updatedGallery.country;
 
-      const index = currentGalleries.findIndex((g) => g.id === updatedGallery.id);
-      if (index !== -1) {
-        // Обновляем существующую галерею
-        newGalleries = [...currentGalleries];
-        newGalleries[index] = updatedGallery;
-      } else {
-        // Добавляем новую галерею
-        newGalleries = [...currentGalleries, updatedGallery];
+      if (!currentGalleries[country]) {
+        currentGalleries[country] = [];
       }
 
-      setValue('galleries.galleries', newGalleries);
+      const index = currentGalleries[country].findIndex((g) => g.id === updatedGallery.id);
+      if (index !== -1) {
+        currentGalleries[country][index] = updatedGallery;
+      } else {
+        currentGalleries[country].push(updatedGallery);
+      }
+
+      // Сортировка галерей внутри страны по полю order
+      currentGalleries[country].sort((a, b) => a.order - b.order);
+
+      setValue('galleries.galleries', currentGalleries);
     }
     setSelectedGallery(null);
     setOpenModal(false);
@@ -85,9 +94,18 @@ const PageTab: React.FC = () => {
   const handleDeleteGallery = async (gallery: TReport) => {
     await removeFS({ folder: `galleries/${gallery.path}` });
 
-    const galleries = getValues('galleries.galleries').filter((item) => item.id !== gallery.id);
+    const currentGalleries = { ...getValues('galleries.galleries') };
+    const country = gallery.country;
 
-    setValue('galleries.galleries', galleries);
+    if (currentGalleries[country]) {
+      currentGalleries[country] = currentGalleries[country].filter((g) => g.id !== gallery.id);
+
+      if (currentGalleries[country].length === 0) {
+        delete currentGalleries[country];
+      }
+    }
+
+    setValue('galleries.galleries', currentGalleries);
     setOpenDialog(false);
     handleSubmit(handleSave)();
   };
@@ -95,13 +113,26 @@ const PageTab: React.FC = () => {
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
       setLoading(true);
-      await updatePageBlock('galleries', 'page', { content: JSON.stringify(formData.galleries) });
+      const sortedGalleries = { ...formData.galleries.galleries };
+      Object.keys(sortedGalleries).forEach((country) => {
+        sortedGalleries[country].sort((a, b) => a.order - b.order);
+      });
+
+      await updatePageBlock('galleries', 'page', {
+        content: JSON.stringify({ galleries: sortedGalleries }),
+      });
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {
       showError('An error occurred');
       setLoading(false);
     }
+  };
+
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   return (
@@ -132,17 +163,38 @@ const PageTab: React.FC = () => {
           >
             Add New Gallery
           </Button>
-          <Stack direction="row" spacing={2} marginBottom={3} marginTop={3} flexWrap="wrap">
-            {getValues('galleries.galleries').map((gallery: TReport, index: number) => (
-              <GalleryCard
-                key={index}
-                gallery={gallery}
-                onEdit={() => handleEditGallery(gallery)}
-                onDelete={() => {
-                  setToBeDeleted(gallery);
-                  setOpenDialog(true);
-                }}
-              />
+          <Stack marginBottom={3} marginTop={3}>
+            {Object.keys(getValues('galleries.galleries')).map((country) => (
+              <AccordionCustom
+                expanded={expanded === country}
+                onChange={handleChange(country)}
+                key={country}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`${country}-content`}
+                  id={`${country}-header`}
+                >
+                  {country}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Stack direction="row" flexWrap="wrap">
+                    {getValues('galleries.galleries')[country].map(
+                      (gallery: TReport, index: number) => (
+                        <GalleryCard
+                          key={index}
+                          gallery={gallery}
+                          onEdit={() => handleEditGallery(gallery)}
+                          onDelete={() => {
+                            setToBeDeleted(gallery);
+                            setOpenDialog(true);
+                          }}
+                        />
+                      )
+                    )}
+                  </Stack>
+                </AccordionDetails>
+              </AccordionCustom>
             ))}
           </Stack>
 

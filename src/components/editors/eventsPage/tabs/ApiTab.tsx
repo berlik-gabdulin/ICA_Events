@@ -5,7 +5,14 @@ import useSnackbar from 'src/hooks/useSnackbar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Input from 'src/components/Input';
 import Button from 'src/components/Button';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material';
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Box,
+  Stack,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileUploader from 'src/components/upload/FileUploader';
 import ImagePreview from 'src/components/ImagePreview';
@@ -29,6 +36,7 @@ type FormData = {
 
 const ApiTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [updateIsLoading, setUpdateIsLoading] = useState(false);
   const { register, handleSubmit, setValue, control, getValues, watch } = useForm<FormData>({
     defaultValues: {
       image: '',
@@ -51,6 +59,26 @@ const ApiTab: React.FC = () => {
 
     fetchData();
   }, [setValue]);
+
+  const updateEvents = async () => {
+    setUpdateIsLoading(true);
+
+    const isAPIUpdated = await (
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/eventFetcher`)
+    ).json();
+
+    const isCombined = await (
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/combineEvents`)
+    ).json();
+
+    if (isCombined && isAPIUpdated.message.includes('success')) {
+      showSuccess('All events successfully updated!');
+    } else {
+      showError('An error occurred :(');
+    }
+
+    setUpdateIsLoading(false);
+  };
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
@@ -88,18 +116,27 @@ const ApiTab: React.FC = () => {
               </AccordionDetails>
             </Accordion>
           ))}
-          <Button
-            variant="outlined"
-            color="primary"
-            type="button"
-            onClick={() => append(InitAPI)}
-            style={{ marginRight: '15px' }}
-          >
-            Add New API +
-          </Button>
-          <Button variant="contained" color="primary">
-            Save
-          </Button>
+          <Stack gap={2} display="flex" flexDirection="row">
+            <Button
+              variant="outlined"
+              color="primary"
+              type="button"
+              onClick={() => append(InitAPI)}
+            >
+              Add New API +
+            </Button>
+            <Button variant="contained" color="primary">
+              Save
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={updateEvents}
+              loading={updateIsLoading}
+            >
+              Update Events
+            </Button>
+          </Stack>
         </>
       ) : (
         <p>Loading...</p>

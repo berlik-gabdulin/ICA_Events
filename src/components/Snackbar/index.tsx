@@ -18,7 +18,13 @@ const Snackbar: React.FC = () => {
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
-      <Alert elevation={6} variant="filled" onClose={handleClose} severity={type}>
+      <Alert
+        elevation={6}
+        variant="filled"
+        onClose={handleClose}
+        severity={type}
+        style={{ color: '#fff' }}
+      >
         {message}
       </Alert>
     </MuiSnackbar>

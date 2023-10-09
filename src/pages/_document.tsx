@@ -7,6 +7,7 @@ import createCache from '@emotion/cache';
 import createEmotionServer from '@emotion/server/create-instance';
 // theme
 import customTheme from 'src/theme/customTheme';
+import Script from 'next/script';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,16 @@ export default class MyDocument extends Document {
           <meta name="keywords" content="react,material,kit,application,dashboard,admin,template" />
 
           <meta name="author" content="Minimal UI Kit" />
+
+          <Script async src="https://www.googletagmanager.com/gtag/js?id=G-TSKMGS93ND" />
+          <Script id="google-analytics">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-TSKMGS93ND');
+            `}
+          </Script>
         </Head>
 
         <body>

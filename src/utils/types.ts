@@ -8,7 +8,8 @@ export interface IData {
 }
 
 export type TFooter = {
-  content: string;
+  footer: string;
+  privacyPolicy: string;
 };
 
 export interface IPageBlock {
@@ -49,6 +50,7 @@ export type TButton = {
   style?: any | null;
   onClick?: () => void;
   children: ReactNode;
+  loading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export type TMetaFields = {
@@ -126,7 +128,7 @@ export type NavLinkProps = {
 
 export type TLayoutProps = {
   social: TSocialLinks;
-  footer: string;
+  footer: TFooter;
   navigation: TNavigation;
   meta: TMetaFields;
 };
@@ -136,6 +138,8 @@ export type TEvent = {
   title: string;
   description: string;
   image_profile: string;
+  beginDate: string;
+  endDate: string;
   dateRange: string;
   location: string;
   country: string;
@@ -161,6 +165,7 @@ export type TAboutPage = {
 
 export type TSettingsMain = {
   footer: string;
+  privacyPolicy: string;
 };
 
 export interface IUpdateBlockData {
@@ -218,12 +223,13 @@ export type TReport = {
   location: string;
   urls: string[];
   path: string;
+  order: number;
   isNew: boolean;
 };
 
 export type TReports = {
   image: string;
-  galleries: TReport[];
+  galleries: Record<string, TReport[]>;
 };
 
 export type TReportModalProps = {

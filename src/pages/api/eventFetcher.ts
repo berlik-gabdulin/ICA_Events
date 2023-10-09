@@ -18,12 +18,12 @@ interface IEvent {
   description: string;
   image_profile: string;
   beginDate: string;
+  endDate: string;
   dateRange: string;
   location: string;
   industry: string;
   website: string;
   country: string;
-  pastEvent: boolean;
 }
 
 const fetchAPIConfigs = async (): Promise<IAPIConfig[]> => {
@@ -58,12 +58,12 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
       description: event.description,
       image_profile: country !== 'Azerbaijan' ? event.logomini : event.image_profile,
       beginDate: dateFormatter(event.beginDate),
+      endDate: dateFormatter(event.endDate),
       dateRange: formatDateRange(event),
       location: event.location,
       industry: event.industry,
       website: event.programme ? event.programme : event.website,
       country: country,
-      pastEvent: new Date() > new Date(dateFormatter(event.endDate)),
     }));
 
     // Добавляем события в объект по странам
@@ -82,21 +82,19 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
   return allEvents;
 };
 
-const saveEventsToDB = async (allEvents: Record<string, IEvent[]>, res: NextApiResponse) => {
+const saveEventsToDB = async (allEvents: Record<string, IEvent[]>) => {
   const combinedEvents = Object.entries(allEvents)
     .flatMap(([country, events]) => events as IEvent[])
     .sort((a: any, b: any) => new Date(a.beginDate).getTime() - new Date(b.beginDate).getTime());
-  // const slicedEvents = allEvents.slice(0, 8);
   try {
     await pool.execute(`UPDATE page_events SET content = ? WHERE block_name = 'events'`, [
-      JSON.stringify(allEvents),
+      JSON.stringify(combinedEvents),
     ]);
-    await pool.execute(`UPDATE page_home SET content = ? WHERE block_name = 'events'`, [
-      JSON.stringify(combinedEvents.slice(0, 8)),
-    ]);
-    return res.status(200).json({ message: 'Changes have been saved' });
+
+    return true;
   } catch (error) {
-    return res.status(500).json({ error: 'Error during data update', message: error });
+    console.error('Error during data update:', error);
+    return false;
   }
 };
 
@@ -109,9 +107,17 @@ const FetchEvents = async (_req: NextApiRequest, res: NextApiResponse) => {
     const allEvents = await fetchAllEvents(apiConfigs);
 
     // Шаг 3: Сохранение данных в БД
-    await saveEventsToDB(allEvents, res);
+    const isSaved = await saveEventsToDB(allEvents);
 
-    res.status(200).json({ message: 'Events fetched and saved successfully!' });
+    const isCombined = await (
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/combineEvents`)
+    ).json();
+
+    if (isSaved && isCombined) {
+      res.status(200).json({ message: 'Events fetched and saved successfully!' });
+    } else {
+      res.status(500).json({ error: 'Internal Server Error', message: 'Failed to save data' });
+    }
   } catch (err) {
     console.error('An error occurred:', err);
     res.status(500).json({ error: 'Internal Server Error', message: err.message });

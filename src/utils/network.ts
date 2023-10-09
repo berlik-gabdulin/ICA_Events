@@ -81,8 +81,19 @@ export const galleryCountries = [
   'Azerbaijan',
   'Uzbekistan',
 ];
+
 export const countries = [
   'United Kingdom',
+  'Poland',
+  'Romania',
+  'United Arab Emirates',
+  'Turkey',
+  'Kazakhstan',
+  'Azerbaijan',
+  'Uzbekistan',
+];
+
+export const countriesDropdown = [
   'Poland',
   'Romania',
   'United Arab Emirates',

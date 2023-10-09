@@ -25,6 +25,7 @@ import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
+import { getLayoutData } from 'src/utils/getLayoutData';
 
 type TMaterialsPageProps = {
   page: TPageType<TMaterialsPage>;
@@ -128,12 +129,7 @@ export async function getStaticProps() {
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
 
-  const layoutData = {
-    social: settingsData.social?.content?.socialLinks || {},
-    footer: settingsData.main?.content?.footer || '',
-    navigation: settingsData.navigation?.content?.nav || [],
-    meta: metaContent,
-  };
+  const layoutData = getLayoutData(settingsData, metaContent);
 
   const data: IData = {};
   pageData.map((block: IPageBlock) => {

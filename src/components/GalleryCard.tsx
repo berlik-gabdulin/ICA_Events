@@ -14,12 +14,12 @@ type GalleryCardProps = {
 };
 
 const GalleryCard: React.FC<GalleryCardProps> = ({ gallery, onEdit, onDelete }) => (
-  <Box sx={{ width: 300, height: 200, position: 'relative' }}>
+  <Box sx={{ margin: '10px', width: 350, height: 230, position: 'relative' }}>
     <ImagePreview
       src={gallery.preview ? gallery.preview : '/assets/placeholder.jpg'}
       alt={gallery.gallery_title}
-      width={300}
-      height={200}
+      width={350}
+      height={230}
     />
     <Title>{gallery.gallery_title}</Title>
     <Box sx={{ position: 'absolute', top: 5, right: 5 }}>
