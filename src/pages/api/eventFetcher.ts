@@ -53,16 +53,16 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
 
     // Преобразуем данные
     const events: IEvent[] = eventsFromAPI.map((event: any) => ({
-      id: event.projectID ? `${event.projectID}` : `${event.id}`,
-      title: event.project ? event.project : event.title,
+      id: `${event.projectID}`,
+      title: event.title,
       description: event.description,
-      image_profile: country !== 'Azerbaijan' ? event.logomini : event.image_profile,
+      image_profile: event.image_profile,
       beginDate: dateFormatter(event.beginDate),
       endDate: dateFormatter(event.endDate),
       dateRange: formatDateRange(event),
       location: event.location,
       industry: event.industry,
-      website: event.programme ? event.programme : event.website,
+      website: event.website,
       country: country,
     }));
 
