@@ -49,7 +49,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
 
           uploadedFiles.push(`/uploads/${folder}/${fileData.originalFilename}`);
           fileDetails.push({
-            // Добавлено
             url: `/uploads/${folder}/${fileData.originalFilename}`,
             name: fileData.originalFilename,
             size: fileData.size,
@@ -65,6 +64,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
     }
 
-    res.status(200).json({ urls: uploadedFiles, files: fileDetails });
+    res.status(200).json({ urls: uploadedFiles, files: fileDetails, location: uploadedFiles[0] });
   });
 }

@@ -4,8 +4,9 @@ import BGBox from '../BGBox';
 import Button from '../Button';
 import { MainTitle } from 'src/components/globalStyles';
 import { Buttons, ContainerStyles } from './styles';
-import ContactModal from 'src/components/ContactModal';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { openModal } from 'src/redux/slices/contactModalSlice';
 
 type TitleBlockProps = TPageType<TTitleBlock> & {
   events: TEvent[];
@@ -15,7 +16,11 @@ const TitleBlock: React.FC<TitleBlockProps> = ({ block_title, content, events })
   const { title, buttons, bgImage, bgImageMobile } = content;
   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleOpen = useCallback(() => {
+    dispatch(openModal());
+  }, [dispatch]);
 
   const handleGoRoute = useCallback(
     (route: string) => {
@@ -23,9 +28,6 @@ const TitleBlock: React.FC<TitleBlockProps> = ({ block_title, content, events })
     },
     [router]
   );
-
-  const handleOpen = useCallback(() => setOpen(true), []);
-  const handleClose = useCallback(() => setOpen(false), []);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -66,7 +68,6 @@ const TitleBlock: React.FC<TitleBlockProps> = ({ block_title, content, events })
         {buttons?.contact?.isActive &&
           renderButton('contact', buttons.contact.label, () => handleGoRoute('/contacts'))}
       </Buttons>
-      <ContactModal open={open} onClose={handleClose} events={events} />
     </BGBox>
   );
 };

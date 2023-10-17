@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Button,
@@ -13,8 +13,10 @@ import {
   TextField,
 } from '@mui/material';
 import { countriesDropdown, industries } from 'src/utils/network';
-import { TEvent } from 'src/utils/types';
 import styled from '@emotion/styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'src/redux/rootReducer';
+import { closeModal, submitForm } from 'src/redux/slices/contactModalSlice';
 
 interface IFormInput {
   name: string;
@@ -25,41 +27,28 @@ interface IFormInput {
   country: string;
 }
 
-interface ContactModalProps {
-  open: boolean;
-  onClose: () => void;
-  events: TEvent[];
-}
+const ContactModal: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { control, handleSubmit, setValue } = useForm<IFormInput>();
+  const isModalOpen = useSelector((state: RootState) => state.contactModal.open);
+  const selectedIndustry = useSelector((state: RootState) => state.contactModal.selectedIndustry); // Получаем выбранную индустрию из состояния
 
-const ContactModal: React.FC<ContactModalProps> = ({ open, onClose, events }) => {
-  const { control, handleSubmit, reset } = useForm<IFormInput>();
+  useEffect(() => {
+    if (selectedIndustry) {
+      setValue('industry', selectedIndustry); // Устанавливаем значение выбранной индустрии в форму
+    }
+  }, [selectedIndustry, setValue]);
+
+  const onClose = () => {
+    dispatch(closeModal());
+  };
 
   const onSubmit = (data: IFormInput) => {
-    const formData = new URLSearchParams();
-
-    Object.keys(data).forEach((key) => {
-      formData.append(key, (data as any)[key]);
-    });
-
-    fetch('/public/sendmail.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData.toString(),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        reset();
-        onClose();
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    dispatch(submitForm(new URLSearchParams(Object.entries(data))));
   };
 
   return (
-    <DialogStyled open={open} onClose={onClose}>
+    <DialogStyled open={isModalOpen} onClose={onClose}>
       <DialogTitle>Contact Us</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -84,7 +73,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, onClose, events }) =>
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <TextField {...field} label="Messege" fullWidth margin="normal" />
+              <TextField {...field} label="Message" fullWidth margin="normal" />
             )}
           />
 
@@ -93,7 +82,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, onClose, events }) =>
             <Controller
               name="industry"
               control={control}
-              defaultValue=""
+              defaultValue={selectedIndustry || ''} // Устанавливаем значение по умолчанию из состояния Redux
               render={({ field }) => (
                 <Select {...field} label="Industry">
                   {industries.map((industry: string) => (

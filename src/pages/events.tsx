@@ -55,6 +55,8 @@ const Events = (props: TMaterialsPageProps) => {
   const [filterCountry, setFilterCountry] = useState('');
   const [filterIndustry, setFilterIndustry] = useState('');
   const [eventsToShow, setEventsToShow] = useState<TEvent[]>([]);
+  const [initialized, setInitialized] = useState(false); // Добавим состояние для отслеживания инициализации
+  const [promo, setPromo] = useState('');
 
   useEffect(() => {
     const options = {
@@ -82,14 +84,6 @@ const Events = (props: TMaterialsPageProps) => {
       if (target) observer.unobserve(target);
     };
   }, [visibleEvents, eventsToShow.length]);
-
-  useEffect(() => {
-    if (router.query) {
-      const { country, industry } = router.query;
-      if (country) setFilterCountry(Array.isArray(country) ? country[0] : country);
-      if (industry) setFilterIndustry(Array.isArray(industry) ? industry[0] : industry);
-    }
-  }, [router.query]);
 
   // 2. Добавим функцию filterEventsArray для фильтрации событий
   const filterEventsArray = () => {
@@ -119,11 +113,65 @@ const Events = (props: TMaterialsPageProps) => {
     setEventsToShow(filteredEvents);
   };
 
-  // 3. Используем useEffect для обновления отображаемых событий при изменении параметров фильтрации
   useEffect(() => {
-    filterEventsArray();
+    if (!initialized && router.isReady) {
+      const { country, industry, search, promo } = router.query;
+      if (country) setFilterCountry(Array.isArray(country) ? country[0] : country);
+      if (industry) setFilterIndustry(Array.isArray(industry) ? industry[0] : industry);
+      if (search) setSearch(Array.isArray(search) ? search[0] : search);
+      if (promo) setPromo(Array.isArray(promo) ? promo[0] : promo); // Инициализируем состояние promo из URL
+      setInitialized(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, filterCountry, filterIndustry]);
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (initialized) {
+      // Убедимся, что состояние инициализировано
+      filterEventsArray();
+    }
+    // Добавляем зависимость от initialized
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterCountry, filterIndustry, search, initialized]);
+
+  useEffect(() => {
+    if (initialized) {
+      const updateURL = () => {
+        const newParams = new URLSearchParams();
+
+        if (search) {
+          newParams.append('search', search);
+        }
+
+        if (filterCountry) {
+          newParams.append('country', filterCountry);
+        }
+
+        if (filterIndustry) {
+          newParams.append('industry', filterIndustry);
+        }
+
+        if (promo) {
+          newParams.append('promo', promo); // Добавляем promo в URL
+        }
+
+        const newSearchString = newParams.toString().replace(/\+/g, '%20');
+
+        if (window.location.search.substr(1) !== newSearchString) {
+          router.push(
+            {
+              pathname: router.pathname,
+              search: newSearchString,
+            },
+            undefined,
+            { shallow: true }
+          );
+        }
+      };
+
+      updateURL();
+    }
+  }, [search, filterCountry, filterIndustry, promo, router, initialized]);
 
   return (
     <>
@@ -199,7 +247,7 @@ const Events = (props: TMaterialsPageProps) => {
             {eventsToShow.length ? (
               <GridBox>
                 {eventsToShow.slice(0, visibleEvents).map((event: TEvent) => (
-                  <EventCard event={event} key={event.id} />
+                  <EventCard event={event} key={event.id} isPromo={!!promo} />
                 ))}
               </GridBox>
             ) : (

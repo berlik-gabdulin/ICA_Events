@@ -15,10 +15,19 @@ import Image from 'next/image';
 import Button from '../Button';
 import palette from 'src/theme/palette';
 import { TEvent } from 'src/utils/types';
+import { useDispatch } from 'react-redux';
+import { setSelectedIndustry, openModal } from 'src/redux/slices/contactModalSlice';
 
-export const EventCard = ({ event }: { event: TEvent }) => {
+export const EventCard = ({ event, isPromo = false }: { event: TEvent; isPromo?: boolean }) => {
+  const dispatch = useDispatch();
+
   const openInNewTab = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const bookAStand = (industry: string) => {
+    dispatch(setSelectedIndustry(industry)); // Устанавливаем выбранную индустрию
+    dispatch(openModal()); // Открываем модальное окно
   };
 
   return (
@@ -32,13 +41,23 @@ export const EventCard = ({ event }: { event: TEvent }) => {
           <CardText>{event.description}</CardText>
           <CardItemDate>{event.dateRange}</CardItemDate>
           <CardItemAddress>{event.location}</CardItemAddress>
-          <Button
-            onClick={() => openInNewTab(event.website)}
-            customcolor={palette.light.primary.dark}
-            style={BtnStyles}
-          >
-            Go to website
-          </Button>
+          {isPromo ? (
+            <Button
+              onClick={() => bookAStand(event.industry)} // Вызываем новую функцию при нажатии на кнопку
+              customcolor={palette.light.primary.dark}
+              style={BtnStyles}
+            >
+              Book a stand
+            </Button>
+          ) : (
+            <Button
+              onClick={() => openInNewTab(event.website)}
+              customcolor={palette.light.primary.dark}
+              style={BtnStyles}
+            >
+              Go to website
+            </Button>
+          )}
         </CardInner>
       </Card>
     </CardWrapper>

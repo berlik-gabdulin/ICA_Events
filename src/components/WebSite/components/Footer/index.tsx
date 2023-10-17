@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import { FooterWrapper, DialogStyled, CloseButton } from './style';
 import { TFooter } from 'src/utils/types';
+import ContactModal from 'src/components/ContactModal';
 
 const Footer: FC<{ content: TFooter }> = ({ content }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -39,6 +40,7 @@ const Footer: FC<{ content: TFooter }> = ({ content }) => {
           Close
         </CloseButton>
       </DialogStyled>
+      <ContactModal />
     </>
   );
 };
