@@ -17,6 +17,7 @@ import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/rootReducer';
 import { closeModal, submitForm } from 'src/redux/slices/contactModalSlice';
+import { useRouter } from 'next/router';
 
 interface IFormInput {
   name: string;
@@ -28,6 +29,7 @@ interface IFormInput {
 }
 
 const ContactModal: React.FC = () => {
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { control, handleSubmit, setValue } = useForm<IFormInput>();
   const isModalOpen = useSelector((state: RootState) => state.contactModal.open);
@@ -69,6 +71,13 @@ const ContactModal: React.FC = () => {
           />
 
           <Controller
+            name="phone"
+            control={control}
+            defaultValue=""
+            render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
+          />
+
+          <Controller
             name="message"
             control={control}
             defaultValue=""
@@ -95,23 +104,25 @@ const ContactModal: React.FC = () => {
             />
           </FormControl>
 
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="country-label">Country</InputLabel>
-            <Controller
-              name="country"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select {...field} label="Country">
-                  {countriesDropdown.map((country: string) => (
-                    <MenuItem key={country} value={country}>
-                      {country}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
+          {!router.query.promo && (
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="country-label">Country</InputLabel>
+              <Controller
+                name="country"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Select {...field} label="Country">
+                    {countriesDropdown.map((country: string) => (
+                      <MenuItem key={country} value={country}>
+                        {country}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </FormControl>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Close</Button>
