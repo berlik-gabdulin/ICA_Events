@@ -16,7 +16,7 @@ import { countriesDropdown, industries } from 'src/utils/network';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/rootReducer';
-import { closeModal, submitForm } from 'src/redux/slices/contactModalSlice';
+import { closeModal, submitForm, setStatus } from 'src/redux/slices/contactModalSlice';
 import { useRouter } from 'next/router';
 
 interface IFormInput {
@@ -33,6 +33,7 @@ const ContactModal: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { control, handleSubmit, setValue } = useForm<IFormInput>();
   const isModalOpen = useSelector((state: RootState) => state.contactModal.open);
+  const status = useSelector((state: RootState) => state.contactModal.status);
   const selectedIndustry = useSelector((state: RootState) => state.contactModal.selectedIndustry); // Получаем выбранную индустрию из состояния
 
   useEffect(() => {
@@ -45,90 +46,142 @@ const ContactModal: React.FC = () => {
     dispatch(closeModal());
   };
 
-  const onSubmit = (data: IFormInput) => {
-    dispatch(submitForm(new URLSearchParams(Object.entries(data))));
+  const isSendedTimeout = () =>
+    setTimeout(() => {
+      dispatch(setStatus('idle'));
+      onClose();
+    }, 3000);
+
+  const onSubmit = async (data: IFormInput) => {
+    await dispatch(submitForm(new URLSearchParams(Object.entries(data))));
+    dispatch(setStatus('succeeded'));
+    isSendedTimeout();
+
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, requestSubmitted: 'true' },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const modalTitle = (): string => {
+    let title = '';
+
+    switch (status) {
+      case 'idle':
+        title = 'Contact Us';
+        break;
+      case 'loading':
+        title = 'Sending Your Request...';
+        break;
+      case 'succeeded':
+        title = 'Request Sent Successfully!';
+        break;
+      case 'failed':
+        title = 'Failed to Send Request. Please try later...';
+        break;
+      default:
+        title = 'Contact Us';
+    }
+
+    return title;
   };
 
   return (
     <DialogStyled open={isModalOpen} onClose={onClose}>
-      <DialogTitle>Contact Us</DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          <Controller
-            name="name"
-            control={control}
-            defaultValue=""
-            render={({ field }) => <TextField {...field} label="Name" fullWidth margin="normal" />}
-          />
-
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField {...field} label="E-Mail" fullWidth margin="normal" />
-            )}
-          />
-
-          <Controller
-            name="phone"
-            control={control}
-            defaultValue=""
-            render={({ field }) => <TextField {...field} label="Phone" fullWidth margin="normal" />}
-          />
-
-          <Controller
-            name="message"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField {...field} label="Message" fullWidth margin="normal" />
-            )}
-          />
-
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="exhibition-label">Industry</InputLabel>
+      <DialogTitle>{modalTitle()}</DialogTitle>
+      {status === 'idle' ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogContent>
             <Controller
-              name="industry"
+              name="name"
               control={control}
-              defaultValue={selectedIndustry || ''} // Устанавливаем значение по умолчанию из состояния Redux
+              defaultValue=""
               render={({ field }) => (
-                <Select {...field} label="Industry">
-                  {industries.map((industry: string) => (
-                    <MenuItem key={industry} value={industry}>
-                      {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <TextField {...field} label="Name" fullWidth margin="normal" required />
               )}
             />
-          </FormControl>
 
-          {!router.query.promo && (
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField {...field} label="E-Mail" fullWidth margin="normal" required />
+              )}
+            />
+
+            <Controller
+              name="phone"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField {...field} label="Phone" fullWidth margin="normal" required />
+              )}
+            />
+
+            <Controller
+              name="message"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField {...field} label="Message" fullWidth margin="normal" />
+              )}
+            />
+
             <FormControl fullWidth margin="normal">
-              <InputLabel id="country-label">Country</InputLabel>
+              <InputLabel id="exhibition-label">Industry</InputLabel>
               <Controller
-                name="country"
+                name="industry"
                 control={control}
-                defaultValue=""
+                defaultValue={selectedIndustry || ''} // Устанавливаем значение по умолчанию из состояния Redux
                 render={({ field }) => (
-                  <Select {...field} label="Country">
-                    {countriesDropdown.map((country: string) => (
-                      <MenuItem key={country} value={country}>
-                        {country}
+                  <Select {...field} label="Industry">
+                    {industries.map((industry: string) => (
+                      <MenuItem key={industry} value={industry}>
+                        {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
                       </MenuItem>
                     ))}
                   </Select>
                 )}
               />
             </FormControl>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Close</Button>
-          <Button type="submit">Send</Button>
-        </DialogActions>
-      </form>
+
+            {!router.query.promo && (
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="country-label">Country</InputLabel>
+                <Controller
+                  name="country"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Select {...field} label="Country">
+                      {countriesDropdown.map((country: string) => (
+                        <MenuItem key={country} value={country}>
+                          {country}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button size="large" onClick={onClose}>
+              Close
+            </Button>
+            <Button size="large" type="submit">
+              Send the request
+            </Button>
+          </DialogActions>
+        </form>
+      ) : (
+        <br />
+      )}
     </DialogStyled>
   );
 };

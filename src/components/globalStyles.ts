@@ -31,10 +31,12 @@ export const Container = styled.div`
 `;
 
 export const MainTitle = styled.h1`
+  margin-top: 0;
   font-size: 64px;
   line-height: 1.2;
   font-family: 'Gilroy-Semibold';
   text-align: center;
+
   @media screen and (max-width: 1200px) {
     font-size: 48px;
   }
@@ -44,6 +46,7 @@ export const MainTitle = styled.h1`
 `;
 
 export const Title = styled.h2`
+  margin-top: 0;
   margin-bottom: 30px;
   text-align: center;
   font-size: 72px;
@@ -63,6 +66,7 @@ export const Title = styled.h2`
 `;
 
 export const TitleH1 = styled.h1`
+  margin-top: 0;
   text-align: center;
   font-size: 72px;
   line-height: 80px;

@@ -30,7 +30,7 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
   return (
     <SectionLocation>
       <Container>
-        <Title style={{ color: customTheme.main[100] }}>Choose your location</Title>
+        <Title style={{ color: customTheme.main[100] }}>Choose your event destination</Title>
         <svg viewBox={Map.viewBox} className="svg-map">
           {filteredLocations.map((location) => {
             const isOurNetwork = countries.includes(location.name);

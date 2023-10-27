@@ -50,13 +50,15 @@ const Events = (props: TMaterialsPageProps) => {
   const { image } = api.content;
 
   const router = useRouter();
+  const requestSubmitted = router.query.requestSubmitted;
+
   const [visibleEvents, setVisibleEvents] = useState<number>(6);
-  const [search, setSearch] = useState('');
-  const [filterCountry, setFilterCountry] = useState('');
-  const [filterIndustry, setFilterIndustry] = useState('');
+  const [search, setSearch] = useState<string>('');
+  const [filterCountry, setFilterCountry] = useState<string>('');
+  const [filterIndustry, setFilterIndustry] = useState<string>('');
   const [eventsToShow, setEventsToShow] = useState<TEvent[]>([]);
-  const [initialized, setInitialized] = useState(false); // Добавим состояние для отслеживания инициализации
-  const [promo, setPromo] = useState('');
+  const [initialized, setInitialized] = useState<boolean>(false); // Добавим состояние для отслеживания инициализации
+  const [promo, setPromo] = useState<string>('');
 
   useEffect(() => {
     const options = {
@@ -155,6 +157,10 @@ const Events = (props: TMaterialsPageProps) => {
           newParams.append('promo', promo); // Добавляем promo в URL
         }
 
+        if (requestSubmitted) {
+          newParams.append('requestSubmitted', requestSubmitted as string);
+        }
+
         const newSearchString = newParams.toString().replace(/\+/g, '%20');
 
         if (window.location.search.substr(1) !== newSearchString) {
@@ -171,78 +177,82 @@ const Events = (props: TMaterialsPageProps) => {
 
       updateURL();
     }
-  }, [search, filterCountry, filterIndustry, promo, router, initialized]);
+  }, [search, filterCountry, filterIndustry, promo, router, requestSubmitted, initialized]);
 
   return (
     <>
       <Layout data={layoutData}>
-        <BGBox
-          bgImage={image ? image : bgImage}
-          style={{ minHeight: 400 }}
-          display="flex"
-          alignItems="center"
-        >
-          <Heading>{title}</Heading>
-        </BGBox>
+        {!promo ? (
+          <BGBox
+            bgImage={image ? image : bgImage}
+            style={{ minHeight: 400 }}
+            display="flex"
+            alignItems="center"
+          >
+            <Heading>{title}</Heading>
+          </BGBox>
+        ) : null}
         <Section>
           <Container>
             <TitleH1>{page_title}</TitleH1>
-            <SearchBox>
-              <Box marginBottom={3}>
-                <SearchInput
-                  label="Search"
-                  variant="outlined"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  fullWidth
-                  color="primary"
-                />
-              </Box>
-              <Box marginBottom={3} display="flex">
-                <SearchLabel>By country</SearchLabel>
-                <FormControl fullWidth>
-                  <InputLabel id="country-label">Country</InputLabel>
-                  <Select
-                    label="Country"
+            {!promo ? (
+              <SearchBox>
+                <Box marginBottom={3}>
+                  <SearchInput
+                    label="Search"
+                    variant="outlined"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     fullWidth
-                    value={filterCountry}
-                    onChange={(e) => setFilterCountry(e.target.value)}
-                    style={{ borderRadius: 0 }}
-                    defaultValue="Choose country"
                     color="primary"
-                  >
-                    <MenuItem value="">All countries</MenuItem>
-                    {countriesDropdown.map((country) => (
-                      <MenuItem key={country} value={country}>
-                        {country}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              <Box marginBottom={3} display="flex">
-                <SearchLabel>By industry</SearchLabel>
-                <FormControl fullWidth>
-                  <InputLabel id="industry-label">Industry</InputLabel>
-                  <Select
-                    label="Industry"
-                    fullWidth
-                    value={filterIndustry}
-                    onChange={(e) => setFilterIndustry(e.target.value)}
-                    style={{ borderRadius: 0 }}
-                    defaultValue="Choose industry"
-                    color="primary"
-                  >
-                    <MenuItem value="">All industries</MenuItem>
-                    {industries.map((industry) => (
-                      <MenuItem key={industry} value={industry}>
-                        {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-            </SearchBox>
+                  />
+                </Box>
+                <Box marginBottom={3} display="flex">
+                  <SearchLabel>By country</SearchLabel>
+                  <FormControl fullWidth>
+                    <InputLabel id="country-label">Country</InputLabel>
+                    <Select
+                      label="Country"
+                      fullWidth
+                      value={filterCountry}
+                      onChange={(e) => setFilterCountry(e.target.value)}
+                      style={{ borderRadius: 0 }}
+                      defaultValue="Choose country"
+                      color="primary"
+                    >
+                      <MenuItem value="">All countries</MenuItem>
+                      {countriesDropdown.map((country) => (
+                        <MenuItem key={country} value={country}>
+                          {country}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+                <Box marginBottom={3} display="flex">
+                  <SearchLabel>By industry</SearchLabel>
+                  <FormControl fullWidth>
+                    <InputLabel id="industry-label">Industry</InputLabel>
+                    <Select
+                      label="Industry"
+                      fullWidth
+                      value={filterIndustry}
+                      onChange={(e) => setFilterIndustry(e.target.value)}
+                      style={{ borderRadius: 0 }}
+                      defaultValue="Choose industry"
+                      color="primary"
+                    >
+                      <MenuItem value="">All industries</MenuItem>
+                      {industries.map((industry) => (
+                        <MenuItem key={industry} value={industry}>
+                          {industry.replace(/_/g, ' ').replace(/,/g, ', ').replace(/\s+/g, ' ')}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+              </SearchBox>
+            ) : null}
 
             {eventsToShow.length ? (
               <GridBox>

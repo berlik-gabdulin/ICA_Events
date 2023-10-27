@@ -37,6 +37,14 @@ const TestimonialsBlock: FC<TPageType<TTestimonial[]>> = ({ block_title, content
         <ArrowForwardIosIcon color="secondary" />
       </Arrow>
     ),
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          arrows: false,
+        },
+      },
+    ],
   };
 
   return (

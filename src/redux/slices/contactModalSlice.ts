@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 
+type IStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 interface ContactModalState {
   open: boolean;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: IStatus;
   error: string | null;
   selectedIndustry: string | null;
 }
@@ -27,7 +28,8 @@ export const submitForm = createAsyncThunk<string, URLSearchParams, { rejectValu
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorMessage = `Network response was not ok: ${response.status} ${response.statusText}`;
+        return rejectWithValue(errorMessage);
       }
 
       return response.text();
@@ -47,6 +49,9 @@ const contactModalSlice = createSlice({
     closeModal: (state) => {
       state.open = false;
     },
+    setStatus: (state: ContactModalState, action: PayloadAction<IStatus>) => {
+      state.status = action.payload;
+    },
     setSelectedIndustry: (state, action: PayloadAction<string>) => {
       // Добавлено
       state.selectedIndustry = action.payload;
@@ -59,7 +64,6 @@ const contactModalSlice = createSlice({
       })
       .addCase(submitForm.fulfilled, (state) => {
         state.status = 'succeeded';
-        state.open = false;
       })
       .addCase(
         submitForm.rejected,
@@ -71,6 +75,6 @@ const contactModalSlice = createSlice({
   },
 });
 
-export const { openModal, closeModal, setSelectedIndustry } = contactModalSlice.actions;
+export const { openModal, closeModal, setSelectedIndustry, setStatus } = contactModalSlice.actions;
 
 export default contactModalSlice.reducer;

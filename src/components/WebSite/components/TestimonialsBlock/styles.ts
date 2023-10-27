@@ -60,6 +60,10 @@ export const QuoteImage = styled.div`
   height: 75px;
   margin-bottom: 15px;
   margin-left: -30px;
+  @media screen and (max-width: 768px) {
+    width: 51px;
+    height: 37px;
+  }
 `;
 
 export const QuoteImageRotate = styled(QuoteImage)`
