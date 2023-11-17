@@ -1,0 +1,5 @@
+yarn run v1.22.19
+$ next dev -p 8081
+ready - started server on 0.0.0.0:8081, url: http://localhost:8081
+info  - Loaded env from /Users/b.gabdulin/Projects/ICA_Events/.env
+event - compiled client and server successfully in 1174 ms (1741 modules)

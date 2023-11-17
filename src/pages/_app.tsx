@@ -13,6 +13,9 @@ import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 import '/public/assets/slick-carousel/slick/slick.css';
 import '/public/assets/slick-carousel/slick/slick-theme.css';
 
+// CSS Animations
+import 'animate.css';
+
 // Fonts
 import '../../public/fonts/index.css';
 
