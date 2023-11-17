@@ -83,7 +83,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const res = await fetch(`http://localhost:8081/api/news`); // Замените URL на ваш API
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news`); // Замените URL на ваш API
   const data = await res.json();
 
   // Получение всех данных страницы
