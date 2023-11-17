@@ -36,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 // Получение новостей с постраничным выводом
 async function getNews(req: NextApiRequest, res: NextApiResponse) {
-  console.log(req.query.page);
   const page = parseInt(req.query.page as string) || 1;
   const limit = 10;
   const offset = (page - 1) * limit;

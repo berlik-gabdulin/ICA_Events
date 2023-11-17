@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import Layout from 'src/components/WebSite/components/Layout'; // Импортируйте ваш Layout компонент
 import Image from 'next/image';
-import { RowDataPacket } from 'mysql2';
+import { OkPacketParams, RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import { IData, IPageBlock, TLayoutProps, TPageType, TTitleBlock } from 'src/utils/types';
 import { getLayoutData } from 'src/utils/getLayoutData';
@@ -63,7 +63,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
                       {item.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {new Date(item.published_at).toLocaleDateString()}
+                      {item.published_at}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -83,8 +83,25 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news`); // Замените URL на ваш API
-  const data = await res.json();
+  const [newsRes] = await db.execute<RowDataPacket[]>(
+    'SELECT * FROM collection_news ORDER BY published_at ASC'
+  );
+
+  const news = Array.isArray(newsRes) ? newsRes : Array.from(newsRes);
+
+  const newsArray = news as NewsItem[];
+
+  newsArray.forEach((item) => {
+    if (item.published_at) {
+      item.published_at = new Date(item.published_at).toLocaleDateString();
+    }
+  });
+
+  const [totalResults] = (await db.execute(
+    'SELECT COUNT(*) AS total FROM collection_news'
+  )) as RowDataPacket[];
+
+  const total = totalResults[0].total;
 
   // Получение всех данных страницы
   const [pageData] = (await db.execute(
@@ -115,8 +132,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   return {
     props: {
-      news: data.news,
-      total: data.total,
+      news,
+      total,
       bgBox: {
         block_title: titleData[0].block_name,
         content: JSON.parse(titleData[0].content),
