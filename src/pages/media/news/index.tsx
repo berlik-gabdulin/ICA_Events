@@ -36,7 +36,7 @@ interface NewsPageProps {
 
 const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) => {
   const [page, setPage] = React.useState(1);
-  const totalPages = Math.ceil(total / 10); // Предположим, что на странице 10 новостей
+  const totalPages = Math.ceil(total / 10);
 
   const { title, bgImage } = bgBox.content;
 
