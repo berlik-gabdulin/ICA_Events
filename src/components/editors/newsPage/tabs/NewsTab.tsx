@@ -12,6 +12,8 @@ import {
   DialogActions,
 } from '@mui/material';
 import AddNewsModal, { INewsData } from './addNewsModal';
+import styled from '@emotion/styled';
+import shadows from 'src/theme/shadows';
 
 interface NewsItem {
   id: number;
@@ -29,7 +31,7 @@ interface NewsResponse {
 
 const boolToTiny1 = (bool: boolean) => (bool ? 1 : 0);
 
-const NewsList: React.FC = () => {
+const NewsTab: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -93,6 +95,7 @@ const NewsList: React.FC = () => {
         body: JSON.stringify({
           id: newsItemId,
           title: newsData.title,
+          alias: newsData.alias,
           content: newsData.content,
           imageUrl: newsData.image_url,
           isPublic: boolToTiny1(newsData.isPublic),
@@ -169,7 +172,7 @@ const NewsList: React.FC = () => {
         <List>
           {news?.length
             ? news.map((item) => (
-                <ListItem key={item.id}>
+                <ListItemStyled key={item.id}>
                   <Box flexGrow={1}>
                     <Typography variant="h6">{item.title}</Typography>
                   </Box>
@@ -184,7 +187,7 @@ const NewsList: React.FC = () => {
                   >
                     Delete
                   </Button>
-                </ListItem>
+                </ListItemStyled>
               ))
             : null}
         </List>
@@ -211,4 +214,13 @@ const NewsList: React.FC = () => {
   );
 };
 
-export default NewsList;
+export default NewsTab;
+
+const ListItemStyled = styled(ListItem)`
+  padding: 16px;
+  margin-bottom: 8px;
+  &:hover {
+    border-radius: 8px;
+    box-shadow: ${shadows.light[15]};
+  }
+`;

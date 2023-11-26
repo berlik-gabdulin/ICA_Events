@@ -334,5 +334,6 @@ export async function getStaticProps() {
       layoutData,
       allEvents: data.allEvents.content,
     },
+    revalidate: 10800,
   };
 }

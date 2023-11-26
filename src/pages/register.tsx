@@ -83,7 +83,7 @@ const RegisterPage: React.FC = () => {
             onChange={handleChange}
           />
           <Button type="submit" fullWidth variant="contained" color="primary">
-            Зарегистрироваться
+            Register
           </Button>
         </form>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

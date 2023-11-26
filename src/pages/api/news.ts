@@ -87,8 +87,6 @@ async function getOneNews(req: NextApiRequest, res: NextApiResponse) {
 async function addNews(req: NextApiRequest, res: NextApiResponse) {
   const { title, alias, content, imageUrl, isPublic } = req.body;
 
-  console.log('req.body', req.body);
-
   if (!title || !content) {
     return res.status(400).json({ error: 'Title and content are required' });
   }
@@ -110,13 +108,13 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
 async function updateNews(req: NextApiRequest, res: NextApiResponse) {
   const { id, title, alias, content, imageUrl, isPublic } = req.body;
 
-  if (!id || !title || !content || isPublic) {
+  if (!id || !title || !alias || !content || isPublic) {
     return res.status(400).json({ error: 'ID, title, alias, content and public are required' });
   }
 
   try {
     await db.execute(
-      'UPDATE collection_news SET title=?, alias = ?, content=?, image_url=?, isPublic=? WHERE id=?',
+      'UPDATE collection_news SET title=?, alias=?, content=?, image_url=?, isPublic=? WHERE id=?',
       [title, alias, content, imageUrl, isPublic, id]
     );
 

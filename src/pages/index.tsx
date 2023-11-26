@@ -118,5 +118,6 @@ export async function getStaticProps() {
       allEvents: JSON.parse(allEvents[0].content),
       layoutData,
     },
+    revalidate: 10800,
   };
 }

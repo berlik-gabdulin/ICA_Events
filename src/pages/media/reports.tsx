@@ -180,5 +180,6 @@ export async function getStaticProps() {
       },
       layoutData,
     },
+    revalidate: 10800,
   };
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
 import {
-  Box,
   Grid,
   Typography,
   Pagination,
@@ -11,13 +10,14 @@ import {
   CardActionArea,
 } from '@mui/material';
 import Layout from 'src/components/WebSite/components/Layout'; // Импортируйте ваш Layout компонент
-import Image from 'next/image';
-import { OkPacketParams, RowDataPacket } from 'mysql2';
+import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import { IData, IPageBlock, TLayoutProps, TPageType, TTitleBlock } from 'src/utils/types';
 import { getLayoutData } from 'src/utils/getLayoutData';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Heading } from 'src/components/WebSite/components/BGBox/styles';
+import { Container, Section } from 'src/components/globalStyles';
+import styled from '@emotion/styled';
 
 interface NewsItem {
   id: number;
@@ -38,46 +38,55 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
   const [page, setPage] = React.useState(1);
   const totalPages = Math.ceil(total / 10);
 
-  const { title, bgImage } = bgBox.content;
+  const { bgImage } = bgBox.content;
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    // Здесь может быть логика для обновления URL или перехода на другую страницу
   };
 
   return (
     <Layout data={layoutData}>
       <BGBox bgImage={bgImage} style={{ minHeight: 400 }} display="flex" alignItems="center">
-        <Heading>{title}</Heading>
+        <Heading>{layoutData.meta.meta_title}</Heading>
       </BGBox>
-      <Box sx={{ flexGrow: 1, paddingTop: 10, paddingX: 4 }}>
-        <Grid container spacing={2}>
-          {news.map((item) => (
-            <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card>
-                <CardActionArea href={`/media/news/${item.alias}`}>
-                  <CardMedia component="img" height="140" image={item.image_url} alt={item.title} />
-                  {item.image_url}
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {item.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.published_at}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={handlePageChange}
-          sx={{ mt: 3, justifyContent: 'center', display: 'flex' }}
-        />
-      </Box>
+      <Section>
+        <Container>
+          <Grid container spacing={2}>
+            {news.map((item) => (
+              <Grid item xs={12} md={6} key={item.id}>
+                <Card
+                  sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 0 }}
+                >
+                  <CardActionArea href={`/media/news/${item.alias}`} sx={{ flexGrow: 1 }}>
+                    <CardMediaWrapper>
+                      <CardMedia
+                        component="img"
+                        image={item.image_url || 'path_to_placeholder_image'} // Replace with your placeholder path
+                        alt={item.title}
+                      />
+                    </CardMediaWrapper>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.published_at}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            sx={{ mt: 3, justifyContent: 'center', display: 'flex' }}
+          />
+        </Container>
+      </Section>
     </Layout>
   );
 };
@@ -140,7 +149,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
       },
       layoutData,
     },
+    revalidate: 10800,
   };
 };
 
 export default NewsPage;
+
+const CardMediaWrapper = styled.div`
+  position: relative;
+  padding-top: 56%;
+  object-fit: cover;
+  height: 0;
+  img {
+    position: absolute;
+    top: 0;
+  }
+`;

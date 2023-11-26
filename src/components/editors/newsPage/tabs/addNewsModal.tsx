@@ -52,11 +52,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
     onClose();
   };
 
-  useEffect(() => console.log('loading', watch()), [watch]);
-
   const handleSave = (data: INewsData) => {
-    console.log('modalData:', data);
-    if (getValues('alias') === '') handleAlias;
     onSave({ ...data });
     setLoading(true);
     handleClose();
@@ -66,22 +62,24 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
     const titleValue = getValues('title');
 
     const alias = titleValue
-      .toLowerCase() // Приведение к нижнему регистру
-      .replace(/[\W_]+/g, '-') // Замена всех не-буквенно-цифровых символов и нижних подчеркиваний на дефис
-      .replace(/^-+|-+$/g, ''); // Удаление лишних дефисов в начале и конце строки
+      .toLowerCase()
+      .replace(/[\W_]+/g, '-')
+      .replace(/^-+|-+$/g, '');
 
     setValue('alias', alias);
+  };
+
+  const handleAliasOnBlur = () => {
+    if (!getValues('alias')) handleAlias();
   };
 
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
         setLoading(true);
-        // Здесь делаем запрос в базу данных для получения данных новости по id
         try {
           const response = await fetch(`/api/news?id=${id}`);
           const data: INewsData = await response.json();
-          // Устанавливаем полученные данные в форму
           reset(data);
         } catch (error) {
           console.error('Error fetching news data:', error);
@@ -110,6 +108,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
               type="text"
               fullWidth
               variant="outlined"
+              onBlur={handleAliasOnBlur}
             />
           )}
         />
@@ -120,7 +119,6 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
           render={({ field }) => (
             <TextField
               {...field}
-              autoFocus
               margin="dense"
               label="Alias"
               type="text"
