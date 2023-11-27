@@ -106,16 +106,57 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
 
 // Обновление новости
 async function updateNews(req: NextApiRequest, res: NextApiResponse) {
-  const { id, title, alias, content, imageUrl, isPublic } = req.body;
+  const {
+    id,
+    title,
+    alias,
+    content,
+    imageUrl,
+    meta_title,
+    meta_description,
+    meta_keywords,
+    og_description,
+    og_locale,
+    og_image,
+    isPublic,
+  } = req.body;
 
-  if (!id || !title || !alias || !content || isPublic) {
-    return res.status(400).json({ error: 'ID, title, alias, content and public are required' });
+  if (
+    !id ||
+    !title ||
+    !alias ||
+    !content ||
+    !meta_title ||
+    !meta_description ||
+    !meta_keywords ||
+    !og_description ||
+    !og_locale ||
+    !og_image ||
+    isPublic
+  ) {
+    return res.status(400).json({
+      error:
+        'ID, title, alias, content, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image and public are required',
+    });
   }
 
   try {
     await db.execute(
-      'UPDATE collection_news SET title=?, alias=?, content=?, image_url=?, isPublic=? WHERE id=?',
-      [title, alias, content, imageUrl, isPublic, id]
+      'UPDATE collection_news SET title=?, alias=?, content=?, image_url=?, meta_title=?, meta_description=?, meta_keywords=?, og_description=?, og_locale=?, og_image=?, isPublic=? WHERE id=?',
+      [
+        title,
+        alias,
+        content,
+        imageUrl,
+        meta_title,
+        meta_description,
+        meta_keywords,
+        og_description,
+        og_locale,
+        og_image,
+        isPublic,
+        id,
+      ]
     );
 
     res.status(200).json({ message: 'News updated successfully' });

@@ -69,6 +69,12 @@ const NewsTab: React.FC = () => {
           title: newsData.title,
           content: newsData.content,
           imageUrl: newsData.image_url,
+          meta_title: newsData.meta_title,
+          meta_description: newsData.meta_description,
+          meta_keywords: newsData.meta_keywords,
+          og_description: newsData.og_description,
+          og_locale: newsData.og_locale,
+          og_image: newsData.og_image,
           isPublic: boolToTiny1(newsData.isPublic),
         }),
       });
@@ -95,9 +101,14 @@ const NewsTab: React.FC = () => {
         body: JSON.stringify({
           id: newsItemId,
           title: newsData.title,
-          alias: newsData.alias,
           content: newsData.content,
           imageUrl: newsData.image_url,
+          meta_title: newsData.meta_title,
+          meta_description: newsData.meta_description,
+          meta_keywords: newsData.meta_keywords,
+          og_description: newsData.og_description,
+          og_locale: newsData.og_locale,
+          og_image: newsData.og_image,
           isPublic: boolToTiny1(newsData.isPublic),
         }),
       });

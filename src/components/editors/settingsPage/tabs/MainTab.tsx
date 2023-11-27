@@ -7,14 +7,24 @@ import { TSettingsMain } from 'src/utils/types';
 import CustomEditor from 'src/components/CustomEditor';
 import { DeviderStyled } from 'src/components/globalStyles';
 import { Typography } from '@mui/material';
+import Input from 'src/components/Input';
 
 const MainTab = () => {
   const [loading, setLoading] = useState(true);
 
-  const { handleSubmit, setValue, watch, control } = useForm<TSettingsMain>({
+  const {
+    handleSubmit,
+    setValue,
+    getValues,
+    register,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<TSettingsMain>({
     defaultValues: {
       footer: '',
       privacyPolicy: '',
+      privacyPolicyBanner: '',
     },
   });
   const { showError, showSuccess } = useSnackbar();
@@ -25,6 +35,7 @@ const MainTab = () => {
       const parsedData = JSON.parse(data.content);
       setValue('footer', parsedData.footer);
       setValue('privacyPolicy', parsedData.privacyPolicy);
+      setValue('privacyPolicyBanner', parsedData.privacyPolicyBanner);
 
       setLoading(false);
     };
@@ -53,6 +64,16 @@ const MainTab = () => {
             Privacy Policy
           </Typography>
           <CustomEditor name="privacyPolicy" watch={watch} control={control} />
+
+          <Input
+            label="Privacy Policy Banner"
+            shrink={getValues('privacyPolicyBanner')}
+            fullWidth
+            {...register('privacyPolicyBanner', { required: 'This field is required' })}
+            error={Boolean(errors.privacyPolicyBanner)}
+            helperText={errors.privacyPolicyBanner?.message}
+            style={{ marginTop: 30 }}
+          />
 
           <Button>Save</Button>
         </>

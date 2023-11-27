@@ -8,12 +8,18 @@ import {
   TextField,
   FormControlLabel,
   Switch,
+  Accordion,
+  AccordionSummary,
+  Typography,
+  AccordionDetails,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useForm, Controller } from 'react-hook-form';
 import FileUploader from 'src/components/upload/FileUploader';
 import CustomEditor from 'src/components/CustomEditor';
 import Loader from 'src/components/Loader';
 import ImagePreview from 'src/components/ImagePreview';
+import Input from 'src/components/Input';
 
 // Определяем типы пропсов для компонента AddNewsModal
 interface IAddNewsModalProps {
@@ -29,6 +35,12 @@ export interface INewsData {
   alias: string;
   content: string;
   image_url: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+  og_description: string;
+  og_locale: string;
+  og_image: string;
   isPublic: boolean;
 }
 
@@ -37,12 +49,27 @@ const InitialState = {
   alias: '',
   content: '',
   image_url: '',
+  meta_title: '',
+  meta_description: '',
+  meta_keywords: '',
+  og_description: '',
+  og_locale: '',
+  og_image: '',
   isPublic: false,
 };
 
 const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, id }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { control, handleSubmit, watch, setValue, getValues, reset } = useForm<INewsData>({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<INewsData>({
     defaultValues: InitialState,
   });
 
@@ -161,6 +188,84 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
           }
           label="Publish"
         />
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Meta Data</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Input
+              label="Meta Title"
+              shrink={getValues('meta_title')}
+              fullWidth
+              {...register('meta_title', { required: 'This field is required' })}
+              error={Boolean(errors.meta_title)}
+              helperText={errors.meta_title?.message}
+            />
+
+            <Input
+              label="Meta Description"
+              shrink={getValues('meta_description')}
+              fullWidth
+              {...register('meta_description', { required: 'This field is required' })}
+              error={Boolean(errors.meta_description)}
+              helperText={errors.meta_description?.message}
+            />
+
+            <Input
+              label="Meta Keywords"
+              shrink={getValues('meta_keywords')}
+              fullWidth
+              {...register('meta_keywords', { required: 'This field is required' })}
+              error={Boolean(errors.meta_keywords)}
+              helperText={errors.meta_keywords?.message}
+            />
+
+            <Input
+              label="OG Description"
+              shrink={getValues('og_description')}
+              fullWidth
+              {...register('og_description', { required: 'This field is required' })}
+              error={Boolean(errors.og_description)}
+              helperText={errors.og_description?.message}
+            />
+
+            <Input
+              label="OG Locale"
+              shrink={getValues('og_locale')}
+              fullWidth
+              {...register('og_locale', { required: 'This field is required' })}
+              error={Boolean(errors.og_locale)}
+              helperText={errors.og_locale?.message}
+            />
+
+            <FileUploader
+              inputName="og_image"
+              setValue={setValue}
+              prefix="preview"
+              folder={`pages/news`}
+            />
+
+            <ImagePreview
+              src={watch('og_image')}
+              alt="Header Background"
+              width={300}
+              height={200}
+            />
+
+            <Input
+              label="OG Image URL"
+              shrink={watch('og_image')}
+              fullWidth
+              {...register('og_image', { required: 'This field is required' })}
+              error={Boolean(errors.og_image)}
+              helperText={errors.og_image?.message}
+            />
+          </AccordionDetails>
+        </Accordion>
       </DialogContent>
 
       <DialogActions>

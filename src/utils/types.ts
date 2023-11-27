@@ -10,6 +10,7 @@ export interface IData {
 export type TFooter = {
   footer: string;
   privacyPolicy: string;
+  privacyPolicyBanner: string;
 };
 
 export interface IPageBlock {
@@ -130,6 +131,7 @@ export type TLayoutProps = {
   social: TSocialLinks;
   footer: TFooter;
   navigation: TNavigation;
+  cookieBanner: string;
   meta: TMetaFields;
 };
 
@@ -166,6 +168,7 @@ export type TAboutPage = {
 export type TSettingsMain = {
   footer: string;
   privacyPolicy: string;
+  privacyPolicyBanner: string;
 };
 
 export interface IUpdateBlockData {
