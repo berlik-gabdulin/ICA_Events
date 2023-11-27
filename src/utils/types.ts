@@ -131,7 +131,6 @@ export type TLayoutProps = {
   social: TSocialLinks;
   footer: TFooter;
   navigation: TNavigation;
-  cookieBanner: string;
   meta: TMetaFields;
 };
 
