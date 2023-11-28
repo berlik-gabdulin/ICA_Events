@@ -194,7 +194,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
             maxFiles={1}
           />
 
-          <ImagePreview src={getValues('image_url')} alt="Preview" height={200} />
+          <ImagePreview src={watch('image_url')} alt="Preview" height={200} />
           <Input
             label="Preview"
             shrink={watch('image_url')}
