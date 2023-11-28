@@ -278,6 +278,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
                 setValue={setValue}
                 prefix="preview"
                 folder="pages/news_images"
+                maxFiles={1}
               />
 
               <ImagePreview
