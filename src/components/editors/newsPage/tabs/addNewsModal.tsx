@@ -61,6 +61,7 @@ const InitialState = {
 
 const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, id }) => {
   const [loading, setLoading] = useState<boolean>(false);
+
   const {
     control,
     handleSubmit,
@@ -81,6 +82,18 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
   };
 
   const handleSave = (data: INewsData) => {
+    const errorFields = (Object.keys(errors) as Array<keyof INewsData>).filter(
+      (key) => errors[key]
+    );
+
+    if (errorFields.length > 0) {
+      // Create a message listing the fields that have errors
+      const errorMessage = `Please fill in the following fields: ${errorFields.join(', ')}.`;
+      // Show the message however you like, e.g., a toast, modal, etc.
+      console.error(errorMessage);
+      return; // Prevent the form from being submitted
+    }
+
     onSave({ ...data });
     setLoading(true);
     handleClose();
@@ -108,6 +121,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
         try {
           const response = await fetch(`/api/news?id=${id}`);
           const data: INewsData = await response.json();
+          console.log('news item', data);
           reset(data);
         } catch (error) {
           console.error('Error fetching news data:', error);
@@ -122,161 +136,178 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="md">
       <DialogTitle>Add new material</DialogTitle>
+      {Object.keys(errors).length > 0 && (
+        <Typography color="error" style={{ textAlign: 'center', marginTop: 10 }}>
+          Please fill in all required fields.
+        </Typography>
+      )}
+      <form onSubmit={handleSubmit(handleSave)}>
+        <DialogContent>
+          <Controller
+            name="title"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                autoFocus
+                margin="dense"
+                label="Title"
+                type="text"
+                fullWidth
+                variant="outlined"
+                onBlur={handleAliasOnBlur}
+              />
+            )}
+          />
 
-      <DialogContent>
-        <Controller
-          name="title"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              autoFocus
-              margin="dense"
-              label="Title"
-              type="text"
-              fullWidth
-              variant="outlined"
-              onBlur={handleAliasOnBlur}
-            />
-          )}
-        />
+          <Controller
+            name="alias"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                margin="dense"
+                label="Alias"
+                type="text"
+                fullWidth
+                variant="outlined"
+              />
+            )}
+          />
 
-        <Controller
-          name="alias"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              margin="dense"
-              label="Alias"
-              type="text"
-              fullWidth
-              variant="outlined"
-            />
-          )}
-        />
+          <Button onClick={handleAlias} color="secondary" style={{ marginTop: 15 }}>
+            Generate auto alias
+          </Button>
 
-        <Button onClick={handleAlias} color="secondary" style={{ marginTop: 15 }}>
-          Generate auto alias
-        </Button>
+          <CustomEditor
+            name="content"
+            control={control}
+            watch={watch}
+            style={{ marginTop: '20px', marginBottom: 30 }}
+          />
 
-        <CustomEditor
-          name="content"
-          control={control}
-          watch={watch}
-          style={{ marginTop: '20px' }}
-        />
+          <FileUploader
+            inputName="image_url"
+            setValue={setValue}
+            folder="news_images"
+            prefix="news"
+            maxFiles={1}
+          />
 
-        <FileUploader
-          inputName="image_url"
-          setValue={setValue}
-          folder="news_images"
-          prefix="news"
-          maxFiles={1}
-        />
+          <ImagePreview src={getValues('image_url')} alt="Preview" height={200} />
+          <Input
+            label="Preview"
+            shrink={watch('image_url')}
+            fullWidth
+            {...register('image_url', { required: 'This field is required' })}
+            error={Boolean(errors.image_url)}
+            helperText={errors.image_url?.message}
+          />
 
-        <ImagePreview src={getValues('image_url')} alt="Preview" height={200} />
+          <FormControlLabel
+            control={
+              <Controller
+                name="isPublic"
+                control={control}
+                render={({ field }) => (
+                  <Switch
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                )}
+              />
+            }
+            label="Publish"
+          />
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Meta Data</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Input
+                label="Meta Title"
+                shrink={getValues('meta_title')}
+                fullWidth
+                {...register('meta_title', { required: 'This field is required' })}
+                error={Boolean(errors.meta_title)}
+                helperText={errors.meta_title?.message}
+              />
 
-        <FormControlLabel
-          control={
-            <Controller
-              name="isPublic"
-              control={control}
-              render={({ field }) => (
-                <Switch checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />
-              )}
-            />
-          }
-          label="Publish"
-        />
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Meta Data</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Input
-              label="Meta Title"
-              shrink={getValues('meta_title')}
-              fullWidth
-              {...register('meta_title', { required: 'This field is required' })}
-              error={Boolean(errors.meta_title)}
-              helperText={errors.meta_title?.message}
-            />
+              <Input
+                label="Meta Description"
+                shrink={getValues('meta_description')}
+                fullWidth
+                {...register('meta_description', { required: 'This field is required' })}
+                error={Boolean(errors.meta_description)}
+                helperText={errors.meta_description?.message}
+              />
 
-            <Input
-              label="Meta Description"
-              shrink={getValues('meta_description')}
-              fullWidth
-              {...register('meta_description', { required: 'This field is required' })}
-              error={Boolean(errors.meta_description)}
-              helperText={errors.meta_description?.message}
-            />
+              <Input
+                label="Meta Keywords"
+                shrink={getValues('meta_keywords')}
+                fullWidth
+                {...register('meta_keywords', { required: 'This field is required' })}
+                error={Boolean(errors.meta_keywords)}
+                helperText={errors.meta_keywords?.message}
+              />
 
-            <Input
-              label="Meta Keywords"
-              shrink={getValues('meta_keywords')}
-              fullWidth
-              {...register('meta_keywords', { required: 'This field is required' })}
-              error={Boolean(errors.meta_keywords)}
-              helperText={errors.meta_keywords?.message}
-            />
+              <Input
+                label="OG Description"
+                shrink={getValues('og_description')}
+                fullWidth
+                {...register('og_description', { required: 'This field is required' })}
+                error={Boolean(errors.og_description)}
+                helperText={errors.og_description?.message}
+              />
 
-            <Input
-              label="OG Description"
-              shrink={getValues('og_description')}
-              fullWidth
-              {...register('og_description', { required: 'This field is required' })}
-              error={Boolean(errors.og_description)}
-              helperText={errors.og_description?.message}
-            />
+              <Input
+                label="OG Locale"
+                shrink={getValues('og_locale')}
+                fullWidth
+                {...register('og_locale', { required: 'This field is required' })}
+                error={Boolean(errors.og_locale)}
+                helperText={errors.og_locale?.message}
+              />
 
-            <Input
-              label="OG Locale"
-              shrink={getValues('og_locale')}
-              fullWidth
-              {...register('og_locale', { required: 'This field is required' })}
-              error={Boolean(errors.og_locale)}
-              helperText={errors.og_locale?.message}
-            />
+              <FileUploader
+                inputName="og_image"
+                setValue={setValue}
+                prefix="preview"
+                folder={`pages/news`}
+              />
 
-            <FileUploader
-              inputName="og_image"
-              setValue={setValue}
-              prefix="preview"
-              folder={`pages/news`}
-            />
+              <ImagePreview
+                src={watch('og_image')}
+                alt="Header Background"
+                width={300}
+                height={200}
+              />
 
-            <ImagePreview
-              src={watch('og_image')}
-              alt="Header Background"
-              width={300}
-              height={200}
-            />
+              <Input
+                label="OG Image URL"
+                shrink={watch('og_image')}
+                fullWidth
+                {...register('og_image', { required: 'This field is required' })}
+                error={Boolean(errors.og_image)}
+                helperText={errors.og_image?.message}
+              />
+            </AccordionDetails>
+          </Accordion>
+        </DialogContent>
 
-            <Input
-              label="OG Image URL"
-              shrink={watch('og_image')}
-              fullWidth
-              {...register('og_image', { required: 'This field is required' })}
-              error={Boolean(errors.og_image)}
-              helperText={errors.og_image?.message}
-            />
-          </AccordionDetails>
-        </Accordion>
-      </DialogContent>
-
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleSubmit(handleSave)} color="primary">
-          {id ? 'Save material' : 'Create new material'}
-        </Button>
-      </DialogActions>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button color="primary" type="submit">
+            {id ? 'Save material' : 'Create new material'}
+          </Button>
+        </DialogActions>
+      </form>
 
       <Loader loading={loading} />
     </Dialog>

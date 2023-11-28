@@ -176,7 +176,7 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
     !og_description ||
     !og_locale ||
     !og_image ||
-    isPublic
+    !isPublic
   ) {
     return res.status(400).json({
       error:
@@ -204,8 +204,8 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
       ]
     );
 
-    await revalidatePage('/media/news/');
-    await revalidatePage(`/media/news/${alias}`);
+    await revalidatePage('media/news');
+    await revalidatePage(`media/news/${alias}`);
 
     res.status(200).json({ message: 'News updated successfully' });
   } catch (error) {
@@ -225,8 +225,8 @@ async function deleteNews(req: NextApiRequest, res: NextApiResponse) {
   try {
     await db.execute('DELETE FROM collection_news WHERE id=?', [id]);
 
-    await revalidatePage('/media/news/');
-    await revalidatePage(`/media/news/${alias}`);
+    await revalidatePage('media/news/');
+    await revalidatePage(`media/news/${alias}`);
 
     res.status(200).json({ message: 'News deleted successfully' });
   } catch (error) {

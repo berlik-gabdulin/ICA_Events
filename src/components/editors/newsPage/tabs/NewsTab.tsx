@@ -226,8 +226,12 @@ export default NewsTab;
 const ListItemStyled = styled(ListItem)`
   padding: 16px;
   margin-bottom: 8px;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  transition: all 0.15s ease-in-out;
   &:hover {
     border-radius: 8px;
     box-shadow: ${shadows.light[15]};
+    border: 1px solid #efefef;
   }
 `;
