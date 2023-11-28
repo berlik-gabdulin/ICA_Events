@@ -47,7 +47,12 @@ const PageTab: React.FC = () => {
 
   const handleSave: SubmitHandler<TMaterialsPage> = async (formData) => {
     try {
-      await updatePageBlock('materials', 'page', { content: JSON.stringify(formData) });
+      await updatePageBlock(
+        'materials',
+        'page',
+        { content: JSON.stringify(formData) },
+        'media/materials'
+      );
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

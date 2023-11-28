@@ -12,9 +12,10 @@ type MetaProps = {
   page: string;
   onSaveSuccess?: () => void;
   onSaveError?: () => void;
+  path?: string;
 };
 
-const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
+const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError, path }) => {
   const [loading, setLoading] = useState(true);
 
   const {
@@ -53,7 +54,7 @@ const Meta: React.FC<MetaProps> = ({ page, onSaveSuccess, onSaveError }) => {
 
   const handleSave: SubmitHandler<TMetaFields> = async (formData) => {
     try {
-      await updatePageBlock(page, 'meta', { content: JSON.stringify(formData) });
+      await updatePageBlock(page, 'meta', { content: JSON.stringify(formData) }, path);
       showSuccess('Successfully saved!');
       if (onSaveSuccess) onSaveSuccess();
     } catch (error) {

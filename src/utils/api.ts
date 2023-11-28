@@ -38,7 +38,8 @@ export const fetchAllPageData = async (page: string): Promise<IPageBlock[]> => {
 export const updatePageBlock = async (
   page: string,
   blockName: string,
-  updateData: IUpdateBlockData
+  updateData: IUpdateBlockData,
+  path?: string
 ) => {
   const response = await fetch(`${API_BASE_URL}/api/${page}/${blockName}`, {
     method: 'POST',
@@ -51,7 +52,7 @@ export const updatePageBlock = async (
     const data = (await response.json()) as IAPIError;
     throw new Error(data.error);
   }
-  await revalidatePage(page);
+  await revalidatePage(path ? path : page);
 };
 
 export const uploadFiles = async (folder: string, formData: FormData) => {

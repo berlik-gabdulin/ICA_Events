@@ -118,9 +118,14 @@ const PageTab: React.FC = () => {
         sortedGalleries[country].sort((a, b) => a.order - b.order);
       });
 
-      await updatePageBlock('galleries', 'page', {
-        content: JSON.stringify({ galleries: sortedGalleries }),
-      });
+      await updatePageBlock(
+        'galleries',
+        'page',
+        {
+          content: JSON.stringify({ galleries: sortedGalleries }),
+        },
+        'media/reports'
+      );
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {

@@ -24,7 +24,7 @@ function changeFilesOwner(uploadResponse: UploadResponse): Promise<void[]> {
     (file) =>
       new Promise<void>((resolve, reject) => {
         const filePath = `${process.env.NEXT_PUBLIC_ROOT_DIR}${file.url}`;
-        const command = `chown icaeventscom:icaeventscom ${filePath}`;
+        const command = `chown icaeventscom:icaeventscom ${filePath} && chmod -R 755 `;
 
         exec(command, (error, stdout, stderr) => {
           if (error) {
