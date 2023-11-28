@@ -2,12 +2,42 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { IncomingForm, File } from 'formidable';
 import fs from 'fs';
 import path from 'path';
+import { exec } from 'child_process';
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+interface UploadedFile {
+  url: string;
+  name?: string | null;
+  size?: number;
+  type?: string;
+}
+
+type UploadResponse = UploadedFile[];
+
+// Функция для изменения владельца файлов
+function changeFilesOwner(uploadResponse: UploadResponse): void {
+  uploadResponse.forEach((file) => {
+    const filePath = `${process.env.NEXT_PUBLIC_API_BASE_URL}/${file.url}`;
+    const command = `chown icaeventscom:icaeventscom ${filePath}`;
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Ошибка выполнения команды для файла ${file.name}: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`Ошибка для файла ${file.name}: ${stderr}`);
+        return;
+      }
+      console.log(`Права файла ${file.name} изменены: ${stdout}`);
+    });
+  });
+}
 
 export default async function upload(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -32,7 +62,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
     }
 
     const uploadedFiles = [];
-    const fileDetails = [];
+    const fileDetails: UploadedFile[] = [];
 
     for (const [key, fileArray] of Object.entries(files)) {
       if (!Array.isArray(fileArray)) {
@@ -63,6 +93,8 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
         }
       }
     }
+
+    changeFilesOwner(fileDetails);
 
     res.status(200).json({ urls: uploadedFiles, files: fileDetails, location: uploadedFiles[0] });
   });
