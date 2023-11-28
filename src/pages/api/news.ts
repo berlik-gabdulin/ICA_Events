@@ -175,8 +175,7 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
     !meta_keywords ||
     !og_description ||
     !og_locale ||
-    !og_image ||
-    !isPublic
+    !og_image
   ) {
     return res.status(400).json({
       error:
