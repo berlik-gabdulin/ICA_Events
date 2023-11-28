@@ -5,6 +5,7 @@ import useSnackbar from 'src/hooks/useSnackbar';
 import Input from 'src/components/Input';
 import Button from 'src/components/Button';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { TReport } from 'src/utils/types';
 
 type FormData = {
   title: string;
@@ -27,12 +28,21 @@ const ReportsTab: React.FC = () => {
       const content = JSON.parse(data.content);
       const blockContent = JSON.parse(homeData.content);
 
+      console.log(blockContent.reports);
+
       setValue('title', blockContent.title);
       setValue('buttonText', blockContent.buttonText);
       setValue('block1', blockContent.reports.block1.id);
       setValue('block2', blockContent.reports.block2.id);
       setValue('block3', blockContent.reports.block3.id);
-      setGalleries(content.galleries);
+      setGalleries(
+        Object.keys(content.galleries).reduce((accumulator, country) => {
+          if (content.galleries.hasOwnProperty(country)) {
+            return accumulator.concat(content.galleries[country]);
+          }
+          return accumulator;
+        }, [] as TReport[])
+      );
       setLoading(false);
     };
 
@@ -77,18 +87,20 @@ const ReportsTab: React.FC = () => {
               >
                 Block {blockNumber}
               </InputLabel>
-              <Select
-                labelId={`block${blockNumber}-label`}
-                {...register(`block${blockNumber}` as keyof FormData)}
-                defaultValue={watch(`block${blockNumber}` as keyof FormData)}
-                fullWidth
-              >
-                {galleries.map((gallery) => (
-                  <MenuItem key={gallery.id} value={gallery.id}>
-                    {gallery.gallery_title}
-                  </MenuItem>
-                ))}
-              </Select>
+              {galleries.length ? (
+                <Select
+                  labelId={`block${blockNumber}-label`}
+                  {...register(`block${blockNumber}` as keyof FormData)}
+                  defaultValue={watch(`block${blockNumber}` as keyof FormData)}
+                  fullWidth
+                >
+                  {galleries.map((gallery) => (
+                    <MenuItem key={gallery.id} value={gallery.id}>
+                      {gallery.gallery_title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              ) : null}
             </FormControl>
           ))}
 
