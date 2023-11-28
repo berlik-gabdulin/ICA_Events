@@ -1,10 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconButton, Avatar, Menu, MenuItem } from '@mui/material';
 import { Language, Settings, ExitToApp } from '@mui/icons-material';
 import { HeaderBox } from './style';
+import { useRouter } from 'next/router';
 
 const AdminHeader: React.FC = () => {
+  const router = useRouter();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/admin/login');
+    }
+  }, [router]);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -12,6 +22,11 @@ const AdminHeader: React.FC = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/admin/login');
   };
 
   return (
@@ -27,7 +42,7 @@ const AdminHeader: React.FC = () => {
           <Settings />
           Profile Settings
         </MenuItem>
-        <MenuItem onClick={handleMenuClose}>
+        <MenuItem onClick={handleLogout}>
           <ExitToApp />
           Logout
         </MenuItem>

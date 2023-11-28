@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Button, TextField, Container, Typography, Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
 import AdminLayout from 'src/components/AdminLayout';
+import useSnackbar from 'src/hooks/useSnackbar';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const { showError, showSuccess } = useSnackbar();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
@@ -24,27 +23,20 @@ const RegisterPage: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message);
+        showSuccess(data.message);
       } else {
-        setMessage(data.error);
+        showError(data.error);
       }
-
-      setOpen(true);
     } catch (error) {
-      setMessage('Ошибка при регистрации');
-      setOpen(true);
+      showError(error);
     }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
     <AdminLayout>
       <Container component="main" maxWidth="xs">
         <Typography component="h1" variant="h5">
-          Регистрация
+          New user registration
         </Typography>
         <form noValidate onSubmit={handleSubmit}>
           <TextField
@@ -53,7 +45,7 @@ const RegisterPage: React.FC = () => {
             required
             fullWidth
             id="name"
-            label="Имя"
+            label="Name"
             name="name"
             autoComplete="name"
             autoFocus
@@ -65,7 +57,7 @@ const RegisterPage: React.FC = () => {
             required
             fullWidth
             id="email"
-            label="Электронная почта"
+            label="E-mail"
             name="email"
             autoComplete="email"
             onChange={handleChange}
@@ -76,7 +68,7 @@ const RegisterPage: React.FC = () => {
             required
             fullWidth
             name="password"
-            label="Пароль"
+            label="Password"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -86,16 +78,6 @@ const RegisterPage: React.FC = () => {
             Register
           </Button>
         </form>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleClose}
-            severity={message === 'Пользователь успешно зарегистрирован' ? 'success' : 'error'}
-          >
-            {message}
-          </MuiAlert>
-        </Snackbar>
       </Container>
     </AdminLayout>
   );
