@@ -6,6 +6,7 @@ import ImageWrapper from '../ImageWrapper';
 import { Box } from '@mui/material';
 import { uploadFiles } from 'src/utils/api';
 import { TUpload } from 'src/utils/types';
+import uuidv4 from 'src/utils/uuidv4';
 
 interface FileUploaderProps {
   inputName: string;
@@ -17,11 +18,18 @@ interface FileUploaderProps {
   onUpload?: (data?: any) => void;
 }
 
+const generateFileName = (prefix: string, originalName: string) => {
+  const date = new Date().toISOString().slice(0, 10);
+  const uuid = uuidv4();
+  const extension = originalName.split('.').pop();
+  return `${prefix ? prefix + '_' : ''}${date}_${uuid}.${extension}`;
+};
+
 const FileUploader: React.FC<FileUploaderProps> = ({
   inputName,
   setValue,
   folder,
-  prefix,
+  prefix = '',
   preview = true,
   maxFiles = 1,
   onUpload,
@@ -33,7 +41,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       const formData = new FormData();
 
       acceptedFiles.forEach((file) => {
-        const newFile = new File([file], `${prefix}_${file.name}`, {
+        const newName = generateFileName(prefix, file.name);
+        const newFile = new File([file], newName, {
           type: file.type,
         });
         formData.append(inputName, newFile);
