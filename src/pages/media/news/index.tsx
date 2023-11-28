@@ -61,7 +61,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
                     <CardMediaWrapper>
                       <CardMedia
                         component="img"
-                        image={item.image_url || 'path_to_placeholder_image'} // Replace with your placeholder path
+                        image={item.image_url || '/assets/placeholder.jpg'}
                         alt={item.title}
                       />
                     </CardMediaWrapper>
