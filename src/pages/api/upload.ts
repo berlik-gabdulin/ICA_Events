@@ -22,7 +22,7 @@ type UploadResponse = UploadedFile[];
 // Функция для изменения владельца файлов
 function changeFilesOwner(uploadResponse: UploadResponse): void {
   uploadResponse.forEach((file) => {
-    const filePath = `${process.env.NEXT_PUBLIC_API_BASE_URL}/${file.url}`;
+    const filePath = `${process.env.NEXT_PUBLIC_API_BASE_URL}${file.url}`;
     const command = `chown icaeventscom:icaeventscom ${filePath}`;
 
     exec(command, (error, stdout, stderr) => {
