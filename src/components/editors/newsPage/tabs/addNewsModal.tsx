@@ -189,7 +189,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
           <FileUploader
             inputName="image_url"
             setValue={setValue}
-            folder="news_images"
+            folder="pages/news_images"
             prefix="news"
             maxFiles={1}
           />
@@ -277,7 +277,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
                 inputName="og_image"
                 setValue={setValue}
                 prefix="preview"
-                folder={`pages/news`}
+                folder="pages/news_images"
               />
 
               <ImagePreview
