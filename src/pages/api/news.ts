@@ -1,5 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { revalidatePage } from 'src/utils/api';
 import db from 'src/utils/db';
 
 interface NewsItem {
@@ -85,17 +86,60 @@ async function getOneNews(req: NextApiRequest, res: NextApiResponse) {
 
 // Добавление новости
 async function addNews(req: NextApiRequest, res: NextApiResponse) {
-  const { title, alias, content, imageUrl, isPublic } = req.body;
+  const {
+    title,
+    alias,
+    content,
+    imageUrl,
+    meta_title,
+    meta_description,
+    meta_keywords,
+    og_description,
+    og_locale,
+    og_image,
+    isPublic,
+  } = req.body;
 
-  if (!title || !content) {
-    return res.status(400).json({ error: 'Title and content are required' });
+  if (
+    !title ||
+    !alias ||
+    !content ||
+    !imageUrl ||
+    !meta_title ||
+    !meta_description ||
+    !meta_keywords ||
+    !og_description ||
+    !og_locale ||
+    !og_image ||
+    !isPublic
+  ) {
+    return res.status(400).json({
+      error:
+        'title, alias, content, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic are required' +
+        `${title},${!!alias},${!!content},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
+    });
   }
 
   try {
     await db.execute(
-      'INSERT INTO collection_news (title, alias, content, image_url, isPublic) VALUES (?, ?, ?, ?, ?)',
-      [title, alias, content, imageUrl, isPublic]
+      'INSERT INTO collection_news (title, alias, content, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        title,
+        alias,
+        content,
+        imageUrl,
+        meta_title,
+        meta_description,
+        meta_keywords,
+        og_description,
+        og_locale,
+        og_image,
+        isPublic,
+      ]
     );
+
+    await revalidatePage('/media/news/');
+    await revalidatePage(`/media/news/${alias}`);
 
     return res.status(201).json({ message: 'News added successfully' });
   } catch (error) {
@@ -136,7 +180,8 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
   ) {
     return res.status(400).json({
       error:
-        'ID, title, alias, content, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image and public are required',
+        'ID, title, alias, content, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image and public are required' +
+        `${title},${!!alias},${!!content},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
     });
   }
 
@@ -159,6 +204,9 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
       ]
     );
 
+    await revalidatePage('/media/news/');
+    await revalidatePage(`/media/news/${alias}`);
+
     res.status(200).json({ message: 'News updated successfully' });
   } catch (error) {
     console.error('Error updating news:', error);
@@ -168,7 +216,7 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
 
 // Удаление новости
 async function deleteNews(req: NextApiRequest, res: NextApiResponse) {
-  const id = req.query.id as string;
+  const { id, alias } = req.query;
 
   if (!id) {
     return res.status(400).json({ error: 'ID is required' });
@@ -176,6 +224,9 @@ async function deleteNews(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     await db.execute('DELETE FROM collection_news WHERE id=?', [id]);
+
+    await revalidatePage('/media/news/');
+    await revalidatePage(`/media/news/${alias}`);
 
     res.status(200).json({ message: 'News deleted successfully' });
   } catch (error) {

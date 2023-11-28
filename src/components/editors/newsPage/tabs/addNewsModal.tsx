@@ -31,6 +31,7 @@ interface IAddNewsModalProps {
 
 // Определяем тип для данных новости
 export interface INewsData {
+  id?: number;
   title: string;
   alias: string;
   content: string;

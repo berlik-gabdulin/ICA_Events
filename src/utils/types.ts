@@ -21,13 +21,6 @@ export interface IPageBlock {
   order: number;
 }
 
-export interface ICreateBlockData {
-  block_name: string;
-  block_title: string;
-  content: string;
-  order_number: number;
-}
-
 export interface IUploadResponse {
   url: string;
 }
@@ -131,6 +124,7 @@ export type TLayoutProps = {
   social: TSocialLinks;
   footer: TFooter;
   navigation: TNavigation;
+
   meta: TMetaFields;
 };
 

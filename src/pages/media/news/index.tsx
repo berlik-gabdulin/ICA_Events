@@ -160,6 +160,7 @@ const CardMediaWrapper = styled.div`
   padding-top: 56%;
   object-fit: cover;
   height: 0;
+  overflow: hidden;
   img {
     position: absolute;
     top: 0;

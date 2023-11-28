@@ -1,6 +1,20 @@
-import { IAPIError, ICreateBlockData, IPageBlock, IUpdateBlockData } from './types';
+import { IAPIError, IPageBlock, IUpdateBlockData } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+export const revalidatePage = async (page: string) => {
+  try {
+    await fetch(`${API_BASE_URL}/api/revalidate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ path: `/${page !== 'home' ? page : ''}` }),
+    });
+  } catch (error) {
+    console.error('Error during revalidation:', error);
+  }
+};
 
 export const fetchPageBlock = async (page: string, blockName: string): Promise<IPageBlock> => {
   const response = await fetch(`${API_BASE_URL}/api/${page}/${blockName}`);
@@ -37,20 +51,7 @@ export const updatePageBlock = async (
     const data = (await response.json()) as IAPIError;
     throw new Error(data.error);
   }
-};
-
-export const createPageBlock = async (page: string, blockData: ICreateBlockData) => {
-  const response = await fetch(`${API_BASE_URL}/api/${page}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(blockData),
-  });
-  if (!response.ok) {
-    const data = (await response.json()) as IAPIError;
-    throw new Error(data.error);
-  }
+  await revalidatePage(page);
 };
 
 export const uploadFiles = async (folder: string, formData: FormData) => {

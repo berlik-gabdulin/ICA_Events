@@ -15,24 +15,15 @@ import AddNewsModal, { INewsData } from './addNewsModal';
 import styled from '@emotion/styled';
 import shadows from 'src/theme/shadows';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  content: string;
-  image_url: string;
-  published_at: string;
-  visible: boolean;
-}
-
 interface NewsResponse {
-  news: NewsItem[];
+  news: INewsData[];
   total: number;
 }
 
 const boolToTiny1 = (bool: boolean) => (bool ? 1 : 0);
 
 const NewsTab: React.FC = () => {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<INewsData[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +44,6 @@ const NewsTab: React.FC = () => {
 
   useEffect(() => {
     fetchNews();
-    console.log(page);
   }, [page, fetchNews]);
 
   const totalPages = total ? Math.ceil(total / 10) : 0;
@@ -67,6 +57,7 @@ const NewsTab: React.FC = () => {
         },
         body: JSON.stringify({
           title: newsData.title,
+          alias: newsData.alias,
           content: newsData.content,
           imageUrl: newsData.image_url,
           meta_title: newsData.meta_title,
@@ -101,6 +92,7 @@ const NewsTab: React.FC = () => {
         body: JSON.stringify({
           id: newsItemId,
           title: newsData.title,
+          alias: newsData.alias,
           content: newsData.content,
           imageUrl: newsData.image_url,
           meta_title: newsData.meta_title,
@@ -143,7 +135,7 @@ const NewsTab: React.FC = () => {
     setNewsItemId(null);
   };
 
-  const handleDeleteDialogOpen = (id: number) => {
+  const handleDeleteDialogOpen = (id: number, alias: string) => {
     setNewsItemId(id);
     setDeleteDialogOpen(true);
   };
@@ -187,13 +179,17 @@ const NewsTab: React.FC = () => {
                   <Box flexGrow={1}>
                     <Typography variant="h6">{item.title}</Typography>
                   </Box>
-                  <Button variant="contained" color="primary" onClick={() => handleEdit(item.id)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => (item.id ? handleEdit(item.id) : null)}
+                  >
                     Edit
                   </Button>
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={() => handleDeleteDialogOpen(item.id)}
+                    onClick={() => handleDeleteDialogOpen(item.id ? item.id : 0, item.alias)}
                     style={{ marginLeft: 15 }}
                   >
                     Delete
