@@ -138,8 +138,8 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
       ]
     );
 
-    await revalidatePage('/media/news/');
-    await revalidatePage(`/media/news/${alias}`);
+    await revalidatePage('media/news/');
+    await revalidatePage(`media/news/${alias}`);
 
     return res.status(201).json({ message: 'News added successfully' });
   } catch (error) {
