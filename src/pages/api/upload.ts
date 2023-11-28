@@ -23,7 +23,7 @@ function changeFilesOwner(uploadResponse: UploadResponse): Promise<void[]> {
   const promises = uploadResponse.map(
     (file) =>
       new Promise<void>((resolve, reject) => {
-        const filePath = `${process.env.NEXT_PUBLIC_API_BASE_URL}${file.url}`;
+        const filePath = `.${file.url}`;
         const command = `chown icaeventscom:icaeventscom ${filePath}`;
 
         exec(command, (error, stdout, stderr) => {
