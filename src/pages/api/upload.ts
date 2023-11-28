@@ -19,24 +19,31 @@ interface UploadedFile {
 
 type UploadResponse = UploadedFile[];
 
-// Функция для изменения владельца файлов
-function changeFilesOwner(uploadResponse: UploadResponse): void {
-  uploadResponse.forEach((file) => {
-    const filePath = `${process.env.NEXT_PUBLIC_API_BASE_URL}${file.url}`;
-    const command = `chown icaeventscom:icaeventscom ${filePath}`;
+function changeFilesOwner(uploadResponse: UploadResponse): Promise<void[]> {
+  const promises = uploadResponse.map(
+    (file) =>
+      new Promise<void>((resolve, reject) => {
+        const filePath = `${process.env.NEXT_PUBLIC_API_BASE_URL}${file.url}`;
+        const command = `chown icaeventscom:icaeventscom ${filePath}`;
 
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Ошибка выполнения команды для файла ${file.name}: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Ошибка для файла ${file.name}: ${stderr}`);
-        return;
-      }
-      console.log(`Права файла ${file.name} изменены: ${stdout}`);
-    });
-  });
+        exec(command, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Ошибка выполнения команды для файла ${file.name}: ${error.message}`);
+            reject(error);
+            return;
+          }
+          if (stderr) {
+            console.error(`Ошибка для файла ${file.name}: ${stderr}`);
+            reject(new Error(stderr));
+            return;
+          }
+          console.log(`Права файла ${file.name} изменены: ${stdout}`);
+          resolve();
+        });
+      })
+  );
+
+  return Promise.all(promises);
 }
 
 export default async function upload(req: NextApiRequest, res: NextApiResponse) {
