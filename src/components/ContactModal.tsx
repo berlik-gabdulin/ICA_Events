@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/rootReducer';
 import { closeModal, submitForm, setStatus } from 'src/redux/slices/contactModalSlice';
 import { useRouter } from 'next/router';
+import { formatPhoneNumber } from 'src/utils/formatPhoneNumber';
 
 interface IFormInput {
   name: string;
@@ -119,7 +120,17 @@ const ContactModal: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <TextField {...field} label="Phone" fullWidth margin="normal" required />
+                <TextField
+                  {...field}
+                  label="Phone"
+                  fullWidth
+                  margin="normal"
+                  required
+                  onChange={(e) => {
+                    const formattedPhone = formatPhoneNumber(e.target.value);
+                    field.onChange(formattedPhone); // Обновляем значение поля с отформатированным номером
+                  }}
+                />
               )}
             />
 
