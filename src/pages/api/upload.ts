@@ -53,7 +53,9 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
 
   const form = new IncomingForm();
   const folder = req.query.folder || 'default';
-  const uploadDir = path.join(process.cwd(), `public/uploads/${folder}`);
+  const uploadDir = path.join(process.cwd(), `/public/uploads/${folder}`);
+
+  console.log('process.cwd()', process.cwd());
 
   // Создаем папку, если ее нет
   if (!fs.existsSync(uploadDir)) {
