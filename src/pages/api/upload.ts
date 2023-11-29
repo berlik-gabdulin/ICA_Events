@@ -85,6 +85,14 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
 
         try {
           await fs.promises.rename(fileData.filepath, newPath);
+          const prodPath = path.join(
+            process.cwd(),
+            `/_build/public/uploads/${folder}/${fileData.originalFilename}`
+          );
+
+          if (process.env.NODE_ENV === 'production') {
+            await fs.promises.copyFile(newPath, prodPath);
+          }
 
           uploadedFiles.push(`/uploads/${folder}/${fileData.originalFilename}`);
           fileDetails.push({
