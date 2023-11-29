@@ -24,7 +24,7 @@ function changeFilesOwner(uploadResponse: UploadResponse): Promise<void[]> {
     (file) =>
       new Promise<void>((resolve, reject) => {
         const filePath = `${process.env.NEXT_PUBLIC_ROOT_DIR}${file.url}`;
-        const command = `chown icaeventscom:icaeventscom ${filePath} && chmod -R 755 `;
+        const command = `chown icaeventscom:icaeventscom ${filePath}`;
 
         exec(command, (error, stdout, stderr) => {
           if (error) {
@@ -103,7 +103,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
     }
 
-    changeFilesOwner(fileDetails);
+    // changeFilesOwner(fileDetails);
 
     res.status(200).json({ urls: uploadedFiles, files: fileDetails, location: uploadedFiles[0] });
   });
