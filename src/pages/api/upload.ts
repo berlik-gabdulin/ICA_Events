@@ -3,6 +3,7 @@ import { IncomingForm, File } from 'formidable';
 import fs from 'fs';
 import path from 'path';
 import { exec } from 'child_process';
+import { revalidatePage } from 'src/utils/api';
 
 export const config = {
   api: {
@@ -24,7 +25,7 @@ function changeFilesOwner(uploadResponse: UploadResponse): Promise<void[]> {
     (file) =>
       new Promise<void>((resolve, reject) => {
         const filePath = `${process.env.NEXT_PUBLIC_ROOT_DIR}${file.url}`;
-        const command = `chown icaeventscom:icaeventscom ${filePath}`;
+        const command = `chown icaeventscom:icaeventscom ${filePath} && chmod 644 ${filePath}`;
 
         exec(command, (error, stdout, stderr) => {
           if (error) {
@@ -55,8 +56,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
   const folder = req.query.folder || 'default';
   const uploadDir = path.join(process.cwd(), `/public/uploads/${folder}`);
 
-  console.log('process.cwd()', process.cwd());
-
   // Создаем папку, если ее нет
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -85,14 +84,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
 
         try {
           await fs.promises.rename(fileData.filepath, newPath);
-          const prodPath = path.join(
-            process.cwd(),
-            `/_build/public/uploads/${folder}/${fileData.originalFilename}`
-          );
-
-          if (process.env.NODE_ENV === 'production') {
-            await fs.promises.copyFile(newPath, prodPath);
-          }
 
           uploadedFiles.push(`/uploads/${folder}/${fileData.originalFilename}`);
           fileDetails.push({
@@ -111,7 +102,9 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
     }
 
-    // changeFilesOwner(fileDetails);
+    changeFilesOwner(fileDetails);
+
+    await revalidatePage('/admin/media/news/');
 
     res.status(200).json({ urls: uploadedFiles, files: fileDetails, location: uploadedFiles[0] });
   });
