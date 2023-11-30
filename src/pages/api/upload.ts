@@ -102,7 +102,7 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
       }
     }
 
-    changeFilesOwner(fileDetails);
+    // changeFilesOwner(fileDetails);
 
     await revalidatePage('/admin/media/news/');
 
