@@ -1,3 +1,9 @@
-# https://www.robotstxt.org/robotstxt.html
+# *
 User-agent: *
-Disallow:
+Allow: /
+
+# Host
+Host: https://ica-events.com
+
+# Sitemaps
+Sitemap: https://ica-events.com/sitemap.xml

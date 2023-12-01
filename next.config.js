@@ -10,7 +10,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Кеширование статических ресурсов Next.js
         source: '/_next/static/:path*',
         headers: [
           {
@@ -20,18 +19,7 @@ const nextConfig = {
         ],
       },
       {
-        // Кеширование ваших статических ресурсов
         source: '/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        // Кеширование изображений
-        source: '/images/:path*',
         headers: [
           {
             key: 'Cache-Control',

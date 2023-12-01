@@ -3,7 +3,6 @@ import { IncomingForm, File } from 'formidable';
 import fs from 'fs';
 import path from 'path';
 import { exec } from 'child_process';
-import { revalidatePage } from 'src/utils/api';
 
 export const config = {
   api: {
@@ -48,15 +47,18 @@ function changeFilesOwner(uploadResponse: UploadResponse): Promise<void[]> {
 }
 
 export default async function upload(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader('Cache-Control', 'no-store');
+
   if (req.method !== 'POST') {
     return res.status(405).end();
   }
 
   const form = new IncomingForm();
   const folder = req.query.folder || 'default';
-  const uploadDir = path.join(process.cwd(), `/public/uploads/${folder}`);
+  const uploadDir = path.join(process.cwd(), `/uploads/${folder}`);
 
-  // Создаем папку, если ее нет
+  console.log('process.cwd()', process.cwd());
+
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
@@ -103,8 +105,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
     }
 
     // changeFilesOwner(fileDetails);
-
-    await revalidatePage('/admin/media/news/');
 
     res.status(200).json({ urls: uploadedFiles, files: fileDetails, location: uploadedFiles[0] });
   });
