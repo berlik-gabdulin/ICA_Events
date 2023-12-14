@@ -17,7 +17,7 @@ export const Buttons = styled(Box)`
 export const ContainerStyles: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-around',
+  justifyContent: 'center',
   height: 'calc(100vh - 320px)',
   maxHeight: '800px',
   minHeight: '400px',

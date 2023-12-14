@@ -12,8 +12,7 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Path, Section, TitleH1 } from 'src/components/globalStyles';
-import { Heading } from 'src/components/WebSite/components/BGBox/styles';
+import { Container, Path, Section } from 'src/components/globalStyles';
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { EventCard } from 'src/components/WebSite/components/EventCard';
 import {
@@ -29,6 +28,8 @@ import PathImg from 'public/assets/arc.png';
 import { countriesDropdown, industries } from 'src/utils/network';
 import { getLayoutData } from 'src/utils/getLayoutData';
 import dateFormatter from 'src/utils/dateFormatter';
+import { Heading } from 'src/components/WebSite/components/Heading';
+import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
 
 type TMaterialsPageProps = {
   events: TPageType<TEvents>;

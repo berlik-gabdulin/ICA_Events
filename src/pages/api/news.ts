@@ -90,6 +90,7 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
     title,
     alias,
     content,
+    short_text,
     imageUrl,
     meta_title,
     meta_description,
@@ -104,6 +105,7 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
     !title ||
     !alias ||
     !content ||
+    !short_text ||
     !imageUrl ||
     !meta_title ||
     !meta_description ||
@@ -115,18 +117,19 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
   ) {
     return res.status(400).json({
       error:
-        'title, alias, content, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic are required' +
-        `${title},${!!alias},${!!content},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
+        'title, alias, content, short_text, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic are required' +
+        `${title},${!!alias},${!!content},${!!short_text},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
     });
   }
 
   try {
     await db.execute(
-      'INSERT INTO collection_news (title, alias, content, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO collection_news (title, alias, content, short_text, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         title,
         alias,
         content,
+        short_text,
         imageUrl,
         meta_title,
         meta_description,
@@ -155,6 +158,7 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
     title,
     alias,
     content,
+    short_text,
     imageUrl,
     meta_title,
     meta_description,
@@ -170,6 +174,7 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
     !title ||
     !alias ||
     !content ||
+    !short_text ||
     !meta_title ||
     !meta_description ||
     !meta_keywords ||
@@ -179,18 +184,19 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
   ) {
     return res.status(400).json({
       error:
-        'ID, title, alias, content, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image and public are required' +
-        `${title},${!!alias},${!!content},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
+        'ID, title, alias, content, short_text, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image and public are required' +
+        `${title},${!!alias},${!!content},${!!short_text},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
     });
   }
 
   try {
     await db.execute(
-      'UPDATE collection_news SET title=?, alias=?, content=?, image_url=?, meta_title=?, meta_description=?, meta_keywords=?, og_description=?, og_locale=?, og_image=?, isPublic=? WHERE id=?',
+      'UPDATE collection_news SET title=?, alias=?, content=?, short_text=?,image_url=?, meta_title=?, meta_description=?, meta_keywords=?, og_description=?, og_locale=?, og_image=?, isPublic=? WHERE id=?',
       [
         title,
         alias,
         content,
+        short_text,
         imageUrl,
         meta_title,
         meta_description,

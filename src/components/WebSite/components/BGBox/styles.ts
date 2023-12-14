@@ -26,7 +26,8 @@ export const SectionStyled = styled(Section)`
   }
 `;
 
-export const Heading = styled.h3`
+export const HeadingStyled = styled.h3`
+  visibility: hidden;
   color: #fff;
   font-size: 64px;
   line-height: 1.2;

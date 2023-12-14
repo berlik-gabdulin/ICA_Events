@@ -213,7 +213,7 @@ export const ContactsBlock = styled.div`
 
 export const LinksBlock = styled.div`
   display: flex;
-
+  visibility: hidden;
   @media screen and (max-width: 768px) {
     flex-direction: column;
     align-items: center;

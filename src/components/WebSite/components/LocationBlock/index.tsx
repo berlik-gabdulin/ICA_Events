@@ -7,7 +7,9 @@ import { SectionLocation } from './styles';
 import { TEvent } from 'src/utils/types';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { Container, Title } from 'src/components/globalStyles';
+import { Container } from 'src/components/globalStyles';
+import { Title } from '../Title';
+import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
 const LocationBlock = ({ events }: { events: TEvent[] }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -27,11 +29,13 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
     ? events.filter((event) => event.country === selectedCountry)
     : [];
 
+  const mapRef = useScrollAnimation('animate__fadeIn', 200, 500);
+
   return (
     <SectionLocation>
       <Container>
         <Title style={{ color: customTheme.main[100] }}>Choose your event destination</Title>
-        <svg viewBox={Map.viewBox} className="svg-map">
+        <svg viewBox={Map.viewBox} className="svg-map" ref={mapRef}>
           {filteredLocations.map((location) => {
             const isOurNetwork = countries.includes(location.name);
 

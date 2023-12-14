@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { Container, Section, Title } from 'src/components/globalStyles';
+import { Container, Section } from 'src/components/globalStyles';
 import customTheme from 'src/theme/customTheme';
 import { TReport, TReportsBlockProps } from 'src/utils/types';
 import Lightbox from 'yet-another-react-lightbox';
@@ -9,6 +9,8 @@ import 'yet-another-react-lightbox/styles.css';
 import Button from '../Button';
 import { FONT_PRIMARY_BOLD } from 'src/theme/typography';
 import { useRouter } from 'next/router';
+import { Title } from '../Title';
+import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
 const ReportsBlock: React.FC<{ block_title: string; content: TReportsBlockProps }> = ({
   block_title,
@@ -34,12 +36,14 @@ const ReportsBlock: React.FC<{ block_title: string; content: TReportsBlockProps 
     setCurrentGallery(null);
   };
 
+  const btnRef = useScrollAnimation('animate__fadeInDown');
+
   return (
     <Section style={{ backgroundColor: customTheme.main[100], padding: 0 }}>
       <ContainerGrid style={{ maxWidth: 1800 }}>
         <TextBlock>
-          <TitleStyled>{title}</TitleStyled>
-          <div>
+          <TitleStyled style={{ textAlign: 'left' }}>{title}</TitleStyled>
+          <div ref={btnRef}>
             <Button
               type="button"
               variant="outlined"

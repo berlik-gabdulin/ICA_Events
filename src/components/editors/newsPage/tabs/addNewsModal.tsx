@@ -21,7 +21,6 @@ import Loader from 'src/components/Loader';
 import ImagePreview from 'src/components/ImagePreview';
 import Input from 'src/components/Input';
 
-// Определяем типы пропсов для компонента AddNewsModal
 interface IAddNewsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,6 +34,7 @@ export interface INewsData {
   title: string;
   alias: string;
   content: string;
+  short_text: string;
   image_url: string;
   meta_title: string;
   meta_description: string;
@@ -43,12 +43,14 @@ export interface INewsData {
   og_locale: string;
   og_image: string;
   isPublic: boolean;
+  published_at?: Date | string;
 }
 
 const InitialState = {
   title: '',
   alias: '',
   content: '',
+  short_text: '',
   image_url: '',
   meta_title: '',
   meta_description: '',
@@ -87,11 +89,9 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
     );
 
     if (errorFields.length > 0) {
-      // Create a message listing the fields that have errors
       const errorMessage = `Please fill in the following fields: ${errorFields.join(', ')}.`;
-      // Show the message however you like, e.g., a toast, modal, etc.
       console.error(errorMessage);
-      return; // Prevent the form from being submitted
+      return;
     }
 
     onSave({ ...data });
@@ -184,6 +184,15 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
             control={control}
             watch={watch}
             style={{ marginTop: '20px', marginBottom: 30 }}
+          />
+
+          <Input
+            label="Short Text"
+            shrink={watch('short_text')}
+            fullWidth
+            {...register('short_text', { required: 'This field is required' })}
+            error={Boolean(errors.short_text)}
+            helperText={errors.short_text?.message}
           />
 
           <FileUploader

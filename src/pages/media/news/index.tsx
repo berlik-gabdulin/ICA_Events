@@ -1,28 +1,25 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
-import {
-  Grid,
-  Typography,
-  Pagination,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActionArea,
-} from '@mui/material';
+import { Grid, Pagination, CardMedia, CardContent, Link, CardActions } from '@mui/material';
 import Layout from 'src/components/WebSite/components/Layout'; // Импортируйте ваш Layout компонент
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import { IData, IPageBlock, TLayoutProps, TPageType, TTitleBlock } from 'src/utils/types';
 import { getLayoutData } from 'src/utils/getLayoutData';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { Container, Section } from 'src/components/globalStyles';
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
+import { NewsButton, NewsItemDate, NewsItemText, NewsItemWrapper, NewsTitleLink } from './styles';
+import { Heading } from 'src/components/WebSite/components/Heading';
+import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
 
 interface NewsItem {
   id: number;
   title: string;
   image_url: string;
+  content: string;
+  short_text?: string;
   published_at: string;
   alias: string;
 }
@@ -36,9 +33,15 @@ interface NewsPageProps {
 
 const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) => {
   const [page, setPage] = React.useState(1);
+  const router = useRouter();
+
+  const handleReadMoreClick = (item: NewsItem) => {
+    router.push(`/media/news/${item.alias}`);
+  };
+
   const totalPages = Math.ceil(total / 10);
 
-  const { bgImage } = bgBox.content;
+  const { bgImage, title } = bgBox.content;
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -47,17 +50,22 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
   return (
     <Layout data={layoutData}>
       <BGBox bgImage={bgImage} style={{ minHeight: 400 }} display="flex" alignItems="center">
-        <Heading>{layoutData.meta.meta_title}</Heading>
+        <Heading>{title}</Heading>
       </BGBox>
       <Section>
         <Container>
-          <Grid container spacing={2}>
+          <TitleH1>{layoutData.meta.meta_title}</TitleH1>
+          <Grid container spacing={[30, 5]}>
             {news.map((item) => (
               <Grid item xs={12} md={6} key={item.id}>
-                <Card
+                <NewsItemWrapper
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 0 }}
                 >
-                  <CardActionArea href={`/media/news/${item.alias}`} sx={{ flexGrow: 1 }}>
+                  <NewsTitleLink href={`/media/news/${item.alias}`}>
+                    <h3>{item.title}</h3>
+                  </NewsTitleLink>
+                  <NewsItemDate>{item.published_at}</NewsItemDate>
+                  <Link href={`/media/news/${item.alias}`} style={{ textDecoration: 'none' }}>
                     <CardMediaWrapper>
                       <CardMedia
                         component="img"
@@ -65,16 +73,20 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
                         alt={item.title}
                       />
                     </CardMediaWrapper>
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {item.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.published_at}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
+                  </Link>
+                  <CardContent sx={{ paddingX: 0 }}>
+                    <NewsItemText>{item.short_text}</NewsItemText>
+                  </CardContent>
+                  <CardActions sx={{ padding: 0 }}>
+                    <NewsButton
+                      size="small"
+                      onClick={() => handleReadMoreClick(item)}
+                      variant="outlined"
+                    >
+                      READ MORE
+                    </NewsButton>
+                  </CardActions>
+                </NewsItemWrapper>
               </Grid>
             ))}
           </Grid>

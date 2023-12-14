@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Title } from 'src/components/globalStyles';
 import customTheme from 'src/theme/customTheme';
+import { Title } from '../Title';
 
 export const Wrapper = styled(Box)`
   position: relative;

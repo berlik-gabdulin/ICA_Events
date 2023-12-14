@@ -11,27 +11,24 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Section, TitleH1 } from 'src/components/globalStyles';
+import { Container, Section } from 'src/components/globalStyles';
 import {
   ContactsBlock,
-  ContentBlock,
   IconLink,
-  ImageBlock,
   Intro,
   LinksBlock,
-  Text,
-  TextBlock,
-  ThemeSection,
 } from 'src/components/WebSite/pageStyles/stylesSolutions';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import customTheme from 'src/theme/customTheme';
-import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import { getLayoutData } from 'src/utils/getLayoutData';
+import { Heading } from 'src/components/WebSite/components/Heading';
+import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
+import { SolutionItem } from 'src/components/WebSite/components/SolutionItem';
+import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
 type TSolutionsPageProps = {
   page: TPageType<TSolutions>;
@@ -49,6 +46,11 @@ const Solutions = (props: TSolutionsPageProps) => {
 
   const { intro, solutions, image, contacts } = page.content;
 
+  const introRef = useScrollAnimation('animate__fadeInUp', 200, 500);
+  const outroRef = useScrollAnimation('animate__fadeInUp', 200, 500);
+  const contactsRef = useScrollAnimation('animate__fadeInLeft');
+  const contactsContentRef = useScrollAnimation('animate__fadeInRight');
+
   return (
     <>
       <Layout data={layoutData}>
@@ -58,31 +60,19 @@ const Solutions = (props: TSolutionsPageProps) => {
         <Section>
           <Container>
             <TitleH1>{page_title}</TitleH1>
-            <Intro dangerouslySetInnerHTML={{ __html: intro }} />
+            <Intro dangerouslySetInnerHTML={{ __html: intro }} ref={introRef} />
           </Container>
         </Section>
-        {solutions.map((item: TSolution) => (
-          <ThemeSection key={item.id}>
-            <Container>
-              <ContentBlock>
-                <TextBlock>
-                  <h2>{item.title}</h2>
-                  <Text dangerouslySetInnerHTML={{ __html: item.text }} />
-                </TextBlock>
-                <ImageBlock>
-                  <Image src={item.image} alt={item.title} width={529} height={432} />
-                </ImageBlock>
-              </ContentBlock>
-            </Container>
-          </ThemeSection>
+        {solutions.map((item: TSolution, index) => (
+          <SolutionItem item={item} index={index} key={item.id} />
         ))}
         <Section style={{ backgroundColor: customTheme.dark[100] }}>
           <Container>
             <ContactsBlock>
-              <div dangerouslySetInnerHTML={{ __html: contacts.text }} />
+              <div dangerouslySetInnerHTML={{ __html: contacts.text }} ref={outroRef} />
 
-              <h2>Contacts:</h2>
-              <LinksBlock>
+              <h2 ref={contactsRef}>Contacts:</h2>
+              <LinksBlock ref={contactsContentRef}>
                 <Link href={`tel:${contacts.phone}`}>
                   <IconLink>
                     <FontAwesomeIcon icon={faPhone} height={40} />

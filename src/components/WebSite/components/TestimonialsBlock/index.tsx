@@ -17,6 +17,8 @@ import Quote from './quote.svg';
 import BgText from './icaevents.svg';
 import Image from 'next/image';
 import { SectionLocation } from '../LocationBlock/styles';
+import { useScrollAnimation } from 'src/utils/useScrollAnimation';
+// import { Title } from '../Title';
 
 const TestimonialsBlock: FC<TPageType<TTestimonial[]>> = ({ block_title, content }) => {
   const settings = {
@@ -47,14 +49,17 @@ const TestimonialsBlock: FC<TPageType<TTestimonial[]>> = ({ block_title, content
     ],
   };
 
+  const slidesRef = useScrollAnimation('animate__fadeInUp');
+  const bgRef = useScrollAnimation('animate__fadeInDown', 200, 500);
+
   return (
     <SectionLocation>
       <BackgroundTextWrapper>
-        <BackgroundText>
+        <BackgroundText ref={bgRef}>
           <Image src={BgText} layout="fill" alt="" />
         </BackgroundText>
       </BackgroundTextWrapper>
-      <SliderContainer>
+      <SliderContainer ref={slidesRef}>
         {/* <Title>{block_title}</Title> */}
         {content && content.length ? (
           <Slider {...settings}>

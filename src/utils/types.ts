@@ -45,6 +45,7 @@ export type TButton = {
   onClick?: () => void;
   children: ReactNode;
   loading?: boolean;
+  ref?: React.MutableRefObject<null>;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export type TMetaFields = {

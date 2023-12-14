@@ -11,13 +11,15 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Section, TitleH1, Path } from 'src/components/globalStyles';
+import { Container, Section, Path } from 'src/components/globalStyles';
 import { Text } from '../components/WebSite/pageStyles/stylesAbout';
-import { Heading } from 'src/components/WebSite/components/BGBox/styles';
 import { RowDataPacket } from 'mysql2';
 import PathImg from 'public/assets/arc.png';
 import Image from 'next/image';
 import { getLayoutData } from 'src/utils/getLayoutData';
+import { Heading } from 'src/components/WebSite/components/Heading';
+import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
+import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
 type TAboutPageProps = {
   page: TPageType<TAboutPage>;
@@ -35,6 +37,8 @@ const About = (props: TAboutPageProps) => {
 
   const { text, image } = page.content;
 
+  const text1Ref = useScrollAnimation('animate__fadeInUp', 0, 0);
+
   return (
     <>
       <Layout data={layoutData}>
@@ -49,7 +53,7 @@ const About = (props: TAboutPageProps) => {
         <Section>
           <Container>
             <TitleH1>{page_title}</TitleH1>
-            <Text dangerouslySetInnerHTML={{ __html: text }} />
+            <Text dangerouslySetInnerHTML={{ __html: text }} ref={text1Ref} />
           </Container>
           <Path>
             <Image src={PathImg} layout="fill" alt="Path" />

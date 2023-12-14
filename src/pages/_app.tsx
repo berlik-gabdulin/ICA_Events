@@ -15,6 +15,8 @@ import '/public/assets/slick-carousel/slick/slick-theme.css';
 
 // CSS Animations
 import 'animate.css';
+// @ts-ignore
+import WOW from 'wowjs';
 
 // Fonts
 import '../../public/fonts/index.css';

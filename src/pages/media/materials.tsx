@@ -10,8 +10,7 @@ import {
 } from 'src/utils/types';
 import Layout from 'src/components/WebSite/components/Layout';
 import BGBox from 'src/components/WebSite/components/BGBox';
-import { Container, Path, Section, TitleH1 } from 'src/components/globalStyles';
-import { Heading } from 'src/components/WebSite/components/BGBox/styles';
+import { Container, Path, Section } from 'src/components/globalStyles';
 import { Box } from '@mui/material';
 import {
   DownloadCard,
@@ -26,6 +25,8 @@ import db from 'src/utils/db';
 import Image from 'next/image';
 import PathImg from 'public/assets/arc.png';
 import { getLayoutData } from 'src/utils/getLayoutData';
+import { Heading } from 'src/components/WebSite/components/Heading';
+import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
 
 type TMaterialsPageProps = {
   page: TPageType<TMaterialsPage>;
@@ -128,6 +129,8 @@ export async function getStaticProps() {
 
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
+
+  console.log(metaContent);
 
   const layoutData = getLayoutData(settingsData, metaContent);
 
