@@ -10,7 +10,13 @@ import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section } from 'src/components/globalStyles';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { NewsButton, NewsItemDate, NewsItemText, NewsItemWrapper, NewsTitleLink } from './styles';
+import {
+  NewsButton,
+  NewsItemDate,
+  NewsItemText,
+  NewsItemWrapper,
+  NewsTitleLink,
+} from 'src/components/WebSite/pageStyles/stylesNews';
 import { Heading } from 'src/components/WebSite/components/Heading';
 import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
 

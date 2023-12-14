@@ -10,7 +10,12 @@ import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section } from 'src/components/globalStyles';
 import { INewsData } from 'src/components/editors/newsPage/tabs/addNewsModal';
 import { formatDate } from 'src/utils/formatTime';
-import { NewsItemDate, NewsItemTextFull, NewsItemWrapper, NewsTitle } from './styles';
+import {
+  NewsItemDate,
+  NewsItemTextFull,
+  NewsItemWrapper,
+  NewsTitle,
+} from '../../../components/WebSite/pageStyles/stylesNews';
 import { Heading } from 'src/components/WebSite/components/Heading';
 
 interface NewsItem {
