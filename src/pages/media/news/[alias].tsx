@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { CardMedia, CardContent } from '@mui/material';
 import Layout from 'src/components/WebSite/components/Layout';
@@ -15,7 +15,7 @@ import {
   NewsItemTextFull,
   NewsItemWrapper,
   NewsTitle,
-} from '../../../components/WebSite/pageStyles/stylesNews';
+} from 'src/components/WebSite/pageStyles/stylesNews';
 import { Heading } from 'src/components/WebSite/components/Heading';
 
 interface NewsItem {
@@ -31,7 +31,7 @@ interface NewsItemPageProps {
   layoutData: TLayoutProps;
 }
 
-const NewsItemPage: React.FC<NewsItemPageProps> = ({ newsItem, layoutData }) => {
+const NewsItemPage: React.FC<NewsItemPageProps> = ({ newsItem, layoutData }): ReactElement => {
   const { title, content, image_url, published_at } = newsItem;
 
   return (
@@ -84,8 +84,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     ...(newsItems[0] as unknown as INewsData),
     published_at: formatDate((newsItems[0] as unknown as INewsData).published_at as string),
   };
-
-  console.log(newsSingleItem);
 
   const [settings] = (await db.execute(
     `SELECT * FROM page_settings ORDER BY order_number ASC`

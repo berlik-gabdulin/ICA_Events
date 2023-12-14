@@ -80,7 +80,7 @@ export const NewsItemText = styled.p`
   }
 `;
 
-export const NewsItemTextFull = styled.p`
+export const NewsItemTextFull = styled.div`
   margin: 40px 0;
   font-size: 24px;
   font-family: 'Gilroy';

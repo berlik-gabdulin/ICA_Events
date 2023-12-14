@@ -15,8 +15,6 @@ import '/public/assets/slick-carousel/slick/slick-theme.css';
 
 // CSS Animations
 import 'animate.css';
-// @ts-ignore
-import WOW from 'wowjs';
 
 // Fonts
 import '../../public/fonts/index.css';
@@ -54,7 +52,7 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
-  const { Component, pageProps, settings } = props;
+  const { Component, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -65,16 +63,14 @@ export default function MyApp(props: MyAppProps) {
       </Head>
 
       <CollapseDrawerProvider>
-        <SettingsProvider defaultSettings={settings}>
-          <MotionLazyContainer>
-            <ThemeProvider>
-              <ThemeSettings>
-                <ProgressBar />
-                {getLayout(<Component {...pageProps} />)}
-              </ThemeSettings>
-            </ThemeProvider>
-          </MotionLazyContainer>
-        </SettingsProvider>
+        <MotionLazyContainer>
+          <ThemeProvider>
+            <ThemeSettings>
+              <ProgressBar />
+              {getLayout(<Component {...pageProps} />)}
+            </ThemeSettings>
+          </ThemeProvider>
+        </MotionLazyContainer>
       </CollapseDrawerProvider>
     </Provider>
   );

@@ -27,13 +27,17 @@ export const OfficeItem = ({ item, index }: { item: TOffice; index: number }): R
     const iframe = doc.querySelector('iframe');
     return iframe ? iframe.getAttribute('src') : null;
   };
+  const imgRef = useScrollAnimation(
+    `animate__fadeIn${(index + 2) % 2 === 0 ? 'Left' : 'Right'}`,
+    200,
+    0
+  );
 
   const titleRef = useScrollAnimation('animate__fadeInUp', 300, 300);
-  const imgRef = useScrollAnimation('animate__fadeInUp', 200, 400);
-  const textRef = useScrollAnimation('animate__fadeInUp', 200, 500);
-  const btnRef = useScrollAnimation('animate__fadeInUp', 200, 600);
-  const hoursRef = useScrollAnimation('animate__fadeInUp', 200, 700);
-  const hoursTitleRef = useScrollAnimation('animate__fadeInUp', 200, 800);
+  const textRef = useScrollAnimation('animate__fadeInUp', 200, 400);
+  const btnRef = useScrollAnimation('animate__fadeInUp', 200, 500);
+  const hoursRef = useScrollAnimation('animate__fadeInUp', 200, 600);
+  const hoursTitleRef = useScrollAnimation('animate__fadeInUp', 200, 700);
 
   return (
     <ThemeSection key={item.id}>
