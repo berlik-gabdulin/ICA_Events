@@ -1,17 +1,17 @@
-import React, { MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { MouseEvent, useRef, useState } from 'react';
 import Map from 'src/utils/mapData';
 import { eurasia, countries } from 'src/utils/network';
-import { Popover, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import customTheme from 'src/theme/customTheme';
 import { SectionLocation } from './styles';
 import { TEvent } from 'src/utils/types';
 import Link from 'next/link';
-import styled from '@emotion/styled';
 import { Container } from 'src/components/globalStyles';
 import { Title } from '../Title';
 import { useScrollAnimation } from 'src/utils/useScrollAnimation';
+import { PopoverStyled } from '.';
 
-const LocationBlock = ({ events }: { events: TEvent[] }) => {
+export const LocationBlock = ({ events }: { events: TEvent[] }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isSvgVisible, setIsSvgVisible] = useState<boolean>(false);
@@ -54,55 +54,28 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
   }, []);
 
   return (
-    <SectionLocation ref={svgRef}>
+    <SectionLocation>
       <Container>
         <Title style={{ color: customTheme.main[100] }}>Choose your event destination</Title>
-        {isSvgVisible && (
-          <svg viewBox={Map.viewBox} className="svg-map" ref={mapRef}>
-            {filteredLocations.map((location) => {
-              const isOurNetwork = countries.includes(location.name);
+        <svg viewBox={Map.viewBox} className="svg-map" ref={mapRef}>
+          {filteredLocations.map((location) => {
+            const isOurNetwork = countries.includes(location.name);
 
-              return isOurNetwork ? (
-                <Tooltip
-                  title={`${location.name} - ${
-                    isOurNetwork && location.name !== 'United Kingdom' ? 'Available' : 'No events'
-                  }`}
-                  key={location.id}
-                >
-                  <path
-                    d={location.path}
-                    className={`svg-map__location ${isOurNetwork ? 'svg-map__location-ica' : ''}`}
-                    onClick={(e) =>
-                      isOurNetwork &&
-                      location.name !== 'United Kingdom' &&
-                      onCountryClick(e, location.name)
-                    }
-                    style={
-                      isOurNetwork
-                        ? {
-                            fill:
-                              selectedCountry === location.name
-                                ? customTheme.light[100]
-                                : customTheme.main[100],
-                            cursor: 'pointer',
-                            stroke: customTheme.light[20],
-                            strokeWidth: '0.3px',
-                          }
-                        : {
-                            fill: '#aeaeae',
-                            cursor: 'default',
-                            stroke: '#5b5b5b',
-                            strokeWidth: '0.3px',
-                          }
-                    }
-                  />
-                </Tooltip>
-              ) : (
+            return isOurNetwork ? (
+              <Tooltip
+                title={`${location.name} - ${
+                  isOurNetwork && location.name !== 'United Kingdom' ? 'Available' : 'No events'
+                }`}
+                key={location.id}
+              >
                 <path
                   d={location.path}
-                  key={location.id}
                   className={`svg-map__location ${isOurNetwork ? 'svg-map__location-ica' : ''}`}
-                  onClick={(e) => isOurNetwork && onCountryClick(e, location.name)}
+                  onClick={(e) =>
+                    isOurNetwork &&
+                    location.name !== 'United Kingdom' &&
+                    onCountryClick(e, location.name)
+                  }
                   style={
                     isOurNetwork
                       ? {
@@ -122,10 +95,35 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
                         }
                   }
                 />
-              );
-            })}
-          </svg>
-        )}
+              </Tooltip>
+            ) : (
+              <path
+                d={location.path}
+                key={location.id}
+                className={`svg-map__location ${isOurNetwork ? 'svg-map__location-ica' : ''}`}
+                onClick={(e) => isOurNetwork && onCountryClick(e, location.name)}
+                style={
+                  isOurNetwork
+                    ? {
+                        fill:
+                          selectedCountry === location.name
+                            ? customTheme.light[100]
+                            : customTheme.main[100],
+                        cursor: 'pointer',
+                        stroke: customTheme.light[20],
+                        strokeWidth: '0.3px',
+                      }
+                    : {
+                        fill: '#aeaeae',
+                        cursor: 'default',
+                        stroke: '#5b5b5b',
+                        strokeWidth: '0.3px',
+                      }
+                }
+              />
+            );
+          })}
+        </svg>
 
         <PopoverStyled open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose}>
           <div>
@@ -152,25 +150,3 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
     </SectionLocation>
   );
 };
-
-export default LocationBlock;
-
-const PopoverStyled = styled(Popover)`
-  .MuiPaper-root {
-    padding: 20px;
-    a {
-      color: ${customTheme.main[100]};
-      text-decoration: none;
-      &:hover {
-        color: ${customTheme.light[100]};
-      }
-    }
-    ul {
-      max-height: 300px;
-      overflow-y: scroll;
-      li {
-        list-style-type: none;
-      }
-    }
-  }
-`;
