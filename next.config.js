@@ -7,6 +7,13 @@ const nextConfig = {
     domains: ['onsite.iteca.kz', 'exhibitions.az', 'iteca.uz'],
     unoptimized: true,
   },
+  webpack: (config, { isServer, dev }) => {
+    // Отключить source maps в продакшен-сборке
+    if (!dev && !isServer) {
+      config.devtool = false;
+    }
+    return config;
+  },
   async headers() {
     return [
       {
