@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import AdminLayout from 'src/components/AdminLayout';
 import Meta from 'src/components/Meta';
-import { fetchAllPageData, revalidatePage } from 'src/utils/api';
+import { fetchAllPageData } from 'src/utils/api';
 import { IPageBlock } from 'src/utils/types';
 
 const MaterialsPage = () => {
@@ -29,9 +29,7 @@ const MaterialsPage = () => {
 
   const components = {
     PageTab: dynamic(() => import('./tabs/PageTab')),
-    MetaTab: () => (
-      <Meta page="materials" onSaveSuccess={() => revalidatePage('media/materials')} />
-    ),
+    MetaTab: () => <Meta page="materials" path="media/materials" />,
   };
 
   const renderTabContent = () => {
