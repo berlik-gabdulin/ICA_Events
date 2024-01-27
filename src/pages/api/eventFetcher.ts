@@ -113,10 +113,12 @@ const FetchEvents = async (_req: NextApiRequest, res: NextApiResponse) => {
       await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/combineEvents`)
     ).json();
 
+    const errorMessage = `Failed to save data. \napiConfigs: \n ${apiConfigs} [] \n\n allEvents: \n ${allEvents} [] \n\n isSaved: \n ${isSaved} [] \n`;
+
     if (isSaved && isCombined) {
       res.status(200).json({ message: 'Events fetched and saved successfully!' });
     } else {
-      res.status(500).json({ error: 'Internal Server Error', message: 'Failed to save data' });
+      res.status(500).json({ error: 'Internal Server Error', message: errorMessage });
     }
   } catch (err) {
     console.error('An error occurred:', err);
