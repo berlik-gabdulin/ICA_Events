@@ -1,12 +1,11 @@
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import Map from 'src/utils/mapData';
 import { eurasia, countries } from 'src/utils/network';
-import { Popover, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import customTheme from 'src/theme/customTheme';
-import { SectionLocation } from './styles';
+import { PopoverStyled, SectionLocation } from './styles';
 import { TEvent } from 'src/utils/types';
 import Link from 'next/link';
-import styled from '@emotion/styled';
 import { Container } from 'src/components/globalStyles';
 import { Title } from '../Title';
 import { useScrollAnimation } from 'src/utils/useScrollAnimation';
@@ -154,23 +153,3 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
 };
 
 export default LocationBlock;
-
-const PopoverStyled = styled(Popover)`
-  .MuiPaper-root {
-    padding: 20px;
-    a {
-      color: ${customTheme.main[100]};
-      text-decoration: none;
-      &:hover {
-        color: ${customTheme.light[100]};
-      }
-    }
-    ul {
-      max-height: 300px;
-      overflow-y: scroll;
-      li {
-        list-style-type: none;
-      }
-    }
-  }
-`;
