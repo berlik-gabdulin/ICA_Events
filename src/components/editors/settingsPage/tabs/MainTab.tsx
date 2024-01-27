@@ -44,7 +44,7 @@ const MainTab = () => {
 
   const handleSave: SubmitHandler<TSettingsMain> = async (formData) => {
     try {
-      await updatePageBlock('settings', 'main', { content: JSON.stringify(formData) }, '/');
+      await updatePageBlock('settings', 'main', { content: JSON.stringify(formData) }, '');
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');

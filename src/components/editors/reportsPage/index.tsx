@@ -29,7 +29,7 @@ const ReportsPage = () => {
 
   const components = {
     PageTab: dynamic(() => import('./tabs/PageTab')),
-    MetaTab: () => <Meta page="galleries" />,
+    MetaTab: () => <Meta page="galleries" path="media/galleries" />,
   };
 
   const renderTabContent = () => {

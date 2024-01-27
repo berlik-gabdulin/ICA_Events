@@ -32,7 +32,7 @@ const NavigationTab: React.FC = () => {
 
   const handleSave: SubmitHandler<{ nav: TNavigation }> = async (formData) => {
     try {
-      await updatePageBlock('settings', 'navigation', { content: JSON.stringify(formData) }, '/');
+      await updatePageBlock('settings', 'navigation', { content: JSON.stringify(formData) }, '');
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');
