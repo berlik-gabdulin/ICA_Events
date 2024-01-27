@@ -32,7 +32,7 @@ const Home: React.FC = () => {
     NavigationTab: dynamic(() => import('./tabs/NavigationTab')),
     SocialTab: dynamic(() => import('./tabs/SocialTab')),
     AnalyticsTab: dynamic(() => import('./tabs/AnalyticsTab')),
-    MetaTab: () => <Meta page="settings" path="" />,
+    MetaTab: () => <Meta page="settings" path="#" />,
   };
 
   const renderTabContent = () => {
