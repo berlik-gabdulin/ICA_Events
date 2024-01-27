@@ -30,8 +30,12 @@ export default class MyDocument extends Document {
 
           <link rel="manifest" href="/manifest.json" />
 
-          <Script async src="https://www.googletagmanager.com/gtag/js?id=G-TSKMGS93ND" />
-          <Script id="google-analytics">
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-TSKMGS93ND"
+            strategy="lazyOnload"
+          />
+          <Script id="google-analytics" strategy="lazyOnload">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}

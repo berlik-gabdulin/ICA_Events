@@ -20,7 +20,11 @@ const MetaHead: FC<{ meta: TMetaFields }> = ({ meta }) => {
         <meta property="og:image" content={meta.og_image} />
         <link rel="canonical" href={canonicalUrl} />
       </Head>
-      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-TSKMGS93ND" />
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-TSKMGS93ND"
+        strategy="lazyOnload"
+      />
       <Script
         id="GTM"
         dangerouslySetInnerHTML={{
@@ -31,6 +35,7 @@ const MetaHead: FC<{ meta: TMetaFields }> = ({ meta }) => {
           gtag('config', 'G-TSKMGS93ND');
         `,
         }}
+        strategy="lazyOnload"
       />
     </>
   );
