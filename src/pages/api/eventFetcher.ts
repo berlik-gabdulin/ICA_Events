@@ -63,7 +63,7 @@ const fetchAllEvents = async (apiConfigs: IAPIConfig[]): Promise<Record<string, 
       location: event.location,
       industry: event.industry,
       website: event.website,
-      country: event.country,
+      country: event.country || country,
     }));
 
     // Добавляем события в объект по странам
