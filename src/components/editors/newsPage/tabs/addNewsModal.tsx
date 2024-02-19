@@ -125,8 +125,8 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
   };
 
   const handleImageChange = () => {
-    if (!getValues('image_url') && getValues('og_image'))
-      setValue('image_url', getValues('og_image')); // Установим автоматически og_image из image_url
+    if (!getValues('og_image') && getValues('image_url'))
+      setValue('og_image', getValues('image_url')); // Установим автоматически og_image из image_url
   };
 
   useEffect(() => {

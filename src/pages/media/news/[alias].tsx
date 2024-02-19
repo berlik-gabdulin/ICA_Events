@@ -4,7 +4,14 @@ import { CardMedia, CardContent } from '@mui/material';
 import Layout from 'src/components/WebSite/components/Layout';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
-import { IData, IPageBlock, TLayoutProps, TMetaFields } from 'src/utils/types';
+import {
+  IData,
+  IPageBlock,
+  TLayoutProps,
+  TMetaFields,
+  TPageType,
+  TTitleBlock,
+} from 'src/utils/types';
 import { getLayoutData } from 'src/utils/getLayoutData';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section } from 'src/components/globalStyles';
@@ -29,19 +36,30 @@ interface NewsItem {
 interface NewsItemPageProps {
   newsItem: NewsItem;
   layoutData: TLayoutProps;
+  bgBox: TPageType<TTitleBlock>;
 }
 
-const NewsItemPage: React.FC<NewsItemPageProps> = ({ newsItem, layoutData }): ReactElement => {
+const NewsItemPage: React.FC<NewsItemPageProps> = ({
+  newsItem,
+  layoutData,
+  bgBox,
+}): ReactElement => {
   const { title, content, image_url, published_at } = newsItem;
+
+  const { bgImage, title: headingTitle } = bgBox.content;
+
+  console.log(bgBox);
 
   return (
     <Layout data={layoutData}>
-      <BGBox style={{ minHeight: 400 }} display="flex" alignItems="center" bgImage="">
-        <Heading>{title}</Heading>
+      <BGBox bgImage={bgImage} style={{ minHeight: 400 }} display="flex" alignItems="center">
+        <Heading>{headingTitle}</Heading>
       </BGBox>
       <Section>
         <Container>
           <NewsItemWrapper>
+            <NewsTitle>{title}</NewsTitle>
+            <NewsItemDate>{published_at}</NewsItemDate>
             {image_url && (
               <CardMedia
                 component="img"
@@ -50,8 +68,6 @@ const NewsItemPage: React.FC<NewsItemPageProps> = ({ newsItem, layoutData }): Re
               />
             )}
             <CardContent>
-              <NewsTitle>{title}</NewsTitle>
-              <NewsItemDate>{published_at}</NewsItemDate>
               <NewsItemTextFull dangerouslySetInnerHTML={{ __html: content }} />
             </CardContent>
           </NewsItemWrapper>
@@ -79,6 +95,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     'SELECT * FROM collection_news WHERE alias = ?',
     [alias]
   );
+
+  // Получение данных для заголовка
+  const [titleData] = (await db.execute(
+    `SELECT * FROM page_home WHERE block_name = 'title'`
+  )) as RowDataPacket[];
 
   const newsSingleItem: INewsData = {
     ...(newsItems[0] as unknown as INewsData),
@@ -118,6 +139,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       newsItem: newsSingleItem,
       layoutData,
+      bgBox: {
+        block_title: titleData[0].block_name,
+        content: JSON.parse(titleData[0].content),
+      },
     },
     revalidate: 10800,
   };
