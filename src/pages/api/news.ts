@@ -112,19 +112,18 @@ async function addNews(req: NextApiRequest, res: NextApiResponse) {
     !meta_keywords ||
     !og_description ||
     !og_locale ||
-    !og_image ||
-    !isPublic
+    !og_image
   ) {
     return res.status(400).json({
       error:
-        'title, alias, content, short_text, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic are required' +
-        `${title},${!!alias},${!!content},${!!short_text},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
+        'title, alias, content, short_text, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image are required' +
+        `${!!title},${!!alias},${!!content},${!!short_text},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image}`,
     });
   }
 
   try {
     await db.execute(
-      'INSERT INTO collection_news (title, alias, content, short_text, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO collection_news (title, alias, content, short_text, image_url, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image, isPublic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         title,
         alias,
@@ -169,23 +168,11 @@ async function updateNews(req: NextApiRequest, res: NextApiResponse) {
     isPublic,
   } = req.body;
 
-  if (
-    !id ||
-    !title ||
-    !alias ||
-    !content ||
-    !short_text ||
-    !meta_title ||
-    !meta_description ||
-    !meta_keywords ||
-    !og_description ||
-    !og_locale ||
-    !og_image
-  ) {
+  if (!id || !title || !alias || !content || !short_text) {
     return res.status(400).json({
       error:
-        'ID, title, alias, content, short_text, meta_title, meta_description, meta_keywords, og_description, og_locale, og_image and public are required' +
-        `${title},${!!alias},${!!content},${!!short_text},${!!imageUrl},${!!meta_title},${!!meta_description},${!!meta_keywords},${!!og_description},${!!og_locale},${!!og_image},${!!isPublic}`,
+        'ID, title, alias, content, short_text' +
+        `${title},${!!alias},${!!content},${!!short_text}`,
     });
   }
 

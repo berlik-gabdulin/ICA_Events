@@ -59,6 +59,7 @@ const NewsTab: React.FC = () => {
           title: newsData.title,
           alias: newsData.alias,
           content: newsData.content,
+          short_text: newsData.short_text,
           imageUrl: newsData.image_url,
           meta_title: newsData.meta_title,
           meta_description: newsData.meta_description,

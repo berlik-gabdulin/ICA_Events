@@ -56,7 +56,7 @@ const InitialState = {
   meta_description: '',
   meta_keywords: '',
   og_description: '',
-  og_locale: '',
+  og_locale: 'en_gb',
   og_image: '',
   isPublic: false,
 };
@@ -84,6 +84,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
   };
 
   const handleSave = (data: INewsData) => {
+    console.log(data);
     const errorFields = (Object.keys(errors) as Array<keyof INewsData>).filter(
       (key) => errors[key]
     );
@@ -110,8 +111,22 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
     setValue('alias', alias);
   };
 
-  const handleAliasOnBlur = () => {
+  const handleTitleBlur = () => {
     if (!getValues('alias')) handleAlias();
+    if (!getValues('meta_title') && getValues('title')) setValue('meta_title', getValues('title')); // Установим автоматически meta_title из названия новости, для упрощения работы
+  };
+
+  const handleShortTextBlur = () => {
+    if (!getValues('meta_description') && getValues('short_text'))
+      setValue('meta_description', getValues('short_text')); // Установим автоматически meta_description из короткого описания новости
+
+    if (!getValues('og_description') && getValues('short_text'))
+      setValue('og_description', getValues('short_text')); // Установим автоматически og_description из короткого описания новости
+  };
+
+  const handleImageChange = () => {
+    if (!getValues('image_url') && getValues('og_image'))
+      setValue('image_url', getValues('og_image')); // Установим автоматически og_image из image_url
   };
 
   useEffect(() => {
@@ -132,6 +147,13 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
 
     fetchData();
   }, [id, reset]);
+
+  const MetaIsError =
+    Boolean(errors.meta_description) ||
+    Boolean(errors.meta_title) ||
+    Boolean(errors.og_description) ||
+    Boolean(errors.og_locale) ||
+    Boolean(errors.og_image);
 
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="md">
@@ -155,7 +177,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
                 type="text"
                 fullWidth
                 variant="outlined"
-                onBlur={handleAliasOnBlur}
+                onBlur={handleTitleBlur}
               />
             )}
           />
@@ -171,6 +193,9 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
                 type="text"
                 fullWidth
                 variant="outlined"
+                inputProps={{
+                  maxLength: 20,
+                }}
               />
             )}
           />
@@ -193,6 +218,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
             {...register('short_text', { required: 'This field is required' })}
             error={Boolean(errors.short_text)}
             helperText={errors.short_text?.message}
+            onBlurCapture={handleShortTextBlur}
           />
 
           <FileUploader
@@ -201,6 +227,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
             folder="pages/news_images"
             prefix="news"
             maxFiles={1}
+            onUpload={handleImageChange}
           />
 
           <ImagePreview src={watch('image_url')} alt="Preview" height={200} />
@@ -211,6 +238,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
             {...register('image_url', { required: 'This field is required' })}
             error={Boolean(errors.image_url)}
             helperText={errors.image_url?.message}
+            onBlurCapture={handleImageChange}
           />
 
           <FormControlLabel
@@ -234,12 +262,12 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Meta Data</Typography>
+              <Typography color={MetaIsError ? '#FF4842' : 'inderit'}>Meta Data</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Input
                 label="Meta Title"
-                shrink={getValues('meta_title')}
+                shrink={watch('meta_title')}
                 fullWidth
                 {...register('meta_title', { required: 'This field is required' })}
                 error={Boolean(errors.meta_title)}
@@ -248,7 +276,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
 
               <Input
                 label="Meta Description"
-                shrink={getValues('meta_description')}
+                shrink={watch('meta_description')}
                 fullWidth
                 {...register('meta_description', { required: 'This field is required' })}
                 error={Boolean(errors.meta_description)}
@@ -257,16 +285,16 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
 
               <Input
                 label="Meta Keywords"
-                shrink={getValues('meta_keywords')}
+                shrink={watch('meta_keywords')}
                 fullWidth
-                {...register('meta_keywords', { required: 'This field is required' })}
+                {...register('meta_keywords')}
                 error={Boolean(errors.meta_keywords)}
                 helperText={errors.meta_keywords?.message}
               />
 
               <Input
                 label="OG Description"
-                shrink={getValues('og_description')}
+                shrink={watch('og_description')}
                 fullWidth
                 {...register('og_description', { required: 'This field is required' })}
                 error={Boolean(errors.og_description)}
@@ -275,7 +303,7 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
 
               <Input
                 label="OG Locale"
-                shrink={getValues('og_locale')}
+                shrink={watch('og_locale')}
                 fullWidth
                 {...register('og_locale', { required: 'This field is required' })}
                 error={Boolean(errors.og_locale)}
