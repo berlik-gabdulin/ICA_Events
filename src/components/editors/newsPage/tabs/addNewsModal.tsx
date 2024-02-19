@@ -84,7 +84,6 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
   };
 
   const handleSave = (data: INewsData) => {
-    console.log(data);
     const errorFields = (Object.keys(errors) as Array<keyof INewsData>).filter(
       (key) => errors[key]
     );

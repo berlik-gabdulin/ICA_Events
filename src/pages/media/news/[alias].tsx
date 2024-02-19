@@ -48,8 +48,6 @@ const NewsItemPage: React.FC<NewsItemPageProps> = ({
 
   const { bgImage, title: headingTitle } = bgBox.content;
 
-  console.log(bgBox);
-
   return (
     <Layout data={layoutData}>
       <BGBox bgImage={bgImage} style={{ minHeight: 400 }} display="flex" alignItems="center">
