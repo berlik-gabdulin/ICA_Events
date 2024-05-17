@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { fetchPageBlock } from 'src/utils/api';
+import { fetchPageBlock, revalidatePage } from 'src/utils/api';
 import fetch from 'node-fetch';
 import pool from 'src/utils/db';
 import { formatDateRange } from 'src/utils/formatDateRange';
@@ -109,9 +109,13 @@ const FetchEvents = async (_req: NextApiRequest, res: NextApiResponse) => {
     // Шаг 3: Сохранение данных в БД
     const isSaved = await saveEventsToDB(allEvents);
 
+    // Шаг 4: Сохранение данных в БД в одной таблице с сортировкой по дате
     const isCombined = await (
       await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/combineEvents`)
     ).json();
+
+    await revalidatePage('/events');
+    await revalidatePage(`/`);
 
     if (isSaved && isCombined) {
       res.status(200).json({ message: 'Events fetched and saved successfully!' });

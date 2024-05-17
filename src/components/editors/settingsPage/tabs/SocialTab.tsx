@@ -58,6 +58,7 @@ const SocialTab = () => {
       showError('An error occurred');
     }
   };
+
   return (
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
