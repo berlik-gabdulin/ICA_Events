@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import useSnackbar from 'src/hooks/useSnackbar';
@@ -10,16 +9,14 @@ interface FormData {
   page_title: string;
 }
 
-const PromoPageTab = () => {
+const PromoTab = () => {
   const [loading, setLoading] = useState(true);
-  console.log('asdf');
 
   const {
     register,
     getValues,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -30,9 +27,8 @@ const PromoPageTab = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchPageBlock('settings', 'promoPage');
+      const data = await fetchPageBlock('settings', 'promo');
       const parsedData = JSON.parse(data.content);
-      console.log(parsedData);
       setValue('page_title', parsedData.page_title);
       setLoading(false);
     };
@@ -42,7 +38,7 @@ const PromoPageTab = () => {
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
-      await updatePageBlock('settings', 'promoPage', { content: JSON.stringify(formData) }, '#');
+      await updatePageBlock('settings', 'promo', { content: JSON.stringify(formData) }, '#');
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');
@@ -67,4 +63,4 @@ const PromoPageTab = () => {
   );
 };
 
-export default PromoPageTab;
+export default PromoTab;

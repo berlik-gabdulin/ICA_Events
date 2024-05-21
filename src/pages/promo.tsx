@@ -179,7 +179,7 @@ export async function getStaticProps() {
   return {
     props: {
       layoutData,
-      data: settingsData.promoPage,
+      data: settingsData.promo,
     },
     revalidate: 10800,
   };
