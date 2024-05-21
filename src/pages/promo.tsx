@@ -1,9 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from 'src/components/WebSite/components/Layout';
 import { Container, Section } from 'src/components/globalStyles';
 import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
 import { IData, IPageBlock, TLayoutProps, TMetaFields } from 'src/utils/types';
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Box,
+  DialogActions,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import Button from 'src/components/WebSite/components/Button';
 import { countriesDropdown, industries } from 'src/utils/network';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,6 +23,7 @@ import { useRouter } from 'next/router';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import { getLayoutData } from 'src/utils/getLayoutData';
+import { DialogStyled } from 'src/components/WebSite/components/Footer/style';
 
 type TPromoPageProps = {
   layoutData: TLayoutProps;
@@ -42,6 +52,8 @@ const PromoPage = (props: TPromoPageProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { control, handleSubmit, setValue } = useForm<IFormInput>();
   const selectedIndustry = useSelector((state: RootState) => state.contactModal.selectedIndustry); // Получаем выбранную индустрию из состояния
+  const status = useSelector((state: RootState) => state.contactModal.status);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (selectedIndustry) {
@@ -51,10 +63,11 @@ const PromoPage = (props: TPromoPageProps) => {
 
   const isSendedTimeout = () =>
     setTimeout(() => {
-      dispatch(setStatus('idle'));
+      setIsModalOpen(false);
     }, 3000);
 
   const onSubmit = async (data: IFormInput) => {
+    setIsModalOpen(true);
     await dispatch(submitForm(new URLSearchParams(Object.entries(data))));
     dispatch(setStatus('succeeded'));
     isSendedTimeout();
@@ -67,6 +80,29 @@ const PromoPage = (props: TPromoPageProps) => {
       undefined,
       { shallow: true }
     );
+  };
+
+  const modalTitle = (): string => {
+    let title = '';
+
+    switch (status) {
+      case 'loading':
+        title = 'Sending Your Request...';
+        break;
+      case 'succeeded':
+        title = 'Thank you! Your request Sent Successfully!';
+        break;
+      case 'failed':
+        title = 'Failed to Send Request. Please try later...';
+        break;
+      default:
+        title = 'Thank you! Your request Sent Successfully!';
+    }
+    return title;
+  };
+
+  const onClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -134,11 +170,15 @@ const PromoPage = (props: TPromoPageProps) => {
                 />
               </FormControl>
               <Box marginTop={4} display="flex" justifyContent="center">
-                <Button type="submit" size="large" variant="contained">
+                <Button type="submit" size="small" variant="contained">
                   Send the request
                 </Button>
               </Box>
             </form>
+
+            <DialogStyled open={isModalOpen} onClose={onClose}>
+              <DialogTitle>{modalTitle()}</DialogTitle>
+            </DialogStyled>
           </Container>
         </Section>
       </Layout>
