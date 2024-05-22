@@ -176,8 +176,12 @@ const PromoPage = (props: TPromoPageProps) => {
               </Box>
             </form>
 
-            <DialogStyled open={isModalOpen} onClose={onClose}>
-              <DialogTitle>{modalTitle()}</DialogTitle>
+            <DialogStyled
+              open={isModalOpen}
+              onClose={onClose}
+              style={{ maxWidth: '600px', margin: '0 auto' }}
+            >
+              <DialogTitle style={{ padding: 0, textAlign: 'center' }}>{modalTitle()}</DialogTitle>
             </DialogStyled>
           </Container>
         </Section>

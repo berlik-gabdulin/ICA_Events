@@ -38,7 +38,7 @@ const PromoTab = () => {
 
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
-      await updatePageBlock('settings', 'promo', { content: JSON.stringify(formData) }, '#');
+      await updatePageBlock('settings', 'promo', { content: JSON.stringify(formData) }, 'promo');
       showSuccess('Successfully saved!');
     } catch (error) {
       showError('An error occurred');
