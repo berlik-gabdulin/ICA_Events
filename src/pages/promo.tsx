@@ -67,8 +67,18 @@ const PromoPage = (props: TPromoPageProps) => {
     }, 3000);
 
   const onSubmit = async (data: IFormInput) => {
+    const utmParams = new URLSearchParams(window.location.search);
+    const utmData: { [key: string]: string } = {};
+    utmParams.forEach((value, key) => {
+      if (key.startsWith('utm_')) {
+        utmData[key] = value;
+      }
+    });
+
+    const formData = { ...data, ...utmData };
+
     setIsModalOpen(true);
-    await dispatch(submitForm(new URLSearchParams(Object.entries(data))));
+    await dispatch(submitForm(new URLSearchParams(Object.entries(formData))));
     dispatch(setStatus('succeeded'));
     isSendedTimeout();
 
