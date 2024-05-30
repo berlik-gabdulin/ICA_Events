@@ -140,7 +140,14 @@ const Events = (props: TMaterialsPageProps) => {
   useEffect(() => {
     if (initialized) {
       const updateURL = () => {
+        const currentParams = new URLSearchParams(window.location.search);
         const newParams = new URLSearchParams();
+
+        currentParams.forEach((value, key) => {
+          if (key.startsWith('utm_')) {
+            newParams.append(key, value);
+          }
+        });
 
         if (search) {
           newParams.append('search', search);
