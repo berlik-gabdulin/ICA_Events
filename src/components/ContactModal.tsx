@@ -16,9 +16,10 @@ import { countriesDropdown, industries } from 'src/utils/network';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/rootReducer';
-import { closeModal, submitForm, setStatus } from 'src/redux/slices/contactModalSlice';
+import { closeModal } from 'src/redux/slices/contactModalSlice';
 import { useRouter } from 'next/router';
 import { formatPhoneNumber } from 'src/utils/formatPhoneNumber';
+import { handleFormSubmit } from 'src/utils/formUtils';
 
 interface IFormInput {
   name: string;
@@ -47,25 +48,8 @@ const ContactModal: React.FC = () => {
     dispatch(closeModal());
   };
 
-  const isSendedTimeout = () =>
-    setTimeout(() => {
-      dispatch(setStatus('idle'));
-      onClose();
-    }, 3000);
-
-  const onSubmit = async (data: IFormInput) => {
-    await dispatch(submitForm(new URLSearchParams(Object.entries(data))));
-    dispatch(setStatus('succeeded'));
-    isSendedTimeout();
-
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, requestSubmitted: 'true' },
-      },
-      undefined,
-      { shallow: true }
-    );
+  const onSubmit = (data: IFormInput) => {
+    handleFormSubmit(data, dispatch, router);
   };
 
   const modalTitle = (): string => {

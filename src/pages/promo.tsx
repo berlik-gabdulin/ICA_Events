@@ -5,7 +5,6 @@ import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
 import { IData, IPageBlock, TLayoutProps, TMetaFields } from 'src/utils/types';
 import {
   Box,
-  DialogActions,
   DialogTitle,
   FormControl,
   InputLabel,
@@ -14,16 +13,16 @@ import {
   TextField,
 } from '@mui/material';
 import Button from 'src/components/WebSite/components/Button';
-import { countriesDropdown, industries } from 'src/utils/network';
+import { industries } from 'src/utils/network';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/redux/rootReducer';
-import { submitForm, setStatus } from 'src/redux/slices/contactModalSlice';
 import { useRouter } from 'next/router';
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import { getLayoutData } from 'src/utils/getLayoutData';
 import { DialogStyled } from 'src/components/WebSite/components/Footer/style';
+import { handleFormSubmit } from 'src/utils/formUtils';
 
 type TPromoPageProps = {
   layoutData: TLayoutProps;
@@ -61,35 +60,9 @@ const PromoPage = (props: TPromoPageProps) => {
     }
   }, [selectedIndustry, setValue]);
 
-  const isSendedTimeout = () =>
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 3000);
-
-  const onSubmit = async (data: IFormInput) => {
-    const utmParams = new URLSearchParams(window.location.search);
-    const utmData: { [key: string]: string } = {};
-    utmParams.forEach((value, key) => {
-      if (key.startsWith('utm_')) {
-        utmData[key] = value;
-      }
-    });
-
-    const formData = { ...data, ...utmData };
-
+  const onSubmit = (data: IFormInput) => {
     setIsModalOpen(true);
-    await dispatch(submitForm(new URLSearchParams(Object.entries(formData))));
-    dispatch(setStatus('succeeded'));
-    isSendedTimeout();
-
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, requestSubmitted: 'true' },
-      },
-      undefined,
-      { shallow: true }
-    );
+    handleFormSubmit(data, dispatch, router);
   };
 
   const modalTitle = (): string => {
