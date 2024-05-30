@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { LogoBox, MenuBox, MenuButton, NavBox, NavItem, NavLink, SocialBox, SubNav } from './style';
 import { useRouter } from 'next/router';
 import { AppBar, Toolbar } from '@mui/material';
@@ -21,6 +21,7 @@ import useResponsive from 'src/hooks/useResponsive';
 const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social, navigation }) => {
   const isMobile = useResponsive('down', 'md');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
   const router = useRouter();
   const hasActiveLink = Object.values(social).some((link) => link.isActive);
 
@@ -30,8 +31,13 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
     { code: 'cn', label: 'CN', url: 'https://cn.ica-events.com' },
   ];
 
-  const currentLanguage =
-    languages.find((lang) => location.host.startsWith(`${lang.code}`))?.code || 'en';
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const matchedLang = languages.find((lang) => hostname.startsWith(lang.code));
+      setCurrentLanguage(matchedLang ? matchedLang.code : 'en');
+    }
+  }, []);
 
   return (
     <AppBar position="static" style={{ backgroundColor: '#044e4e' }} className="header">
