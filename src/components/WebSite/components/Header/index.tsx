@@ -30,9 +30,8 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
     { code: 'cn', label: 'CN', url: 'https://cn.ica-events.com' },
   ];
 
-  // Extract the current language from the pathname
   const currentLanguage =
-    languages.find((lang) => router.pathname.startsWith(`/${lang.code}`))?.code || 'en';
+    languages.find((lang) => location.host.startsWith(`${lang.code}`))?.code || 'en';
 
   return (
     <AppBar position="static" style={{ backgroundColor: '#044e4e' }} className="header">
