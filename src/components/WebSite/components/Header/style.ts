@@ -43,6 +43,9 @@ export const SocialBox = styled.div`
   .language-links a {
     margin-right: 10px;
   }
+  .current-lang {
+    color: ${customTheme.light[100]};
+  }
 `;
 
 export const NavBox = styled.ul`

@@ -87,13 +87,16 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
                   </Link>
                 ) : null}
                 <div className="language-links">
-                  {languages
-                    .filter((lang) => lang.code !== currentLanguage)
-                    .map((lang) => (
-                      <Link href={lang.url} key={lang.code}>
-                        <a aria-label={lang.label}>{lang.label}</a>
-                      </Link>
-                    ))}
+                  {languages.map((lang) => (
+                    <Link href={lang.url} key={lang.code}>
+                      <a
+                        aria-label={lang.label}
+                        className={lang.code === currentLanguage ? 'current-lang' : undefined}
+                      >
+                        {lang.label}
+                      </a>
+                    </Link>
+                  ))}
                 </div>
               </SocialBox>
             ) : null}
