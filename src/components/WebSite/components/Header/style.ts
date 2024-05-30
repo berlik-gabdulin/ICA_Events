@@ -35,6 +35,14 @@ export const SocialBox = styled.div`
       }
     }
   }
+  .language-links {
+    display: flex;
+    margin-left: 20px;
+  }
+
+  .language-links a {
+    margin-right: 10px;
+  }
 `;
 
 export const NavBox = styled.ul`

@@ -24,6 +24,16 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
   const router = useRouter();
   const hasActiveLink = Object.values(social).some((link) => link.isActive);
 
+  const languages = [
+    { code: 'en', label: 'EN', url: 'https://ica-events.com' },
+    { code: 'tr', label: 'TR', url: 'https://tr.ica-events.com' },
+    { code: 'cn', label: 'CN', url: 'https://cn.ica-events.com' },
+  ];
+
+  // Extract the current language from the pathname
+  const currentLanguage =
+    languages.find((lang) => router.pathname.startsWith(`/${lang.code}`))?.code || 'en';
+
   return (
     <AppBar position="static" style={{ backgroundColor: '#044e4e' }} className="header">
       <Container>
@@ -76,6 +86,15 @@ const Header: FC<{ social: TSocialLinks; navigation: TNavigation }> = ({ social,
                     </a>
                   </Link>
                 ) : null}
+                <div className="language-links">
+                  {languages
+                    .filter((lang) => lang.code !== currentLanguage)
+                    .map((lang) => (
+                      <Link href={lang.url} key={lang.code}>
+                        <a aria-label={lang.label}>{lang.label}</a>
+                      </Link>
+                    ))}
+                </div>
               </SocialBox>
             ) : null}
             <NavBox className="NavBox">
