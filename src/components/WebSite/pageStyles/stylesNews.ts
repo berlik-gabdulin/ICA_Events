@@ -24,12 +24,13 @@ export const NewsTitleLink = styled(Link)`
   h3 {
     font-weight: 300;
     margin: 0;
-    font-size: 52px;
+    font-size: 32px;
+    line-height: 1.2;
     @media screen and (max-width: 768px) {
-      font-size: 40px;
+      font-size: 28px;
     }
     @media screen and (max-width: 480px) {
-      font-size: 32px;
+      font-size: 20px;
     }
   }
 `;
@@ -52,7 +53,7 @@ export const NewsTitle = styled.h3`
 
 export const NewsItemDate = styled.span`
   display: block;
-  font-size: 32px;
+  font-size: 18px;
   color: #002333;
   margin: 16px 0 30px;
   opacity: 0.6;
@@ -93,10 +94,14 @@ export const NewsItemTextFull = styled.div`
 `;
 
 export const NewsButton = styled(Button)`
+  margin-top: auto;
   display: inline-block;
+  padding: 12px 10px 10px;
+  height: 60px;
+  font-size: 20px;
   margin-top: 0;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
   @media screen and (max-width: 768px) {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 `;

@@ -77,6 +77,7 @@ export type TTitleTab = {
 
 export type TAboutTab = {
   block_title: string;
+  title: string;
   text: string;
   bullets: Record<string, string>;
 };

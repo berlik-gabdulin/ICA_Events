@@ -45,7 +45,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
     router.push(`/media/news/${item.alias}`);
   };
 
-  const totalPages = Math.ceil(total / 10);
+  const totalPages = Math.ceil(total / 9);
 
   const { bgImage, title } = bgBox.content;
 
@@ -63,14 +63,10 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
           <TitleH1>{layoutData.meta.meta_title}</TitleH1>
           <Grid container spacing={[30, 5]}>
             {news.map((item) => (
-              <Grid item xs={12} md={6} key={item.id}>
+              <Grid item xs={12} sm={6} md={4} key={item.id}>
                 <NewsItemWrapper
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 0 }}
                 >
-                  <NewsTitleLink href={`/media/news/${item.alias}`}>
-                    <h3>{item.title}</h3>
-                  </NewsTitleLink>
-                  <NewsItemDate>{item.published_at}</NewsItemDate>
                   <Link href={`/media/news/${item.alias}`} style={{ textDecoration: 'none' }}>
                     <CardMediaWrapper>
                       <CardMedia
@@ -80,9 +76,17 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
                       />
                     </CardMediaWrapper>
                   </Link>
-                  <CardContent sx={{ paddingX: 0 }}>
+
+                  <NewsTitleLink href={`/media/news/${item.alias}`}>
+                    <h3>{item.title}</h3>
+                  </NewsTitleLink>
+
+                  <NewsItemDate>{item.published_at}</NewsItemDate>
+
+                  {/* <CardContent sx={{ paddingX: 0 }}>
                     <NewsItemText>{item.short_text}</NewsItemText>
-                  </CardContent>
+                  </CardContent> */}
+
                   <CardActions sx={{ padding: 0 }}>
                     <NewsButton
                       size="small"

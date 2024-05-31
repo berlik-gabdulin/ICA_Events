@@ -7,14 +7,14 @@ import { AnimatedBulletValue } from '../AnimatedBulletValue';
 import { Title } from '../Title';
 import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
-const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ block_title, content }) => {
-  const { text, bullets } = content;
+const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ content }) => {
+  const { title, text, bullets } = content;
 
   const text1Ref = useScrollAnimation('animate__fadeInDown');
   return (
     <SectionStyled>
       <Container>
-        <Title>{block_title}</Title>
+        <Title>{title}</Title>
         <div dangerouslySetInnerHTML={{ __html: text }} ref={text1Ref} />
         <Bullets>
           {bullets

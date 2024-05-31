@@ -17,6 +17,7 @@ const AboutTab: React.FC = () => {
   const { watch, control, handleSubmit, setValue, getValues, register } = useForm<FormData>({
     defaultValues: {
       about: {
+        title: '',
         text: '',
         bullets: {
           countries: '8',
@@ -56,6 +57,12 @@ const AboutTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
+          <Input
+            shrink={getValues('about.title')}
+            label="Block title"
+            fullWidth
+            {...register('about.title')}
+          />
           <CustomEditor
             name="about.text"
             watch={watch}
