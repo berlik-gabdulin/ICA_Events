@@ -1,6 +1,6 @@
 import React from 'react';
-import { GetStaticProps } from 'next';
-import { Grid, Pagination, CardMedia, CardContent, Link, CardActions } from '@mui/material';
+import { GetServerSideProps } from 'next';
+import { Grid, Pagination, CardMedia, Link, CardActions } from '@mui/material';
 import Layout from 'src/components/WebSite/components/Layout'; // Импортируйте ваш Layout компонент
 import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 import {
   NewsButton,
   NewsItemDate,
-  NewsItemText,
   NewsItemWrapper,
   NewsTitleLink,
 } from 'src/components/WebSite/pageStyles/stylesNews';
@@ -35,22 +34,21 @@ interface NewsPageProps {
   total: number;
   bgBox: TPageType<TTitleBlock>;
   layoutData: TLayoutProps;
+  currentPage: number;
 }
 
-const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) => {
-  const [page, setPage] = React.useState(1);
+const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData, currentPage }) => {
   const router = useRouter();
+  const totalPages = Math.ceil(total / 9);
 
   const handleReadMoreClick = (item: NewsItem) => {
     router.push(`/media/news/${item.alias}`);
   };
 
-  const totalPages = Math.ceil(total / 9);
-
   const { bgImage, title } = bgBox.content;
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
+    router.push(`/media/news?page=${value}`);
   };
 
   return (
@@ -83,10 +81,6 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
 
                   <NewsItemDate>{item.published_at}</NewsItemDate>
 
-                  {/* <CardContent sx={{ paddingX: 0 }}>
-                    <NewsItemText>{item.short_text}</NewsItemText>
-                  </CardContent> */}
-
                   <CardActions sx={{ padding: 0 }}>
                     <NewsButton
                       size="small"
@@ -103,7 +97,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
 
           <Pagination
             count={totalPages}
-            page={page}
+            page={currentPage}
             onChange={handlePageChange}
             sx={{ mt: 3, justifyContent: 'center', display: 'flex' }}
           />
@@ -113,9 +107,14 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData }) =
   );
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const page = context.query.page ? Number(context.query.page) : 1;
+  const itemsPerPage = 9;
+  const offset = (page - 1) * itemsPerPage;
+
   const [newsRes] = await db.execute<RowDataPacket[]>(
-    'SELECT * FROM collection_news ORDER BY published_at ASC'
+    'SELECT * FROM collection_news ORDER BY published_at DESC LIMIT ? OFFSET ?',
+    [itemsPerPage, offset]
   );
 
   const news = Array.isArray(newsRes) ? newsRes : Array.from(newsRes);
@@ -170,8 +169,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
         content: JSON.parse(titleData[0].content),
       },
       layoutData,
+      currentPage: page,
     },
-    revalidate: 10800,
   };
 };
 
