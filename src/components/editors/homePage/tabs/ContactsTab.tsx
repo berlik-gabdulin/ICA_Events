@@ -13,6 +13,8 @@ const ContactsTab: React.FC = () => {
 
   const { control, register, handleSubmit, setValue, getValues, watch } = useForm<TContactsBlock>({
     defaultValues: {
+      title: '',
+      social_title: '',
       contactsHtml: '',
       photo: '',
     },
@@ -23,6 +25,8 @@ const ContactsTab: React.FC = () => {
     const fetchData = async () => {
       const data = await fetchPageBlock('home', 'contacts');
       const parsedData = JSON.parse(data.content);
+      setValue('title', parsedData.title);
+      setValue('social_title', parsedData.social_title);
       setValue('contactsHtml', parsedData.contactsHtml);
       setValue('photo', parsedData.photo);
       setLoading(false);
@@ -43,6 +47,13 @@ const ContactsTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
+          <Input shrink={getValues('title')} label="Title" fullWidth {...register('title')} />
+          <Input
+            shrink={getValues('social_title')}
+            label="Social title"
+            fullWidth
+            {...register('social_title')}
+          />
           <CustomEditor name="contactsHtml" watch={watch} control={control} />
           <DeviderStyled />
           <Input shrink={getValues('photo')} label="Photo" fullWidth {...register('photo')} />

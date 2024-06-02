@@ -4,13 +4,13 @@ import { eurasia, countries } from 'src/utils/network';
 import { Tooltip } from '@mui/material';
 import customTheme from 'src/theme/customTheme';
 import { PopoverStyled, SectionLocation } from './styles';
-import { TEvent } from 'src/utils/types';
+import { TEvents, TLocationTab } from 'src/utils/types';
 import Link from 'next/link';
 import { Container } from 'src/components/globalStyles';
 import { Title } from '../Title';
 import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
-const LocationBlock = ({ events }: { events: TEvent[] }) => {
+const LocationBlock: React.FC<TLocationTab & TEvents> = ({ title, events }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isSvgVisible, setIsSvgVisible] = useState<boolean>(false);
@@ -40,7 +40,7 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
           observer.disconnect();
         }
       },
-      { threshold: 0.1 } // Задаёт, какая часть элемента должна быть видна, чтобы считаться видимой
+      { threshold: 0.1 }
     );
 
     if (svgRef.current) {
@@ -55,7 +55,7 @@ const LocationBlock = ({ events }: { events: TEvent[] }) => {
   return (
     <SectionLocation ref={svgRef}>
       <Container>
-        <Title style={{ color: customTheme.main[100] }}>Choose your event destination</Title>
+        <Title style={{ color: customTheme.main[100] }}>{title}</Title>
         {isSvgVisible && (
           <svg viewBox={Map.viewBox} className="svg-map" ref={mapRef}>
             {filteredLocations.map((location) => {

@@ -18,8 +18,21 @@ import { TEvent } from 'src/utils/types';
 import { useDispatch } from 'react-redux';
 import { setSelectedIndustry, openModal } from 'src/redux/slices/contactModalSlice';
 
-export const EventCard = ({ event, isPromo = false }: { event: TEvent; isPromo?: boolean }) => {
+export const EventCard = ({
+  event,
+  isPromo = false,
+  buttons,
+}: {
+  event: TEvent;
+  isPromo?: boolean;
+  buttons: {
+    eventWebsiteBtn: string;
+    eventPromoBtn: string;
+  };
+}) => {
   const dispatch = useDispatch();
+
+  const { eventWebsiteBtn, eventPromoBtn } = buttons;
 
   const openInNewTab = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -47,7 +60,7 @@ export const EventCard = ({ event, isPromo = false }: { event: TEvent; isPromo?:
               customcolor={palette.light.primary.dark}
               style={BtnStyles}
             >
-              Book a stand
+              {eventPromoBtn}
             </Button>
           ) : (
             <Button
@@ -55,7 +68,7 @@ export const EventCard = ({ event, isPromo = false }: { event: TEvent; isPromo?:
               customcolor={palette.light.primary.dark}
               style={BtnStyles}
             >
-              Go to website
+              {eventWebsiteBtn}
             </Button>
           )}
         </CardInner>

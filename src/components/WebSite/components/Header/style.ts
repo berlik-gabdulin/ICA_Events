@@ -42,6 +42,12 @@ export const SocialBox = styled.div`
 
   .language-links a {
     margin-right: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
   }
   .current-lang {
     color: ${customTheme.light[100]};

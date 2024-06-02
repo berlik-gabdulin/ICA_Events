@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import Slider from 'react-slick';
 import { Container, Section } from 'src/components/globalStyles';
 import { Typography } from '@mui/material';
-import { TEvent, TPageType } from 'src/utils/types';
+import { TEvent, TEventsBlock, TPageType } from 'src/utils/types';
 import { EventCard } from '../EventCard';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Arrow, ButtonStyled } from './styles';
@@ -11,8 +11,10 @@ import customTheme from 'src/theme/customTheme';
 import { Title } from '../Title';
 import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 
-const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
+const EventsBlock: FC<TPageType<TEventsBlock>> = ({ block_title, content }) => {
   const router = useRouter();
+
+  const { title, events, eventWebsiteBtn, eventPromoBtn, viewAllBtn } = content;
 
   const handleGoRoute = (route: string) => {
     router.push(route);
@@ -60,13 +62,13 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
   return (
     <Section>
       <Container>
-        <Title style={{ color: customTheme.main[100] }}>{block_title}</Title>
+        <Title style={{ color: customTheme.main[100] }}>{title}</Title>
 
-        {content && content.length ? (
+        {events && events.length ? (
           <div ref={slidesRef}>
             <Slider {...settings}>
-              {content.map((event, index) => (
-                <EventCard key={index} event={event} />
+              {events.map((event: TEvent, index: number) => (
+                <EventCard key={index} event={event} buttons={{ eventWebsiteBtn, eventPromoBtn }} />
               ))}
             </Slider>
           </div>
@@ -81,7 +83,7 @@ const EventsBlock: FC<TPageType<TEvent[]>> = ({ block_title, content }) => {
             customcolor={customTheme.main[100]}
             onClick={() => handleGoRoute('/events')}
           >
-            All Events
+            {viewAllBtn}
           </ButtonStyled>
         </div>
       </Container>

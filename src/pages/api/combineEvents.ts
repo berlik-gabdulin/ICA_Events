@@ -19,17 +19,32 @@ const combineEvents = async (req: NextApiRequest, res: NextApiResponse) => {
 
     combinedEvents.sort((a: any, b: any) => a.beginDate.localeCompare(b.beginDate));
 
-    const updatedContent = JSON.stringify(combinedEvents);
+    const [allEventsRow] = (await db.execute(
+      'SELECT content FROM page_events WHERE block_name = ?',
+      ['allEvents']
+    )) as RowDataPacket[];
+
+    const allEventsContent = JSON.parse(allEventsRow[0].content);
+    allEventsContent.events = combinedEvents;
+
+    const updatedContent = JSON.stringify(allEventsContent);
 
     await db.execute('UPDATE page_events SET content = ? WHERE block_name = ?', [
       updatedContent,
       'allEvents',
     ]);
 
+    const [pageHomeRow] = (await db.execute(
+      `SELECT content FROM page_home WHERE block_name = 'events'`
+    )) as RowDataPacket[];
+
+    const pageHomeContent = JSON.parse(pageHomeRow[0].content);
+    pageHomeContent.events = combinedEvents
+      .filter((event: TEvent) => new Date() < new Date(event.endDate))
+      .slice(0, 9);
+
     await db.execute(`UPDATE page_home SET content = ? WHERE block_name = 'events'`, [
-      JSON.stringify(
-        combinedEvents.filter((event: TEvent) => new Date() < new Date(event.endDate)).slice(0, 9)
-      ),
+      JSON.stringify(pageHomeContent),
     ]);
 
     res.status(200).json(true);
@@ -38,4 +53,5 @@ const combineEvents = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 };
+
 export default combineEvents;

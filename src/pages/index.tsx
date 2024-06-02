@@ -7,7 +7,9 @@ import {
   TAboutTab,
   TContactsBlock,
   TEvent,
+  TEventsBlock,
   TLayoutProps,
+  TLocationTab,
   TMembership,
   TMetaFields,
   TPageType,
@@ -25,9 +27,10 @@ import { getLayoutData } from 'src/utils/getLayoutData';
 type THomePageProps = {
   title: TPageType<TTitleBlock>;
   about: TPageType<TAboutTab>;
-  events: TPageType<TEvent[]>;
+  events: TPageType<TEventsBlock>;
   testimonials: TPageType<TTestimonial[]>;
   reports: TPageType<TReportsBlockProps>;
+  location: TPageType<TLocationTab>;
   membership: TPageType<TMembership>;
   contacts: TPageType<TContactsBlock>;
   meta: TPageType<TMetaFields>;
@@ -41,6 +44,7 @@ const Home = (props: THomePageProps) => {
     about,
     events,
     testimonials,
+    location,
     /*membership,*/ reports,
     contacts,
     layoutData,
@@ -65,7 +69,7 @@ const Home = (props: THomePageProps) => {
         <TitleBlock {...title} events={allEvents} />
         <AboutBlock {...about} />
         <EventsBlock {...events} />
-        {!isMobile ? <CustomSVGMap events={allEvents} /> : null}
+        {!isMobile ? <CustomSVGMap title={location.content.title} events={allEvents} /> : null}
         <ReportsBlock {...reports} />
         <TestimonialsBlock {...testimonials} />
         {/* <Membership {...membership} /> */}

@@ -82,6 +82,10 @@ export type TAboutTab = {
   bullets: Record<string, string>;
 };
 
+export type TLocationTab = {
+  title: string;
+};
+
 export type TTestimonial = {
   id: string;
   author: string;
@@ -98,6 +102,8 @@ export type TMembership = {
 };
 
 export type TContactsBlock = {
+  title: string;
+  social_title: string;
   contactsHtml: string;
   photo: string;
 };
@@ -147,6 +153,14 @@ export type TEvent = {
 
 export type TEvents = {
   events: TEvent[];
+};
+
+export type TEventsBlock = {
+  title: string;
+  events: TEvent[];
+  eventWebsiteBtn: string;
+  eventPromoBtn: string;
+  viewAllBtn: string;
 };
 
 export type TBGBox = {

@@ -23,7 +23,7 @@ const ContactBlock: React.FC<TPageType<TContactsBlock> & { socialLinks: TSocialL
   const imgRef = useScrollAnimation('animate__fadeInLeft');
   const text1Ref = useScrollAnimation('animate__fadeInRight', 0, 300);
   const text2Ref = useScrollAnimation('animate__fadeInRight', 0, 600);
-  const { contactsHtml, photo } = content;
+  const { title, social_title, contactsHtml, photo } = content;
 
   const hasActiveLink = Object.values(socialLinks).some((link) => link.isActive);
 
@@ -33,11 +33,11 @@ const ContactBlock: React.FC<TPageType<TContactsBlock> & { socialLinks: TSocialL
         <Image src={photo} alt="Contacts" layout="fill" />
       </PhotoBox>
       <Wrapper flex={1}>
-        <Title style={{ textAlign: 'left' }}>Contact Us</Title>
+        <Title style={{ textAlign: 'left' }}>{title}</Title>
         <Text dangerouslySetInnerHTML={{ __html: contactsHtml }} ref={text1Ref} />
         {hasActiveLink ? (
           <>
-            <SocialTitle style={{ textAlign: 'left', marginTop: 50 }}>Get social</SocialTitle>
+            <SocialTitle style={{ textAlign: 'left', marginTop: 50 }}>{social_title}</SocialTitle>
 
             <SocialBox display="flex" ref={text2Ref}>
               {socialLinks?.linkedin?.isActive ? (
