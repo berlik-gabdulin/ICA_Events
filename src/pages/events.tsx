@@ -39,10 +39,15 @@ type TMaterialsPageProps = {
   meta: TPageType<TMetaFields>;
   bgBox: TPageType<TTitleBlock>;
   layoutData: TLayoutProps;
+  eventsButtons: {
+    eventWebsiteBtn: string;
+    eventPromoBtn: string;
+    viewAllBtn: string;
+  };
 };
 
 const Events = (props: TMaterialsPageProps) => {
-  const { meta, api, bgBox, layoutData, allEvents } = props;
+  const { meta, api, bgBox, layoutData, allEvents, eventsButtons } = props;
 
   const { title, bgImage } = bgBox.content;
 
@@ -265,7 +270,12 @@ const Events = (props: TMaterialsPageProps) => {
             {eventsToShow.length ? (
               <GridBox>
                 {eventsToShow.slice(0, visibleEvents).map((event: TEvent) => (
-                  <EventCard event={event} key={event.id} isPromo={!!promo} />
+                  <EventCard
+                    event={event}
+                    key={event.id}
+                    isPromo={!!promo}
+                    buttons={eventsButtons}
+                  />
                 ))}
               </GridBox>
             ) : (
@@ -307,6 +317,11 @@ export async function getStaticProps() {
     `SELECT * FROM page_home WHERE block_name = 'title'`
   )) as RowDataPacket[];
 
+  // Получение данных для блока events на странице page_home
+  const [eventsData] = (await db.execute(
+    `SELECT * FROM page_home WHERE block_name = 'events'`
+  )) as RowDataPacket[];
+
   const [settings] = (await db.execute(
     `SELECT * FROM page_settings ORDER BY order_number ASC`
   )) as RowDataPacket[];
@@ -341,6 +356,7 @@ export async function getStaticProps() {
       },
       layoutData,
       allEvents: data.allEvents.content,
+      eventsButtons: JSON.parse(eventsData[0].content), // Добавляем данные кнопок
     },
     revalidate: 10800,
   };
