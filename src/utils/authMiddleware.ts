@@ -13,7 +13,7 @@ const authMiddleware =
       if (!token) {
         return res.status(401).json({ error: 'Not authorized' });
       }
-      console.log(process.env.JWT_SECRET);
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
       req.user = decoded;
 

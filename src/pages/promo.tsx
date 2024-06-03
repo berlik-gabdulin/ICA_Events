@@ -180,8 +180,6 @@ export async function getStaticProps() {
     `SELECT * FROM page_settings ORDER BY order_number ASC`
   )) as RowDataPacket[];
 
-  console.log(settings);
-
   const settingsData: IData = {};
   settings.map((block: IPageBlock) => {
     settingsData[`${block.block_name}`] = {

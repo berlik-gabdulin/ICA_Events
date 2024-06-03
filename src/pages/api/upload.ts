@@ -57,8 +57,6 @@ export default async function upload(req: NextApiRequest, res: NextApiResponse) 
   const folder = req.query.folder || 'default';
   const uploadDir = path.join(process.cwd(), `/uploads/${folder}`);
 
-  console.log('process.cwd()', process.cwd());
-
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }

@@ -130,8 +130,6 @@ export async function getStaticProps() {
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
 
-  console.log(metaContent);
-
   const layoutData = getLayoutData(settingsData, metaContent);
 
   const data: IData = {};

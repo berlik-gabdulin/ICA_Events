@@ -34,7 +34,7 @@ const NewsTab: React.FC = () => {
     try {
       const response = await fetch(`/api/news?page=${page}`);
       const data: NewsResponse = await response.json();
-      console.log(data);
+
       setNews(data.news);
       setTotal(data.total);
     } catch (error) {
