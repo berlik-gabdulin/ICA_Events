@@ -75,11 +75,17 @@ export type TTitleTab = {
   content: TTitleBlock;
 };
 
+export type Bullet = {
+  key: string;
+  value: string;
+  order: number;
+};
+
 export type TAboutTab = {
   block_title: string;
   title: string;
   text: string;
-  bullets: Record<string, string>;
+  bullets: Record<string, Bullet>;
 };
 
 export type TLocationTab = {
