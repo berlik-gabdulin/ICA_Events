@@ -15,6 +15,7 @@ import {
   NewsItemDate,
   NewsItemWrapper,
   NewsTitleLink,
+  NewsContentWrapper,
 } from 'src/components/WebSite/pageStyles/stylesNews';
 import { Heading } from 'src/components/WebSite/components/Heading';
 import { TitleH1 } from 'src/components/WebSite/components/TitleH1';
@@ -74,13 +75,12 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData, cur
                       />
                     </CardMediaWrapper>
                   </Link>
-
-                  <NewsTitleLink href={`/media/news/${item.alias}`}>
-                    <h3>{item.title}</h3>
-                  </NewsTitleLink>
-
+                  <NewsContentWrapper>
+                    <NewsTitleLink href={`/media/news/${item.alias}`}>
+                      <h3>{item.title}</h3>
+                    </NewsTitleLink>
+                  </NewsContentWrapper>
                   <NewsItemDate>{item.published_at}</NewsItemDate>
-
                   <CardActions sx={{ padding: 0 }}>
                     <NewsButton
                       size="small"
@@ -94,7 +94,6 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData, cur
               </Grid>
             ))}
           </Grid>
-
           <Pagination
             count={totalPages}
             page={currentPage}

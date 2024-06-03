@@ -7,9 +7,15 @@ export const NewsItemWrapper = styled(Card)`
   padding: 0;
   background: none;
   box-shadow: none;
-  > div {
-    padding: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const NewsContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 `;
 
 export const NewsTitleLink = styled(Link)`
