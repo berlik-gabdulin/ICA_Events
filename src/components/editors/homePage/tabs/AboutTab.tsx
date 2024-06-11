@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { SubmitHandler, useForm, useFieldArray } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
 import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
+import Input from 'src/components/Input';
+import Button from 'src/components/Button';
+import { Box, FormControlLabel, Switch } from '@mui/material';
 import useSnackbar from 'src/hooks/useSnackbar';
 import CustomEditor from 'src/components/CustomEditor';
-import Button from 'src/components/Button';
-import Input from 'src/components/Input';
 import { TAboutTab, Bullet } from 'src/utils/types';
 
 type FormData = {
@@ -13,13 +14,19 @@ type FormData = {
 
 const AboutTab: React.FC = () => {
   const [loading, setLoading] = useState(true);
-
-  const { watch, control, handleSubmit, setValue, getValues, register } = useForm<FormData>({
+  const { showError, showSuccess } = useSnackbar();
+  const { register, handleSubmit, setValue, watch, getValues, control } = useForm<FormData>({
     defaultValues: {
       about: {
         title: '',
         text: '',
-        bullets: [],
+        bullets: [
+          { key: 'countries', label: 'Countries', value: '8', order: 1, isActive: true },
+          { key: 'events', label: 'Events', value: '60+', order: 2, isActive: true },
+          { key: 'industries', label: 'Industries', value: '18', order: 3, isActive: true },
+          { key: 'attendees', label: 'Attendees', value: '340.000+', order: 4, isActive: true },
+          { key: 'exhibitors', label: 'Exhibitors', value: '9000+', order: 5, isActive: true },
+        ],
       },
     },
   });
@@ -29,22 +36,16 @@ const AboutTab: React.FC = () => {
     name: 'about.bullets',
   });
 
-  const { showError, showSuccess } = useSnackbar();
-
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchPageBlock('home', 'about');
-      const aboutData = JSON.parse(data.content) as TAboutTab;
-
-      // Transform bullets to array
-      const bulletsArray = Object.entries(aboutData.bullets).map(([key, bullet]) => ({
-        key,
-        value: bullet.value,
-        order: bullet.order,
-      }));
-
-      setValue('about', { ...aboutData, bullets: bulletsArray });
-      setLoading(false);
+      try {
+        const data = await fetchPageBlock('home', 'about');
+        const aboutData = JSON.parse(data.content) as TAboutTab;
+        setValue('about', aboutData);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchData();
@@ -53,16 +54,7 @@ const AboutTab: React.FC = () => {
   const handleSave: SubmitHandler<FormData> = async (formData) => {
     try {
       setLoading(true);
-
-      // Transform bullets back to object
-      const bulletsObject = formData.about.bullets.reduce((acc, bullet) => {
-        acc[bullet.key] = { value: bullet.value, order: bullet.order };
-        return acc;
-      }, {} as Record<string, { value: string; order: number }>);
-
-      await updatePageBlock('home', 'about', {
-        content: JSON.stringify({ ...formData.about, bullets: bulletsObject }),
-      });
+      await updatePageBlock('home', 'about', { content: JSON.stringify(formData.about) });
       showSuccess('Successfully saved!');
       setLoading(false);
     } catch (error) {
@@ -87,16 +79,16 @@ const AboutTab: React.FC = () => {
             style={{ marginBottom: '30px' }}
           />
           {fields.map((field, index) => (
-            <div key={field.id} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+            <Box key={field.id} display="flex" gap={2} alignItems="center" mb={2}>
               <Input
-                shrink={getValues(`about.bullets.${index}.key`)}
-                label="Key"
+                shrink={getValues(`about.bullets.${index}.label`)}
+                label="Bullet Label"
                 fullWidth
-                {...register(`about.bullets.${index}.key`)}
+                {...register(`about.bullets.${index}.label`)}
               />
               <Input
                 shrink={getValues(`about.bullets.${index}.value`)}
-                label="Value"
+                label="Bullet Value"
                 fullWidth
                 {...register(`about.bullets.${index}.value`)}
               />
@@ -107,22 +99,23 @@ const AboutTab: React.FC = () => {
                 fullWidth
                 {...register(`about.bullets.${index}.order`)}
               />
-              <Button type="button" onClick={() => remove(index)}>
-                Remove
-              </Button>
-            </div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    {...register(`about.bullets.${index}.isActive`)}
+                    checked={watch(`about.bullets.${index}.isActive`)}
+                  />
+                }
+                label={watch(`about.bullets.${index}.isActive`) ? 'Active' : 'Inactive'}
+                style={{ marginBottom: 15 }}
+              />
+            </Box>
           ))}
-          <Button
-            type="button"
-            onClick={() => append({ key: '', value: '', order: fields.length + 1 })}
-          >
-            Add Bullet
-          </Button>
+          <Button type="submit">Save</Button>
         </>
       ) : (
-        <p>Loading</p>
+        <p>Loading...</p>
       )}
-      <Button>Save</Button>
     </form>
   );
 };

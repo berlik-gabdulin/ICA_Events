@@ -11,7 +11,10 @@ const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ content }) => {
 
   const text1Ref = useScrollAnimation('animate__fadeInDown');
 
-  const bulletsArray = Object.values(bullets).sort((a, b) => a.order - b.order);
+  // Sort bullets array by order and filter active bullets
+  const sortedBullets = bullets
+    .filter((bullet) => bullet.isActive)
+    .sort((a, b) => a.order - b.order);
 
   return (
     <SectionStyled>
@@ -19,7 +22,7 @@ const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ content }) => {
         <Title>{title}</Title>
         <div dangerouslySetInnerHTML={{ __html: text }} ref={text1Ref} />
         <Bullets>
-          {bulletsArray.map(({ key, value }) => (
+          {sortedBullets.map(({ key, value, label }) => (
             <Bullet key={key} className="animate__animated animate__fadeInUp">
               <BulletValue>
                 {value.includes('+') ? (
@@ -31,7 +34,7 @@ const AboutBlock: React.FC<TPageType<TAboutTab>> = ({ content }) => {
                   <AnimatedBulletValue value={value} />
                 )}
               </BulletValue>
-              <BulletLabel>{key}</BulletLabel>
+              <BulletLabel>{label}</BulletLabel>
             </Bullet>
           ))}
         </Bullets>

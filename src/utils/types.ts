@@ -79,14 +79,17 @@ export type Bullet = {
   key: string;
   value: string;
   order: number;
+  isActive: boolean;
+  label: string;
 };
 
 export type TAboutTab = {
   block_title: string;
   title: string;
   text: string;
-  bullets: Record<string, Bullet>;
+  bullets: Bullet[];
 };
+
 
 export type TLocationTab = {
   title: string;
