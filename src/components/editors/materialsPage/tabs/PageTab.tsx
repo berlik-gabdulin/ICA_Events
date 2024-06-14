@@ -18,7 +18,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Input from 'src/components/Input';
 import { TMaterialsPage, TMaterial } from 'src/utils/types';
-import { AccordionCustom } from 'src/components/globalStyles';
+import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
 import FileUploader from 'src/components/upload/FileUploader';
 import ImagePreview from 'src/components/ImagePreview';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -39,6 +39,7 @@ const PageTab: React.FC = () => {
       const parsedData = JSON.parse(data.content);
       setValue('materials', parsedData.materials);
       setValue('image', parsedData.image);
+      setValue('downloadButton', parsedData.downloadButton);
       setLoading(false);
     };
 
@@ -94,15 +95,38 @@ const PageTab: React.FC = () => {
   return !loading ? (
     <form onSubmit={handleSubmit(handleSave)}>
       <Box style={{ marginBottom: '30px' }}>
-        <FileUploader inputName="image" setValue={setValue} folder="materials" prefix="preview" />
-        <ImagePreview src={watch('image')} alt="Header Background" height={200} />
-        <Input
-          label="Image"
-          shrink={watch('image')}
-          fullWidth
-          {...register('image', { required: 'This field is required' })}
-        />
+        <AccordionCustom>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Button and Header Background</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <form onSubmit={handleSubmit(handleSave)}>
+              <Input
+                label="Button"
+                fullWidth
+                {...register('downloadButton', { required: 'This field is required' })}
+              />
+              <DeviderStyled />
+              <FileUploader
+                inputName="image"
+                setValue={setValue}
+                folder="materials"
+                prefix="preview"
+              />
+              <ImagePreview src={watch('image')} alt="Header Background" height={200} />
+              <Input
+                label="Image"
+                shrink={watch('image')}
+                fullWidth
+                {...register('image', { required: 'This field is required' })}
+              />
+            </form>
+          </AccordionDetails>
+        </AccordionCustom>
       </Box>
+
+      <DeviderStyled />
+
       <Box style={{ marginBottom: '30px' }}>
         {materials.map((material, index) => (
           <AccordionCustom key={material.id}>

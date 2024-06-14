@@ -10,25 +10,39 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
-import AddNewsModal, { INewsData } from './addNewsModal';
+import Input from 'src/components/Input';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AddNewsModal from './addNewsModal';
 import styled from '@emotion/styled';
 import shadows from 'src/theme/shadows';
-
-interface NewsResponse {
-  news: INewsData[];
-  total: number;
-}
+import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import FileUploader from 'src/components/upload/FileUploader';
+import ImagePreview from 'src/components/ImagePreview';
+import { INewsData, NewsResponse, TNewsPage } from 'src/utils/types';
+import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
+import useSnackbar from 'src/hooks/useSnackbar';
 
 const boolToTiny1 = (bool: boolean) => (bool ? 1 : 0);
 
 const NewsTab: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const { showError, showSuccess } = useSnackbar();
   const [news, setNews] = useState<INewsData[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newsItemId, setNewsItemId] = useState<number | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { register, handleSubmit, setValue, watch } = useForm({
+    defaultValues: {
+      readMore: '',
+      image: '',
+    },
+  });
 
   const fetchNews = useCallback(async () => {
     try {
@@ -45,6 +59,18 @@ const NewsTab: React.FC = () => {
   useEffect(() => {
     fetchNews();
   }, [page, fetchNews]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchPageBlock('news', 'page');
+      const parsedData = JSON.parse(data.content);
+      setValue('readMore', parsedData.readMore);
+      setValue('image', parsedData.image);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [setValue]);
 
   const totalPages = total ? Math.ceil(total / 10) : 0;
 
@@ -75,7 +101,6 @@ const NewsTab: React.FC = () => {
         console.log('Successfull');
         fetchNews();
       } else {
-        // Обработка ошибок, если запрос не прошел
         console.error('Failed to save the news');
       }
     } catch (error) {
@@ -111,7 +136,6 @@ const NewsTab: React.FC = () => {
         console.log('Successfull');
         fetchNews();
       } else {
-        // Обработка ошибок, если запрос не прошел
         console.error('Failed to save the news');
       }
     } catch (error) {
@@ -165,6 +189,17 @@ const NewsTab: React.FC = () => {
     }
   };
 
+  const handleSaveSettings: SubmitHandler<TNewsPage> = async (formData) => {
+    setLoading(true);
+    try {
+      await updatePageBlock('news', 'page', { content: JSON.stringify(formData) }, 'media/news');
+      showSuccess('Successfully saved!');
+    } catch (error) {
+      showError('An error occurred');
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <Box>
@@ -200,6 +235,42 @@ const NewsTab: React.FC = () => {
               ))
             : null}
         </List>
+      </Box>
+
+      <DeviderStyled />
+
+      <Box display="flex" justifyContent="space-between" marginBottom={5}>
+        <AccordionCustom>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Button and Header Background</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <form onSubmit={handleSubmit(handleSaveSettings)}>
+              <Input
+                label="Read more"
+                fullWidth
+                {...register('readMore', { required: 'This field is required' })}
+              />
+              <DeviderStyled />
+              <FileUploader
+                inputName="image"
+                setValue={setValue}
+                folder="news"
+                prefix="header-background"
+              />
+              <Input
+                label="Image"
+                shrink={watch('image')}
+                fullWidth
+                {...register('image', { required: 'This field is required' })}
+              />
+              <ImagePreview src={watch('image')} alt="Header Background" height={200} />
+              <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                Save
+              </Button>
+            </form>
+          </AccordionDetails>
+        </AccordionCustom>
       </Box>
       <AddNewsModal
         isOpen={isModalOpen}

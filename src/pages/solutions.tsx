@@ -71,7 +71,7 @@ const Solutions = (props: TSolutionsPageProps) => {
             <ContactsBlock>
               <div dangerouslySetInnerHTML={{ __html: contacts.text }} ref={outroRef} />
 
-              <h2 ref={contactsRef}>Contacts:</h2>
+              <h2 ref={contactsRef}>{contacts.title}</h2>
               <LinksBlock ref={contactsContentRef}>
                 <Link href={`tel:${contacts.phone}`}>
                   <IconLink>

@@ -126,6 +126,7 @@ export const Arrow = styled.span`
 `;
 
 export const AccordionCustom = styled(Accordion)`
+  width: 100%;
   border: 1px solid ${customTheme.dark[20]};
   transition: all 0.3s ease-in-out;
   &:hover {

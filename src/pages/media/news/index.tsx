@@ -36,11 +36,26 @@ interface NewsPageProps {
   bgBox: TPageType<TTitleBlock>;
   layoutData: TLayoutProps;
   currentPage: number;
+  data: {
+    readMore: string;
+    image: string;
+  };
 }
 
-const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData, currentPage }) => {
+const NewsPage: React.FC<NewsPageProps> = ({
+  news,
+  total,
+  bgBox,
+  layoutData,
+  currentPage,
+  data,
+}) => {
   const router = useRouter();
   const totalPages = Math.ceil(total / 9);
+
+  const { image, readMore } = data;
+
+  console.log('news Page: ', data);
 
   const handleReadMoreClick = (item: NewsItem) => {
     router.push(`/media/news/${item.alias}`);
@@ -87,7 +102,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ news, total, bgBox, layoutData, cur
                       onClick={() => handleReadMoreClick(item)}
                       variant="outlined"
                     >
-                      READ MORE
+                      {readMore}
                     </NewsButton>
                   </CardActions>
                 </NewsItemWrapper>
@@ -156,6 +171,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const metaBlock = pageData.find((item: IPageBlock) => item.block_name === 'meta');
   const metaContent = metaBlock ? JSON.parse(metaBlock.content) : null;
+  const pageBlock = pageData.find((item: IPageBlock) => item.block_name === 'page');
+  const pageContent = metaBlock ? JSON.parse(pageBlock.content) : null;
 
   const layoutData = getLayoutData(settingsData, metaContent);
 
@@ -169,6 +186,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       layoutData,
       currentPage: page,
+      data: pageContent,
     },
   };
 };

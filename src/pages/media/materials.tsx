@@ -54,7 +54,7 @@ const Materials = (props: TMaterialsPageProps) => {
     document.body.removeChild(link);
   };
 
-  const { image, materials } = page.content;
+  const { image, materials, downloadButton } = page.content;
 
   return (
     <>
@@ -86,7 +86,7 @@ const Materials = (props: TMaterialsPageProps) => {
                     variant="outlined"
                     onClick={() => downloadFile(material.link, material.name)}
                   >
-                    Download
+                    {downloadButton}
                     <DownloadIcon />
                   </Button>
                 </DownloadCard>

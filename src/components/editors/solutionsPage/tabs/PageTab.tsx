@@ -105,6 +105,12 @@ const PageTab: React.FC = () => {
           style={{ marginBottom: 15 }}
         />
         <Input
+          label="Title"
+          shrink={getValues('contacts.title')}
+          fullWidth
+          {...register('contacts.title', { required: 'This field is required' })}
+        />
+        <Input
           label="Phone"
           shrink={getValues('contacts.phone')}
           fullWidth

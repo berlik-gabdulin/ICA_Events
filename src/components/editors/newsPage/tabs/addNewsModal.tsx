@@ -20,30 +20,13 @@ import CustomEditor from 'src/components/CustomEditor';
 import Loader from 'src/components/Loader';
 import ImagePreview from 'src/components/ImagePreview';
 import Input from 'src/components/Input';
+import { INewsData } from 'src/utils/types';
 
 interface IAddNewsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (newsData: INewsData) => void;
   id: number | null;
-}
-
-// Определяем тип для данных новости
-export interface INewsData {
-  id?: number;
-  title: string;
-  alias: string;
-  content: string;
-  short_text: string;
-  image_url: string;
-  meta_title: string;
-  meta_description: string;
-  meta_keywords: string;
-  og_description: string;
-  og_locale: string;
-  og_image: string;
-  isPublic: boolean;
-  published_at?: Date | string;
 }
 
 const InitialState = {

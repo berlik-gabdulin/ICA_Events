@@ -90,7 +90,6 @@ export type TAboutTab = {
   bullets: Bullet[];
 };
 
-
 export type TLocationTab = {
   title: string;
 };
@@ -212,6 +211,7 @@ export type TSolutions = {
   image: string;
   intro: string;
   contacts: {
+    title: string;
     text: string;
     phone: string;
     email: string;
@@ -277,8 +277,35 @@ export type TMaterial = {
 
 export type TMaterialsPage = {
   image: string;
+  downloadButton: string;
   materials: TMaterial[];
 };
+
+export type TNewsPage = {
+  readMore: string;
+  image: string;
+};
+
+export interface INewsData {
+  id?: number;
+  title: string;
+  alias: string;
+  content: string;
+  short_text: string;
+  image_url: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+  og_description: string;
+  og_locale: string;
+  og_image: string;
+  isPublic: boolean;
+  published_at?: Date | string;
+}
+export interface NewsResponse {
+  news: INewsData[];
+  total: number;
+}
 
 export type TUpload = {
   url: string;
