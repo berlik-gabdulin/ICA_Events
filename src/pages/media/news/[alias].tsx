@@ -6,6 +6,7 @@ import { RowDataPacket } from 'mysql2';
 import db from 'src/utils/db';
 import {
   IData,
+  INewsData,
   IPageBlock,
   TLayoutProps,
   TMetaFields,
@@ -15,7 +16,6 @@ import {
 import { getLayoutData } from 'src/utils/getLayoutData';
 import BGBox from 'src/components/WebSite/components/BGBox';
 import { Container, Section } from 'src/components/globalStyles';
-import { INewsData } from 'src/components/editors/newsPage/tabs/addNewsModal';
 import { formatDate } from 'src/utils/formatTime';
 import {
   NewsItemDate,
