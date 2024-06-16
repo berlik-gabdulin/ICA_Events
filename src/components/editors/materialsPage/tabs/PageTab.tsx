@@ -97,7 +97,7 @@ const PageTab: React.FC = () => {
       <Box style={{ marginBottom: '30px' }}>
         <AccordionCustom>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Button and Header Background</Typography>
+            <Typography>Page settings</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <form onSubmit={handleSubmit(handleSave)}>

@@ -23,7 +23,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Input from 'src/components/Input';
 import CustomEditor from 'src/components/CustomEditor';
 import { TContactsPage, TOffice } from 'src/utils/types';
-import { AccordionCustom } from 'src/components/globalStyles';
+import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
+import FileUploader from 'src/components/upload/FileUploader';
+import ImagePreview from 'src/components/ImagePreview';
 
 const themes = ['Medium', 'Light', 'Dark'];
 
@@ -35,13 +37,14 @@ const PageTab: React.FC = () => {
   const { showError, showSuccess } = useSnackbar();
 
   const offices = watch('offices') || [];
+  const settings = watch('settings') || {};
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchPageBlock('contacts', 'page');
       const parsedData = JSON.parse(data.content);
       setValue('offices', parsedData.offices);
-      setValue('image', parsedData.image);
+      setValue('settings', parsedData.settings);
       setLoading(false);
     };
 
@@ -82,15 +85,40 @@ const PageTab: React.FC = () => {
 
   return !loading ? (
     <form onSubmit={handleSubmit(handleSave)}>
-      <Box style={{ marginBottom: '30px' }}>
-        <Input
-          label="Meta Description"
-          shrink={getValues('image')}
-          fullWidth
-          {...register('image', { required: 'This field is required' })}
-        />
+      <Box display="flex" flexDirection="column" gap={5} marginBottom={5}>
+        <AccordionCustom>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Page settings</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <FileUploader
+                inputName="settings.image"
+                setValue={setValue}
+                folder="contacts"
+                prefix="preview"
+              />
+              <ImagePreview
+                src={getValues('settings.image')}
+                alt="Header Background"
+                height={200}
+              />
+              <Input
+                label="Image"
+                shrink={getValues('settings.image')}
+                fullWidth
+                {...register('settings.image')}
+              />
+              <Input label="Map" fullWidth {...register('settings.map')} />
+              <Input label="Look at the map" fullWidth {...register('settings.lookMap')} />
+              <Input label="Close the map" fullWidth {...register('settings.closeMap')} />
+              <Input label="Hours" fullWidth {...register('settings.hours')} />
+            </Box>
+          </AccordionDetails>
+        </AccordionCustom>
       </Box>
-      <Box style={{ marginBottom: '30px' }}>
+
+      <Box display="flex" flexDirection="column" marginBottom={5}>
         {offices.map((office, index) => (
           <AccordionCustom key={office.id}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -134,6 +162,7 @@ const PageTab: React.FC = () => {
           </AccordionCustom>
         ))}
       </Box>
+
       <Button
         variant="outlined"
         color="primary"

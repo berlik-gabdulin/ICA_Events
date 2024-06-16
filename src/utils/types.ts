@@ -229,9 +229,17 @@ export type TOffice = {
   map: string;
 };
 
-export type TContactsPage = {
+export type TOfficeSettings = {
   image: string;
+  map: string;
+  lookMap: string;
+  closeMap: string;
+  hours: string;
+};
+
+export type TContactsPage = {
   offices: TOffice[];
+  settings: TOfficeSettings;
 };
 
 export type TReport = {

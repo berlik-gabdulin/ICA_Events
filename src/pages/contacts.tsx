@@ -33,7 +33,9 @@ const Contacts = (props: TSolutionsPageProps) => {
 
   const { page_title } = meta.content;
 
-  const { image, offices } = page.content;
+  const { settings, offices } = page.content;
+
+  const { image } = settings;
 
   return (
     <>
@@ -47,7 +49,7 @@ const Contacts = (props: TSolutionsPageProps) => {
           </Container>
         </Section>
         {offices.map((item: TOffice, index: number) => (
-          <OfficeItem item={item} index={index} key={item.id} />
+          <OfficeItem item={item} index={index} key={item.id} settings={settings} />
         ))}
       </Layout>
     </>
@@ -57,12 +59,10 @@ const Contacts = (props: TSolutionsPageProps) => {
 export default Contacts;
 
 export async function getStaticProps() {
-  // Получение всех данных страницы
   const [pageData] = (await db.execute(
     `SELECT * FROM page_contacts ORDER BY order_number ASC`
   )) as RowDataPacket[];
 
-  // Получение данных для заголовка
   const [titleData] = (await db.execute(
     `SELECT * FROM page_home WHERE block_name = 'title'`
   )) as RowDataPacket[];

@@ -202,6 +202,42 @@ const NewsTab: React.FC = () => {
 
   return (
     <>
+      <Box display="flex" justifyContent="space-between" marginBottom={5}>
+        <AccordionCustom>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Page settings</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <form onSubmit={handleSubmit(handleSaveSettings)}>
+              <Input
+                label="Read more"
+                fullWidth
+                {...register('readMore', { required: 'This field is required' })}
+              />
+              <DeviderStyled />
+              <FileUploader
+                inputName="image"
+                setValue={setValue}
+                folder="news"
+                prefix="header-background"
+              />
+              <Input
+                label="Image"
+                shrink={watch('image')}
+                fullWidth
+                {...register('image', { required: 'This field is required' })}
+              />
+              <ImagePreview src={watch('image')} alt="Header Background" height={200} />
+              <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                Save
+              </Button>
+            </form>
+          </AccordionDetails>
+        </AccordionCustom>
+      </Box>
+
+      <DeviderStyled />
+
       <Box>
         <Box display="flex" justifyContent="space-between" marginBottom={5}>
           <Button variant="contained" color="primary" onClick={handleOpenModal}>
@@ -237,41 +273,6 @@ const NewsTab: React.FC = () => {
         </List>
       </Box>
 
-      <DeviderStyled />
-
-      <Box display="flex" justifyContent="space-between" marginBottom={5}>
-        <AccordionCustom>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>Button and Header Background</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <form onSubmit={handleSubmit(handleSaveSettings)}>
-              <Input
-                label="Read more"
-                fullWidth
-                {...register('readMore', { required: 'This field is required' })}
-              />
-              <DeviderStyled />
-              <FileUploader
-                inputName="image"
-                setValue={setValue}
-                folder="news"
-                prefix="header-background"
-              />
-              <Input
-                label="Image"
-                shrink={watch('image')}
-                fullWidth
-                {...register('image', { required: 'This field is required' })}
-              />
-              <ImagePreview src={watch('image')} alt="Header Background" height={200} />
-              <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                Save
-              </Button>
-            </form>
-          </AccordionDetails>
-        </AccordionCustom>
-      </Box>
       <AddNewsModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

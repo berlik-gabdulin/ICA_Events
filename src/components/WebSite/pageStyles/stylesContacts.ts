@@ -164,7 +164,7 @@ export const TextBlock = styled.div`
 `;
 
 export const LookMap = styled(Button)`
-  margin-top: -5px;
+  margin-top: 5px;
   margin-left: -11px;
   font-size: 24px;
   font-family: ${FONT_PRIMARY_BOLD};

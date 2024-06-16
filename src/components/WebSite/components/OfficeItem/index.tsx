@@ -1,5 +1,5 @@
 import { ReactElement, useState } from 'react';
-import { TOffice } from 'src/utils/types';
+import { TOffice, TOfficeSettings } from 'src/utils/types';
 import {
   ImageBlock,
   LookMap,
@@ -14,9 +14,18 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { useScrollAnimation } from 'src/utils/useScrollAnimation';
 import customTheme from 'src/theme/customTheme';
 
-export const OfficeItem = ({ item, index }: { item: TOffice; index: number }): ReactElement => {
+export const OfficeItem = ({
+  item,
+  index,
+  settings,
+}: {
+  item: TOffice;
+  index: number;
+  settings: TOfficeSettings;
+}): ReactElement => {
   const [hovered, setHovered] = useState<string | null>(null);
   const [showMap, setShowMap] = useState<string | null>(null);
+  const { map, lookMap, closeMap, hours } = settings;
 
   const toggleMap = (id: string) => {
     setShowMap(showMap === id ? null : id);
@@ -27,6 +36,7 @@ export const OfficeItem = ({ item, index }: { item: TOffice; index: number }): R
     const iframe = doc.querySelector('iframe');
     return iframe ? iframe.getAttribute('src') : null;
   };
+
   const imgRef = useScrollAnimation(
     `animate__fadeIn${(index + 2) % 2 === 0 ? 'Left' : 'Right'}`,
     200,
@@ -48,10 +58,10 @@ export const OfficeItem = ({ item, index }: { item: TOffice; index: number }): R
           <div ref={btnRef}>
             <LookMap variant="text" onClick={() => toggleMap(item.id)}>
               <FontAwesomeIcon icon={faLocationDot} />
-              Look at the map
+              {showMap !== item.id ? lookMap : closeMap}
             </LookMap>
           </div>
-          <h3 ref={hoursRef}>Hours</h3>
+          <h3 ref={hoursRef}>{hours}</h3>
           <Text dangerouslySetInnerHTML={{ __html: item.hours }} ref={hoursTitleRef} />
         </div>
       </TextBlock>
@@ -80,7 +90,7 @@ export const OfficeItem = ({ item, index }: { item: TOffice; index: number }): R
                   variant="contained"
                   customcolor={customTheme.light[100]}
                 >
-                  Map
+                  {map}
                 </MapButton>
               )}
             </>

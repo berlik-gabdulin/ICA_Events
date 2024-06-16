@@ -81,49 +81,58 @@ const PageTab: React.FC = () => {
 
   return !loading ? (
     <form onSubmit={handleSubmit(handleSave)}>
-      <Box>
-        <FileUploader inputName="image" setValue={setValue} folder="pages" prefix="solutions" />
-        <Input
-          label="Background"
-          shrink={watch('image')}
-          fullWidth
-          {...register('image', { required: 'This field is required' })}
-        />
-        <ImagePreview src={getValues('image')} />
-        <DeviderStyled />
+      <Box display="flex" justifyContent="space-between" marginBottom={5}>
+        <AccordionCustom>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Page settings</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <FileUploader inputName="image" setValue={setValue} folder="pages" prefix="solutions" />
+            <Input
+              label="Background"
+              shrink={watch('image')}
+              fullWidth
+              {...register('image', { required: 'This field is required' })}
+            />
+            <ImagePreview src={getValues('image')} />
+            <DeviderStyled />
 
-        <Heading>Intro text</Heading>
-        <CustomEditor name="intro" watch={watch} control={control} />
+            <Heading>Intro text</Heading>
+            <CustomEditor name="intro" watch={watch} control={control} />
 
-        <DeviderStyled />
+            <DeviderStyled />
 
-        <Heading>Contact Us</Heading>
-        <CustomEditor
-          name="contacts.text"
-          watch={watch}
-          control={control}
-          style={{ marginBottom: 15 }}
-        />
-        <Input
-          label="Title"
-          shrink={getValues('contacts.title')}
-          fullWidth
-          {...register('contacts.title', { required: 'This field is required' })}
-        />
-        <Input
-          label="Phone"
-          shrink={getValues('contacts.phone')}
-          fullWidth
-          {...register('contacts.phone', { required: 'This field is required' })}
-        />
-        <Input
-          label="E-mail"
-          shrink={getValues('contacts.email')}
-          fullWidth
-          {...register('contacts.email', { required: 'This field is required' })}
-        />
+            <Heading>Contact Us</Heading>
+            <CustomEditor
+              name="contacts.text"
+              watch={watch}
+              control={control}
+              style={{ marginBottom: 15 }}
+            />
+            <Input
+              label="Title"
+              shrink={getValues('contacts.title')}
+              fullWidth
+              {...register('contacts.title', { required: 'This field is required' })}
+            />
+            <Input
+              label="Phone"
+              shrink={getValues('contacts.phone')}
+              fullWidth
+              {...register('contacts.phone', { required: 'This field is required' })}
+            />
+            <Input
+              label="E-mail"
+              shrink={getValues('contacts.email')}
+              fullWidth
+              {...register('contacts.email', { required: 'This field is required' })}
+            />
+          </AccordionDetails>
+        </AccordionCustom>
       </Box>
+
       <DeviderStyled />
+
       <Box style={{ marginBottom: '30px' }}>
         <Heading>Solutions</Heading>
         {solutions.map((solution, index) => (

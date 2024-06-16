@@ -3,12 +3,14 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import {
   AccordionDetails,
   AccordionSummary,
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Stack,
+  Typography,
 } from '@mui/material';
 import { fetchPageBlock, removeFS, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
@@ -20,7 +22,7 @@ import GalleryModal from 'src/components/GalleryModal';
 import Button from 'src/components/Button';
 import ImagePreview from 'src/components/ImagePreview';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AccordionCustom } from 'src/components/globalStyles';
+import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
 
 type FormData = {
   galleries: TReports;
@@ -144,19 +146,35 @@ const PageTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
-          <FileUploader
-            inputName="galleries.image"
-            setValue={setValue}
-            folder="reports"
-            prefix="preview"
-          />
-          <ImagePreview src={getValues('galleries.image')} alt="Header Background" height={200} />
-          <Input
-            label="Image"
-            shrink={getValues('galleries.image')}
-            fullWidth
-            {...register('galleries.image')}
-          />
+          <Box display="flex" justifyContent="space-between" marginBottom={5}>
+            <AccordionCustom>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Page settings</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <FileUploader
+                  inputName="galleries.image"
+                  setValue={setValue}
+                  folder="reports"
+                  prefix="preview"
+                />
+                <ImagePreview
+                  src={getValues('galleries.image')}
+                  alt="Header Background"
+                  height={200}
+                />
+                <Input
+                  label="Image"
+                  shrink={getValues('galleries.image')}
+                  fullWidth
+                  {...register('galleries.image')}
+                />
+              </AccordionDetails>
+            </AccordionCustom>
+          </Box>
+
+          <DeviderStyled />
+
           <Button
             variant="contained"
             color="primary"
@@ -168,6 +186,7 @@ const PageTab: React.FC = () => {
           >
             Add New Gallery
           </Button>
+
           <Stack marginBottom={3} marginTop={3}>
             {Object.keys(getValues('galleries.galleries')).map((country) => (
               <AccordionCustom
