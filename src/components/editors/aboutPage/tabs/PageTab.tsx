@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { fetchPageBlock, updatePageBlock } from 'src/utils/api';
 import useSnackbar from 'src/hooks/useSnackbar';
+import { AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CustomEditor from 'src/components/CustomEditor';
 import Button from 'src/components/Button';
 import Input from 'src/components/Input';
 import { TAboutPage } from 'src/utils/types';
 import FileUploader from 'src/components/upload/FileUploader';
 import ImagePreview from 'src/components/ImagePreview';
+import { AccordionCustom, DeviderStyled } from 'src/components/globalStyles';
 
 type FormData = {
   about: TAboutPage;
@@ -45,14 +48,24 @@ const PageTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
-          <FileUploader inputName="about.image" setValue={setValue} folder="pages" />
-          <Input
-            label="Image"
-            shrink={getValues('about.image')}
-            fullWidth
-            {...register('about.image')}
-          />
-          <ImagePreview src={getValues('about.image')} />
+          <Box display="flex" flexDirection="column" gap={2} marginBottom={2}>
+            <AccordionCustom>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Page settings</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <FileUploader inputName="about.image" setValue={setValue} folder="pages" />
+                <Input
+                  label="Image"
+                  shrink={getValues('about.image')}
+                  fullWidth
+                  {...register('about.image')}
+                />
+                <ImagePreview src={getValues('about.image')} />
+              </AccordionDetails>
+            </AccordionCustom>
+          </Box>
+
           <CustomEditor name="about.text" control={control} watch={watch} />
         </>
       ) : (

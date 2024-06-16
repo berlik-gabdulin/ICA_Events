@@ -16,6 +16,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileUploader from 'src/components/upload/FileUploader';
 import ImagePreview from 'src/components/ImagePreview';
+import { AccordionCustom } from 'src/components/globalStyles';
 
 const InitAPI = {
   label: '',
@@ -95,9 +96,19 @@ const ApiTab: React.FC = () => {
     <form onSubmit={handleSubmit(handleSave)}>
       {!loading ? (
         <>
-          <FileUploader inputName="image" setValue={setValue} folder="pages" />
-          <Input label="Image" shrink={getValues('image')} fullWidth {...register('image')} />
-          <ImagePreview src={watch('image')} />
+          <Box display="flex" flexDirection="column" gap={2} marginBottom={2}>
+            <AccordionCustom>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Page settings</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <FileUploader inputName="image" setValue={setValue} folder="pages" />
+                <Input label="Image" shrink={getValues('image')} fullWidth {...register('image')} />
+                <ImagePreview src={watch('image')} />
+              </AccordionDetails>
+            </AccordionCustom>
+          </Box>
+
           {fields.map((item, index) => (
             <Accordion key={item.id}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
