@@ -200,6 +200,24 @@ const NewsTab: React.FC = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    const handleFocusIn = (e: FocusEvent) => {
+      if (
+        (e.target as HTMLElement).closest(
+          '.tox-tinymce-aux, .moxman-window, .tam-assetmanager-root'
+        ) !== null
+      ) {
+        e.stopImmediatePropagation();
+      }
+    };
+
+    document.addEventListener('focusin', handleFocusIn);
+
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn);
+    };
+  }, []);
+
   return (
     <>
       <Box display="flex" justifyContent="space-between" marginBottom={5}>

@@ -118,7 +118,6 @@ const AddNewsModal: React.FC<IAddNewsModalProps> = ({ isOpen, onClose, onSave, i
         try {
           const response = await fetch(`/api/news?id=${id}`);
           const data: INewsData = await response.json();
-          console.log('news item', data);
           reset(data);
         } catch (error) {
           console.error('Error fetching news data:', error);
