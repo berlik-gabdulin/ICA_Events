@@ -5,6 +5,7 @@ import { TEvent } from 'src/utils/types';
 
 const combineEvents = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    // Получение и объединение событий из блоков 'events' и 'manual'
     const [rows] = (await db.execute(
       'SELECT content, block_name FROM page_events WHERE block_name IN (?, ?)',
       ['events', 'manual']
@@ -17,23 +18,17 @@ const combineEvents = async (req: NextApiRequest, res: NextApiResponse) => {
       combinedEvents = [...combinedEvents, ...content];
     }
 
-    combinedEvents.sort((a: any, b: any) => a.beginDate.localeCompare(b.beginDate));
+    combinedEvents.sort((a: TEvent, b: TEvent) => a.beginDate.localeCompare(b.beginDate));
 
-    const [allEventsRow] = (await db.execute(
-      'SELECT content FROM page_events WHERE block_name = ?',
-      ['allEvents']
-    )) as RowDataPacket[];
-
-    const allEventsContent = JSON.parse(allEventsRow[0].content);
-    allEventsContent.events = combinedEvents;
-
-    const updatedContent = JSON.stringify(allEventsContent);
+    // Обновление блока 'allEvents' с объединёнными событиями
+    const updatedContent = JSON.stringify(combinedEvents);
 
     await db.execute('UPDATE page_events SET content = ? WHERE block_name = ?', [
       updatedContent,
       'allEvents',
     ]);
 
+    // Обновление блока 'events' в 'page_home'
     const [pageHomeRow] = (await db.execute(
       `SELECT content FROM page_home WHERE block_name = 'events'`
     )) as RowDataPacket[];
@@ -47,7 +42,7 @@ const combineEvents = async (req: NextApiRequest, res: NextApiResponse) => {
       JSON.stringify(pageHomeContent),
     ]);
 
-    res.status(200).json(true);
+    res.status(200).json({ status: true, combinedEvents });
   } catch (error) {
     console.error('An error occurred:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });

@@ -63,7 +63,7 @@ const Events = (props: TMaterialsPageProps) => {
   const [filterCountry, setFilterCountry] = useState<string>('');
   const [filterIndustry, setFilterIndustry] = useState<string>('');
   const [eventsToShow, setEventsToShow] = useState<TEvent[]>([]);
-  const [initialized, setInitialized] = useState<boolean>(false); // Добавим состояние для отслеживания инициализации
+  const [initialized, setInitialized] = useState<boolean>(false);
   const [promo, setPromo] = useState<string>('');
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const Events = (props: TMaterialsPageProps) => {
           entry.intersectionRatio >= 0.5 &&
           visibleEvents < eventsToShow.length
         ) {
-          setVisibleEvents((prev) => Math.min(prev + 6, eventsToShow.length)); // увеличиваем количество видимых событий
+          setVisibleEvents((prev) => Math.min(prev + 6, eventsToShow.length));
         }
       });
     }, options);
@@ -93,7 +93,6 @@ const Events = (props: TMaterialsPageProps) => {
     };
   }, [visibleEvents, eventsToShow.length]);
 
-  // 2. Добавим функцию filterEventsArray для фильтрации событий
   const filterEventsArray = () => {
     setEventsToShow([]);
     const searchLCase = search.toLowerCase();
@@ -356,7 +355,7 @@ export async function getStaticProps() {
       },
       layoutData,
       allEvents: data.allEvents.content,
-      eventsButtons: JSON.parse(eventsData[0].content), // Добавляем данные кнопок
+      eventsButtons: JSON.parse(eventsData[0].content),
     },
     revalidate: 10800,
   };
