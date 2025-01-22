@@ -88,7 +88,7 @@ const TitleTab: React.FC = () => {
           />
           <Input
             shrink={getValues('content.bgImageMobile')}
-            label="Background image mor mobile"
+            label="Background image for mobile"
             fullWidth
             {...register('content.bgImageMobile', { required: 'This field is required' })}
             error={Boolean(errors.content?.bgImageMobile)}

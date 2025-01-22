@@ -230,7 +230,7 @@ export const countries = [
   { code: 'TM', label: 'Turkmenistan', phone: '993' },
   { code: 'TN', label: 'Tunisia', phone: '216' },
   { code: 'TO', label: 'Tonga', phone: '676' },
-  { code: 'TR', label: 'Turkey', phone: '90' },
+  { code: 'TR', label: 'Turkiye', phone: '90' },
   { code: 'TT', label: 'Trinidad and Tobago', phone: '1-868' },
   { code: 'TV', label: 'Tuvalu', phone: '688' },
   { code: 'TW', label: 'Taiwan, Province of China', phone: '886' },

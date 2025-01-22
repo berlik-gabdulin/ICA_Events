@@ -128,6 +128,8 @@ export const MenuButton = styled(IconButton)`
 
   @media screen and (max-width: 1010px) {
     display: block;
+    width: 46px;
+    height: 46px;
   }
 `;
 

@@ -40,7 +40,7 @@ export const fullAddress = [
   '1795 Kilback Stravenue Apt. 745 - Concord, MA / 96099',
   '831 Rolfson Expressway Apt. 878 - Norman, NY / 10239',
   '909 Nathaniel Lake Suite 769 - Sherman, NJ / 46523',
-  '3690 Hans Ports Apt. 369 - Cary, KS / 48930'
+  '3690 Hans Ports Apt. 369 - Cary, KS / 48930',
 ];
 
 export const country = [
@@ -81,7 +81,7 @@ export const country = [
   'Zambia',
   'Isle of Man',
   'Canada',
-  'Turkey',
+  'Turkiye',
   'Samoa',
-  'Vietnam'
+  'Vietnam',
 ];
